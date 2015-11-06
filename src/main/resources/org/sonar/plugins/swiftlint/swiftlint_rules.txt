@@ -1,0 +1,18 @@
+Line Length Rule (line_length): Enforce maximum line length
+Leading Whitespace Rule (leading_whitespace): This rule checks that there's no leading whitespace in your file.
+Trailing Whitespace Rule (trailing_whitespace): This rule checks whether you don't have any trailing whitespace.
+Returning Whitespace Rule (return_arrow_whitespace): This rule checks whether you have 1 space before return arrow and return type. Newlines are also acceptable.
+Trailing Newline Rule (trailing_newline): Files should have a single trailing newline.
+Operator Function Whitespace Rule (operator_whitespace): Use a single whitespace around operators when defining them.
+Force Cast Rule (force_cast): This rule checks whether you don't do force casts.
+File Line Length Rule (file_length): Enforce maximum file length
+Todo Rule (todo): This rule checks whether you removed all TODOs and FIXMEs.
+Colon Rule (colon): This rule checks whether you associate the colon with the identifier.
+Type Name Rule (type_name): Type name should only contain alphanumeric characters, start with an uppercase character and between 3 and 40 characters in length.
+Variable Name Rule (variable_name): Variable name should only contain alphanumeric characters, start with a a lowercase character and be between 3 and 40 characters in length.
+Type body Length Rule (type_body_length): Enforce maximum type body length
+Function Body Length Rule (function_body_length): Enforce maximum function length
+Nesting Rule (nesting): Types should be nested at most 1 level deep, and statements should be nested at most 5 levels deep.
+Control Statement Rule (control_statement): if,for,while,do statements shouldn't wrap their conditionals in parentheses.
+Opening Brace Spacing Rule (opening_brace): Check whether there is a space before opening brace and it is on the same line.
+Comma Spacing Rule (comma): One space before and no after must be present next to any comma.

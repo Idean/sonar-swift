@@ -1,0 +1,128 @@
+[
+    {
+        "category": "SwiftLint",
+        "name": "Line Length",
+        "key": "line_length",
+        "description": "Enforce maximum line length",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Leading Whitespace",
+        "key": "leading_whitespace",
+        "description": "This rule checks that there's no leading whitespace in your file.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Trailing Whitespace",
+        "key": "trailing_whitespace",
+        "description": "This rule checks whether you don't have any trailing whitespace.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Returning Whitespace",
+        "key": "return_arrow_whitespace",
+        "description": "This rule checks whether you have 1 space before return arrow and return type. Newlines are also acceptable.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Trailing Newline",
+        "key": "trailing_newline",
+        "description": "Files should have a single trailing newline.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Operator Function Whitespace",
+        "key": "operator_whitespace",
+        "description": "Use a single whitespace around operators when defining them.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Force Cast",
+        "key": "force_cast",
+        "description": "This rule checks whether you don't do force casts.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "File Line Length",
+        "key": "file_length",
+        "description": "Enforce maximum file length",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Todo",
+        "key": "todo",
+        "description": "This rule checks whether you removed all TODOs and FIXMEs.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Colon",
+        "key": "colon",
+        "description": "This rule checks whether you associate the colon with the identifier.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Type Name",
+        "key": "type_name",
+        "description": "Type name should only contain alphanumeric characters, start with an uppercase character and between 3 and 40 characters in length.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Variable Name",
+        "key": "variable_name",
+        "description": "Variable name should only contain alphanumeric characters, start with a a lowercase character and be between 3 and 40 characters in length.",
+        "severity": "CRITICAL"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Type body Length",
+        "key": "type_body_length",
+        "description": "Enforce maximum type body length",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Function Body Length",
+        "key": "function_body_length",
+        "description": "Enforce maximum function length",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Nesting",
+        "key": "nesting",
+        "description": "Types should be nested at most 1 level deep, and statements should be nested at most 5 levels deep.",
+        "severity": "CRITICAL"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Control Statement",
+        "key": "control_statement",
+        "description": "if,for,while,do statements shouldn't wrap their conditionals in parentheses.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Opening Brace Spacing",
+        "key": "opening_brace",
+        "description": "Check whether there is a space before opening brace and it is on the same line.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Comma Spacing",
+        "key": "comma",
+        "description": "One space before and no after must be present next to any comma.",
+        "severity": "MINOR"
+    }
+]
