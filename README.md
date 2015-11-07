@@ -28,6 +28,7 @@ TBD
 - [x] Issues (SwiftLint)
 - [x] Size
 - [x] Tests
+- [ ] Code coverage (soon)
 
 
 ###Download
@@ -38,8 +39,8 @@ TBD
 
 - a Mac with Xcode 7 or +
 - [SonarQube](http://docs.codehaus.org/display/SONAR/Setup+and+Upgrade) and [SonarQube Runner](http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+SonarQube+Runner) installed ([HomeBrew](http://brew.sh) installed and ```brew install sonar-runner```)
-- [xctool](https://github.com/facebook/xctool) ([HomeBrew](http://brew.sh) installed and ```brew install xctool```). Version 0.2.6 or above.
-- [SwiftLint] (https://github.com/realm/SwiftLint) ([HomeBrew](http://brew.sh) installed and ```brew install swiftlint```). Version 0.3.0 or above.
+- [xcpretty](https://github.com/supermarin/xcpretty) (```gem install xcpretty```)
+- [SwiftLint](https://github.com/realm/SwiftLint) ([HomeBrew](http://brew.sh) installed and ```brew install swiftlint```). Version 0.3.0 or above.
 - [slather](https://github.com/venmo/slather) ```gem install slather```
 
 ###Installation (once for all your Swift projects)

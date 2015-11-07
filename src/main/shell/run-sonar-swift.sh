@@ -9,6 +9,8 @@
 XCTOOL_CMD=xctool
 SLATHER_CMD=slather
 SWIFTLINT_CMD=swiftlint
+XCPRETTY_CMD=xcpretty
+
 
 trap "echo 'Script interrupted by Ctrl+C'; stopProgress; exit 1" SIGHUP SIGINT SIGTERM
 
@@ -222,9 +224,9 @@ rm -rf sonar-reports
 mkdir sonar-reports
 
 # Extracting project information needed later
-echo -n 'Extracting Xcode project information'
-runCommand /dev/stdout $xctoolCmdPrefix -scheme "$appScheme" clean
-runCommand /dev/stdout $xctoolCmdPrefix -scheme "$appScheme" -reporter plain -reporter json-compilation-database:compile_commands.json build
+#echo -n 'Extracting Xcode project information'
+#runCommand /dev/stdout $xctoolCmdPrefix -scheme "$appScheme" clean
+#runCommand /dev/stdout $xctoolCmdPrefix -scheme "$appScheme" -reporter plain -reporter json-compilation-database:compile_commands.json build
 
 # Unit tests and coverage
 if [ "$testScheme" = "" ]; then
@@ -238,9 +240,14 @@ else
     # Configure project for proper code coverage
     runCommand /dev/stdout $SLATHER_CMD setup $projectFile
 
-	echo -n 'Running tests using xctool'
+	echo -n 'Running tests'
 	#runCommand /dev/null $xctoolCmdPrefix -scheme "$testScheme" GCC_PRECOMPILE_PREFIX_HEADER=NO GCC_GENERATE_TEST_COVERAGE_FILES=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES -reporter junit:sonar-reports/TEST-report.xml -reporter plain clean test
-     $xctoolCmdPrefix -scheme "$testScheme" GCC_PRECOMPILE_PREFIX_HEADER=NO GCC_GENERATE_TEST_COVERAGE_FILES=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES -reporter junit:sonar-reports/TEST-report.xml -reporter plain clean test
+    # $xctoolCmdPrefix -scheme "$testScheme" GCC_PRECOMPILE_PREFIX_HEADER=NO GCC_GENERATE_TEST_COVERAGE_FILES=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES -reporter junit:sonar-reports/TEST-report.xml -reporter plain clean test
+
+    runCommand /dev/stdout xcodebuild clean -project $projectFile -scheme $testScheme
+    runCommand sonar-reports/xcodebuild.log xcodebuild test -project $projectFile -scheme $testScheme -sdk iphonesimulator -configuration Debug -enableCodeCoverage YES
+    cat sonar-reports/xcodebuild.log  | $XCPRETTY_CMD -t --report junit
+    mv build/reports/junit.xml sonar-reports/TEST-report.xml
 
 
 	echo -n 'Computing coverage report'
@@ -259,10 +266,10 @@ else
     fi
 
     # Create symlink on the build directory to enable its access from the workspace
-    coverageFilesPath=$(grep 'command' compile_commands.json | sed 's#^.*-o \\/#\/#;s#",##' | grep "${projectName%%.*}.build" | awk 'NR<2' | sed 's/\\\//\//g' | sed 's/\\\\//g' | xargs -0 dirname)
-    splitIndex=$(awk -v a="$coverageFilesPath" -v b="/Intermediates" 'BEGIN{print index(a,b)}')
-    coverageFilesPath=$(echo ${coverageFilesPath:0:$splitIndex}Intermediates)
-    ln -s $coverageFilesPath sonar-reports/build
+    #coverageFilesPath=$(grep 'command' compile_commands.json | sed 's#^.*-o \\/#\/#;s#",##' | grep "${projectName%%.*}.build" | awk 'NR<2' | sed 's/\\\//\//g' | sed 's/\\\\//g' | xargs -0 dirname)
+    #splitIndex=$(awk -v a="$coverageFilesPath" -v b="/Intermediates" 'BEGIN{print index(a,b)}')
+    #coverageFilesPath=$(echo ${coverageFilesPath:0:$splitIndex}Intermediates)
+    #ln -s $coverageFilesPath sonar-reports/build
 
     # TODO : generate cobertura report with slather + remember to exclude files from coverage !!!
 

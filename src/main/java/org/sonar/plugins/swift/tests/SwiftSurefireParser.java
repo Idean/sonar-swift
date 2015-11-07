@@ -155,16 +155,9 @@ class SwiftSurefireParser {
         if ( !Double.isNaN(value)) {
 
             String basename = fileReport.getClassKey().replace('.', '/');
+            File testFile = new File(basename + ".swift");
+            context.saveMeasure(getUnitTestResource(testFile.getName()), metric, value);
 
-            // .swift file
-            context.saveMeasure(getUnitTestResource(basename + ".swift"), metric, value);
-
-            // Try .swift file with + in name
-            try {
-                context.saveMeasure(getUnitTestResource(basename.replace('_', '+') + ".swift"), metric, value);
-            } catch (Exception e) {
-                // Nothing : File was probably already registered successfully
-            }
         }
     }
 

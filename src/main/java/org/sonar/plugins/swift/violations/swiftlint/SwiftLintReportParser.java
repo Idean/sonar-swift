@@ -89,8 +89,6 @@ public class SwiftLintReportParser {
 
             org.sonar.api.resources.File resource = org.sonar.api.resources.File.fromIOFile(new File(filePath), project);
 
-            LOGGER.info("XXX " + resource.getName());
-
             final Rule rule = Rule.create();
             final Violation violation = Violation.create(rule, resource);
 
