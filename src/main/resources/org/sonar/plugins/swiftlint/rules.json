@@ -124,5 +124,12 @@
         "key": "comma",
         "description": "One space before and no after must be present next to any comma.",
         "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
+        "name": "Statement Position",
+        "key": "statement_position",
+        "description": "This rule checks whether statements are correctly positioned.",
+        "severity": "MINOR"
     }
 ]

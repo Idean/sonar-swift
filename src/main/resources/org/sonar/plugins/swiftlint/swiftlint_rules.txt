@@ -16,3 +16,4 @@ Nesting Rule (nesting): Types should be nested at most 1 level deep, and stateme
 Control Statement Rule (control_statement): if,for,while,do statements shouldn't wrap their conditionals in parentheses.
 Opening Brace Spacing Rule (opening_brace): Check whether there is a space before opening brace and it is on the same line.
 Comma Spacing Rule (comma): One space before and no after must be present next to any comma.
+Statement Position Rule (statement_position): This rule checks whether statements are correctly positioned.

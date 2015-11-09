@@ -75,5 +75,9 @@
       <repositoryKey>SwiftLint</repositoryKey>
       <key>comma</key>
     </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>statement_position</key>
+    </rule>
   </rules>
 </profile>
