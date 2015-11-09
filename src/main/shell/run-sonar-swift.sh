@@ -175,8 +175,6 @@ srcDirs=''; readParameter srcDirs 'sonar.sources'
 # The name of your application scheme in Xcode
 appScheme=''; readParameter appScheme 'sonar.swift.appScheme'
 
-# The name of your test scheme in Xcode
-testScheme=''; readParameter testScheme 'sonar.swift.testScheme'
 # The file patterns to exclude from coverage report
 excludedPathsFromCoverage=''; readParameter excludedPathsFromCoverage 'sonar.swift.excludedPathsFromCoverage'
 
@@ -203,7 +201,6 @@ if [ "$vflag" = "on" ]; then
  	echo "Xcode workspace file is: $workspaceFile"
  	echo "Xcode project file is: $projectFile"
  	echo "Xcode application scheme is: $appScheme"
- 	echo "Xcode test scheme is: $testScheme"
  	echo "Excluded paths from coverage are: $excludedPathsFromCoverage" 	
 fi
 
@@ -223,58 +220,48 @@ fi
 rm -rf sonar-reports
 mkdir sonar-reports
 
-# Extracting project information needed later
-#echo -n 'Extracting Xcode project information'
-#runCommand /dev/stdout $xctoolCmdPrefix -scheme "$appScheme" clean
-#runCommand /dev/stdout $xctoolCmdPrefix -scheme "$appScheme" -reporter plain -reporter json-compilation-database:compile_commands.json build
-
 # Unit tests and coverage
-if [ "$testScheme" = "" ]; then
-	echo 'Skipping tests as no test scheme has been provided!'
 
-	# Put default xml files with no tests and no coverage...
-	echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='AllTestUnits'></testsuites>" > sonar-reports/TEST-report.xml
-	echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage.xml
-else
-
-    # Configure project for proper code coverage
-    runCommand /dev/stdout $SLATHER_CMD setup $projectFile
-
-	echo -n 'Running tests'
-	#runCommand /dev/null $xctoolCmdPrefix -scheme "$testScheme" GCC_PRECOMPILE_PREFIX_HEADER=NO GCC_GENERATE_TEST_COVERAGE_FILES=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES -reporter junit:sonar-reports/TEST-report.xml -reporter plain clean test
-    # $xctoolCmdPrefix -scheme "$testScheme" GCC_PRECOMPILE_PREFIX_HEADER=NO GCC_GENERATE_TEST_COVERAGE_FILES=YES GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES -reporter junit:sonar-reports/TEST-report.xml -reporter plain clean test
-
-    runCommand /dev/stdout xcodebuild clean -project $projectFile -scheme $testScheme
-    runCommand sonar-reports/xcodebuild.log xcodebuild test -project $projectFile -scheme $testScheme -sdk iphonesimulator -configuration Debug -enableCodeCoverage YES
-    cat sonar-reports/xcodebuild.log  | $XCPRETTY_CMD -t --report junit
-    mv build/reports/junit.xml sonar-reports/TEST-report.xml
+# Put default xml files with no tests and no coverage...
+echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='AllTestUnits'></testsuites>" > sonar-reports/TEST-report.xml
+echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage.xml
 
 
-	echo -n 'Computing coverage report'
+# Configure project for proper code coverage
+runCommand /dev/stdout $SLATHER_CMD setup $projectFile
 
-	# Build the --exclude flags
-    excludedCommandLineFlags=""
-    if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
-        echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
-        while read word; do
-            excludedCommandLineFlags+=" --exclude $word"
-        done < tmpFileRunSonarSh2
-        rm -rf tmpFileRunSonarSh2
-    fi
-    if [ "$vflag" = "on" ]; then
-        echo "Command line exclusion flags for gcovr is:$excludedCommandLineFlags"
-    fi
-
-    # Create symlink on the build directory to enable its access from the workspace
-    #coverageFilesPath=$(grep 'command' compile_commands.json | sed 's#^.*-o \\/#\/#;s#",##' | grep "${projectName%%.*}.build" | awk 'NR<2' | sed 's/\\\//\//g' | sed 's/\\\\//g' | xargs -0 dirname)
-    #splitIndex=$(awk -v a="$coverageFilesPath" -v b="/Intermediates" 'BEGIN{print index(a,b)}')
-    #coverageFilesPath=$(echo ${coverageFilesPath:0:$splitIndex}Intermediates)
-    #ln -s $coverageFilesPath sonar-reports/build
-
-    # TODO : generate cobertura report with slather + remember to exclude files from coverage !!!
+echo -n 'Running tests'
+runCommand /dev/stdout xcodebuild clean -project $projectFile -scheme $appScheme
+runCommand sonar-reports/xcodebuild.log xcodebuild test -project $projectFile -scheme $appScheme -sdk iphonesimulator -configuration Debug -enableCodeCoverage YES
+cat sonar-reports/xcodebuild.log  | $XCPRETTY_CMD -t --report junit
+mv build/reports/junit.xml sonar-reports/TEST-report.xml
 
 
+echo -n 'Computing coverage report'
+
+# Build the --exclude flags
+excludedCommandLineFlags=""
+if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
+	echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
+	while read word; do
+		excludedCommandLineFlags+=" --exclude $word"
+	done < tmpFileRunSonarSh2
+	rm -rf tmpFileRunSonarSh2
 fi
+if [ "$vflag" = "on" ]; then
+	echo "Command line exclusion flags for gcovr is:$excludedCommandLineFlags"
+fi
+
+# Create symlink on the build directory to enable its access from the workspace
+#coverageFilesPath=$(grep 'command' compile_commands.json | sed 's#^.*-o \\/#\/#;s#",##' | grep "${projectName%%.*}.build" | awk 'NR<2' | sed 's/\\\//\//g' | sed 's/\\\\//g' | xargs -0 dirname)
+#splitIndex=$(awk -v a="$coverageFilesPath" -v b="/Intermediates" 'BEGIN{print index(a,b)}')
+#coverageFilesPath=$(echo ${coverageFilesPath:0:$splitIndex}Intermediates)
+#ln -s $coverageFilesPath sonar-reports/build
+
+# TODO : generate cobertura report with slather + remember to exclude files from coverage !!!
+
+
+
 
 # SwiftLint
 if [ "$swiftlint" = "on" ]; then
