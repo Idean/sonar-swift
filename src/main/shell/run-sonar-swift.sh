@@ -154,15 +154,8 @@ fi
 
 ## READ PARAMETERS from sonar-project.properties
 
-# Your .xcworkspace/.xcodeproj filename
-workspaceFile=''; readParameter workspaceFile 'sonar.swift.workspace'
+#.xcodeproj filename
 projectFile=''; readParameter projectFile 'sonar.swift.project'
-
-if [[ "$workspaceFile" != "" ]] ; then
-	xctoolCmdPrefix="$XCTOOL_CMD -workspace $workspaceFile -sdk iphonesimulator ARCHS=i386 VALID_ARCHS=i386 CURRENT_ARCH=i386 ONLY_ACTIVE_ARCH=NO"
-else
-	xctoolCmdPrefix="$XCTOOL_CMD -project $projectFile -sdk iphonesimulator ARCHS=i386 VALID_ARCHS=i386 CURRENT_ARCH=i386 ONLY_ACTIVE_ARCH=NO"
-fi
 
 # Count projects
 projectCount=$(echo $projectFile | sed -n 1'p' | tr ',' '\n' | wc -l | tr -d '[[:space:]]')
@@ -180,12 +173,7 @@ excludedPathsFromCoverage=''; readParameter excludedPathsFromCoverage 'sonar.swi
 
 # Check for mandatory parameters
 if [ -z "$projectFile" -o "$projectFile" = " " ]; then
-
-	if [ ! -z "$workspaceFile" -a "$workspaceFile" != " " ]; then
-		echo >&2 "ERROR - sonar.swift.project parameter is missing in sonar-project.properties. You must specify which projects (comma-separated list) are application code within the workspace $workspaceFile."
-	else
-		echo >&2 "ERROR - sonar.swift.project parameter is missing in sonar-project.properties (name of your .xcodeproj)"
-	fi
+	echo >&2 "ERROR - sonar.swift.project parameter is missing in sonar-project.properties. You must specify which projects (comma-separated list) are application code."
 	exit 1
 fi
 if [ -z "$srcDirs" -o "$srcDirs" = " " ]; then
@@ -198,7 +186,6 @@ if [ -z "$appScheme" -o "$appScheme" = " " ]; then
 fi
 
 if [ "$vflag" = "on" ]; then
- 	echo "Xcode workspace file is: $workspaceFile"
  	echo "Xcode project file is: $projectFile"
  	echo "Xcode application scheme is: $appScheme"
  	echo "Excluded paths from coverage are: $excludedPathsFromCoverage" 	
@@ -226,10 +213,6 @@ mkdir sonar-reports
 echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='AllTestUnits'></testsuites>" > sonar-reports/TEST-report.xml
 echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage.xml
 
-
-# Configure project for proper code coverage
-runCommand /dev/stdout $SLATHER_CMD setup $projectFile
-
 echo -n 'Running tests'
 runCommand /dev/stdout xcodebuild clean -project $projectFile -scheme $appScheme
 runCommand sonar-reports/xcodebuild.log xcodebuild test -project $projectFile -scheme $appScheme -sdk iphonesimulator -configuration Debug -enableCodeCoverage YES
@@ -244,29 +227,21 @@ excludedCommandLineFlags=""
 if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
 	echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
 	while read word; do
-		excludedCommandLineFlags+=" --exclude $word"
+		excludedCommandLineFlags+=" -i $word"
 	done < tmpFileRunSonarSh2
 	rm -rf tmpFileRunSonarSh2
 fi
 if [ "$vflag" = "on" ]; then
-	echo "Command line exclusion flags for gcovr is:$excludedCommandLineFlags"
+	echo "Command line exclusion flags for slather is:$excludedCommandLineFlags"
 fi
 
-# Create symlink on the build directory to enable its access from the workspace
-#coverageFilesPath=$(grep 'command' compile_commands.json | sed 's#^.*-o \\/#\/#;s#",##' | grep "${projectName%%.*}.build" | awk 'NR<2' | sed 's/\\\//\//g' | sed 's/\\\\//g' | xargs -0 dirname)
-#splitIndex=$(awk -v a="$coverageFilesPath" -v b="/Intermediates" 'BEGIN{print index(a,b)}')
-#coverageFilesPath=$(echo ${coverageFilesPath:0:$splitIndex}Intermediates)
-#ln -s $coverageFilesPath sonar-reports/build
-
-# TODO : generate cobertura report with slather + remember to exclude files from coverage !!!
-
-
+runCommand /dev/stdout $SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports --scheme $appScheme $projectFile
+mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
 
 
 # SwiftLint
 if [ "$swiftlint" = "on" ]; then
 
-	# OCLint
 	echo -n 'Running SwiftLint...'
 
 
@@ -275,11 +250,6 @@ if [ "$swiftlint" = "on" ]; then
 	echo "$srcDirs" | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
 	while read word; do
 
-		includedCommandLineFlags=" --include .*/${currentDirectory}/${word}"
-		if [ "$vflag" = "on" ]; then
-            echo
-            echo -n "Path included in oclint analysis is:$includedCommandLineFlags"
-        fi
 		# Run SwiftLint command
 	    $SWIFTLINT_CMD > sonar-reports/$(echo $word | sed 's/\//_/g')-swiftlint.txt
 
