@@ -11,24 +11,25 @@ SonarQube Plugin for Swift
 ================================
 
 This is an open source initiative for Apple Swift language support in SonarQube.
+The structure of the plugin is based on the [sonar-objective-c](https://github.com/octo-technology/sonar-objective-c) plugin.
 
 SCREENSHOT
 
 TBD
 
-
-
-
 ###Features
 
-- [ ] Complexity
-- [ ] Design
-- [x] Documentation
-- [x] Duplications
-- [x] Issues (SwiftLint)
-- [x] Size
-- [x] Tests
-- [ ] Code coverage (soon)
+
+| Feature 		| Supported	| Details	|
+|---------------|----------|:-----------:|
+| Complexity	|NO			|			|
+| Design		|NO			|			|
+| Documentation	|YES		|			|
+| Duplications	|YES		|			|
+| Issues		|YES		| Uses [SwiftLint](https://github.com/realm/SwiftLint)|
+| Size			|YES		|			|
+| Tests			|YES		|			|
+| Code coverage	|NO			| Coming soon, with [slather](https://github.com/venmo/slather)			|
 
 
 ###Download
