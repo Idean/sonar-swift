@@ -19,6 +19,7 @@ fi
 cp target/*.jar $SONARQUBE_HOME/extensions/plugins
 
 # Stop/start Sonar
+unset GEM_PATH GEM_HOME
 $SONARQUBE_HOME/bin/macosx-universal-64/sonar.sh stop
 $SONARQUBE_HOME/bin/macosx-universal-64/sonar.sh start
 
