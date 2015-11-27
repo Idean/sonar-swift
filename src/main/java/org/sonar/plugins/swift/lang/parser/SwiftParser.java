@@ -31,13 +31,14 @@ public class SwiftParser {
 
     }
 
-    public static Parser<SwiftGrammar> create(ParsingEventListener... parsingEventListeners) {
-        return create(new SwiftConfiguration(), parsingEventListeners);
+    public static Parser<SwiftGrammar> create() {
+        return create(new SwiftConfiguration());
     }
 
-    public static Parser<SwiftGrammar> create(SwiftConfiguration conf, ParsingEventListener... parsingEventListeners) {
+    public static Parser<SwiftGrammar> create(SwiftConfiguration conf) {
         return Parser.builder((SwiftGrammar) new SwiftGrammarImpl())
                 .withLexer(SwiftLexer.create(conf))
-                .setParsingEventListeners(parsingEventListeners).build();
+                .build();
     }
+
 }

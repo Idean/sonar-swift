@@ -19,11 +19,15 @@
  */
 package org.sonar.plugins.swift.tests;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.Metric;
@@ -48,7 +52,19 @@ class SwiftSurefireParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(SwiftSurefireParser.class);
 
-    public void collect(Project project, SensorContext context, File reportsDir) {
+    private final Project project;
+    private final FileSystem fileSystem;
+    private final  ResourcePerspectives resourcePerspectives;
+    private final SensorContext context;
+
+    public SwiftSurefireParser(Project project, FileSystem fileSystem, ResourcePerspectives resourcePerspectives, SensorContext context) {
+        this.project = project;
+        this.fileSystem = fileSystem;
+        this.resourcePerspectives = resourcePerspectives;
+        this.context = context;
+    }
+
+    public void collect(File reportsDir) {
 
         File[] xmlFiles = getReports(reportsDir);
 
@@ -80,9 +96,7 @@ class SwiftSurefireParser {
 
     private void insertZeroWhenNoReports(Project pom, SensorContext context) {
 
-        if ( !StringUtils.equalsIgnoreCase("pom", pom.getPackaging())) {
-            context.saveMeasure(CoreMetrics.TESTS, 0.0);
-        }
+        context.saveMeasure(CoreMetrics.TESTS, 0.0);
     }
 
     private void parseFiles(SensorContext context, File[] reports) {
@@ -105,17 +119,17 @@ class SwiftSurefireParser {
 
                     if (fileReport.getTests() > 0) {
                         double testsCount = fileReport.getTests() - fileReport.getSkipped();
-                        saveClassMeasure(context, fileReport, CoreMetrics.SKIPPED_TESTS, fileReport.getSkipped());
-                        saveClassMeasure(context, fileReport, CoreMetrics.TESTS, testsCount);
-                        saveClassMeasure(context, fileReport, CoreMetrics.TEST_ERRORS, fileReport.getErrors());
-                        saveClassMeasure(context, fileReport, CoreMetrics.TEST_FAILURES, fileReport.getFailures());
-                        saveClassMeasure(context, fileReport, CoreMetrics.TEST_EXECUTION_TIME, fileReport.getTimeMS());
+                        saveClassMeasure(fileReport, CoreMetrics.SKIPPED_TESTS, fileReport.getSkipped());
+                        saveClassMeasure(fileReport, CoreMetrics.TESTS, testsCount);
+                        saveClassMeasure(fileReport, CoreMetrics.TEST_ERRORS, fileReport.getErrors());
+                        saveClassMeasure(fileReport, CoreMetrics.TEST_FAILURES, fileReport.getFailures());
+                        saveClassMeasure(fileReport, CoreMetrics.TEST_EXECUTION_TIME, fileReport.getTimeMS());
                         double passedTests = testsCount - fileReport.getErrors() - fileReport.getFailures();
                         if (testsCount > 0) {
                             double percentage = passedTests * 100d / testsCount;
-                            saveClassMeasure(context, fileReport, CoreMetrics.TEST_SUCCESS_DENSITY, ParsingUtils.scaleValue(percentage));
+                            saveClassMeasure(fileReport, CoreMetrics.TEST_SUCCESS_DENSITY, ParsingUtils.scaleValue(percentage));
                         }
-                        saveTestsDetails(context, fileReport);
+                        saveTestsDetails(fileReport);
                         analyzedReports.add(fileReport);
                     }
                 }
@@ -126,7 +140,7 @@ class SwiftSurefireParser {
         }
     }
 
-    private void saveTestsDetails(SensorContext context, TestSuiteReport fileReport) throws TransformerException {
+    private void saveTestsDetails(TestSuiteReport fileReport) throws TransformerException {
 
         StringBuilder testCaseDetails = new StringBuilder(256);
         testCaseDetails.append("<tests-details>");
@@ -150,20 +164,45 @@ class SwiftSurefireParser {
         context.saveMeasure(getUnitTestResource(fileReport.getClassKey()), new Measure(CoreMetrics.TEST_DATA, testCaseDetails.toString()));
     }
 
-    private void saveClassMeasure(SensorContext context, TestSuiteReport fileReport, Metric metric, double value) {
+    private void saveClassMeasure(TestSuiteReport fileReport, Metric metric, double value) {
 
         if ( !Double.isNaN(value)) {
 
-            String basename = fileReport.getClassKey().replace('.', '/');
-            File testFile = new File(basename + ".swift");
-            context.saveMeasure(getUnitTestResource(testFile.getName()), metric, value);
+            context.saveMeasure(getUnitTestResource(fileReport.getClassKey()), metric, value);
 
         }
     }
 
-    public Resource getUnitTestResource(String filename) {
+    public Resource getUnitTestResource(String classname) {
 
-        org.sonar.api.resources.File sonarFile = new org.sonar.api.resources.File(filename);
+        String fileName = classname.replace('.', '/') + ".swift";
+
+        File file = new File(fileName);
+        if (!file.isAbsolute()) {
+            file = new File(fileSystem.baseDir(), fileName);
+        }
+
+        /*
+         * Most xcodebuild JUnit parsers don't include the path to the class in the class field, so search for it if it
+         * wasn't found in the root.
+         */
+        if (!file.isFile() || !file.exists()) {
+            List<File> files = ImmutableList.copyOf(fileSystem.files(fileSystem.predicates().and(
+                    fileSystem.predicates().hasType(InputFile.Type.TEST),
+                    fileSystem.predicates().matchesPathPattern("**/" + fileName))));
+
+            if (files.isEmpty()) {
+                LOG.info("Unable to locate test source file {}", fileName);
+            } else {
+                /*
+                 * Lazily get the first file, since we wouldn't be able to determine the correct one from just the
+                 * test class name in the event that there are multiple matches.
+                 */
+                file = files.get(0);
+            }
+        }
+
+        org.sonar.api.resources.File sonarFile = org.sonar.api.resources.File.fromIOFile(file, project);
         sonarFile.setQualifier(Qualifiers.UNIT_TEST_FILE);
         return sonarFile;
     }

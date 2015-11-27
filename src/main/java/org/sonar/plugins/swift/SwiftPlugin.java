@@ -27,13 +27,9 @@ import org.sonar.plugins.swift.colorizer.SwiftCodeColorizerFormat;
 import org.sonar.plugins.swift.coverage.SwiftCoberturaSensor;
 import org.sonar.plugins.swift.cpd.SwiftCpdMapping;
 import org.sonar.plugins.swift.lang.core.Swift;
-import org.sonar.plugins.swift.lang.core.SwiftSourceImporter;
-import org.sonar.plugins.swift.violations.SwiftProfile;
+import org.sonar.plugins.swift.issues.SwiftProfile;
 import org.sonar.plugins.swift.tests.SwiftSurefireSensor;
-import org.sonar.plugins.swift.violations.swiftlint.SwiftLintProfile;
-import org.sonar.plugins.swift.violations.swiftlint.SwiftLintProfileImporter;
-import org.sonar.plugins.swift.violations.swiftlint.SwiftLintRuleRepository;
-import org.sonar.plugins.swift.violations.swiftlint.SwiftLintSensor;
+import org.sonar.plugins.swift.issues.swiftlint.*;
 
 import java.util.List;
 
@@ -58,7 +54,6 @@ public class SwiftPlugin extends SonarPlugin {
     public List getExtensions() {
         return ImmutableList.of(
                 Swift.class,
-                SwiftSourceImporter.class,
                 SwiftCodeColorizerFormat.class,
                 SwiftCpdMapping.class,
 
@@ -69,7 +64,7 @@ public class SwiftPlugin extends SonarPlugin {
                 SwiftProfile.class,
 
                 SwiftLintSensor.class,
-                SwiftLintRuleRepository.class,
+                SwiftLintRulesDefinition.class,
                 SwiftLintProfile.class,
                 SwiftLintProfileImporter.class
                 );

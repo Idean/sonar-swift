@@ -17,7 +17,7 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.swift.violations.swiftlint;
+package org.sonar.plugins.swift.issues.swiftlint;
 
 import com.google.common.io.Closeables;
 import org.slf4j.Logger;
@@ -54,7 +54,7 @@ public class SwiftLintProfile extends ProfileDefinition {
             config = new InputStreamReader(getClass().getResourceAsStream(
                     PROFILE_PATH));
             final RulesProfile profile = profileImporter.importProfile(config, messages);
-            profile.setName(SwiftLintRuleRepository.REPOSITORY_KEY);
+            profile.setName(SwiftLintRulesDefinition.REPOSITORY_KEY);
             profile.setLanguage(Swift.KEY);
 
             return profile;

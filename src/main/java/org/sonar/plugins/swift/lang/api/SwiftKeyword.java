@@ -105,7 +105,7 @@ public enum SwiftKeyword implements TokenType {
 
     private final String value;
 
-    private SwiftKeyword(String value) {
+    SwiftKeyword(String value) {
         this.value = value;
     }
 

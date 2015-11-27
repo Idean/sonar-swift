@@ -17,7 +17,7 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.swift.violations;
+package org.sonar.plugins.swift.issues;
 
 import com.google.common.io.Closeables;
 import org.slf4j.Logger;
@@ -27,8 +27,8 @@ import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.utils.ValidationMessages;
 import org.sonar.plugins.swift.lang.core.Swift;
-import org.sonar.plugins.swift.violations.swiftlint.SwiftLintProfile;
-import org.sonar.plugins.swift.violations.swiftlint.SwiftLintProfileImporter;
+import org.sonar.plugins.swift.issues.swiftlint.SwiftLintProfile;
+import org.sonar.plugins.swift.issues.swiftlint.SwiftLintProfileImporter;
 
 import java.io.InputStreamReader;
 import java.io.Reader;

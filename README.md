@@ -28,7 +28,7 @@ TBD
 | Duplications	|YES		|			|
 | Issues		|YES		| Uses [SwiftLint](https://github.com/realm/SwiftLint)|
 | Size			|YES		|			|
-| Tests			|YES		|			|
+| Tests			|YES		| Uses xcodebuild + xcpretty [xcpretty](https://github.com/supermarin/xcpretty)			|
 | Code coverage	|NO			| Coming soon, with [slather](https://github.com/venmo/slather)			|
 
 
@@ -42,7 +42,20 @@ TBD
 - [SonarQube](http://docs.codehaus.org/display/SONAR/Setup+and+Upgrade) and [SonarQube Runner](http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+SonarQube+Runner) installed ([HomeBrew](http://brew.sh) installed and ```brew install sonar-runner```)
 - [xcpretty](https://github.com/supermarin/xcpretty) (```gem install xcpretty```)
 - [SwiftLint](https://github.com/realm/SwiftLint) ([HomeBrew](http://brew.sh) installed and ```brew install swiftlint```). Version 0.3.0 or above.
-- [slather](https://github.com/venmo/slather) ```gem install slather```
+- [slather](https://github.com/venmo/slather) with profdata support (see instructions below)
+
+###Installation of slather with profdata support
+
+At the time, slather does not support profdata. A special version of slather needs t be installed.
+
+To install slather with profdata support, follow those steps :
+
+	git clone https://github.com/mattdelves/slather.git
+	cd slather
+	git checkout feature-profdata
+	gem build slather.gemspec
+	gem install --both slather-1.8.1.gem
+
 
 ###Installation (once for all your Swift projects)
 - Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory

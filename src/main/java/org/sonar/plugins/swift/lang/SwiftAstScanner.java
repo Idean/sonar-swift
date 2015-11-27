@@ -68,7 +68,7 @@ public class SwiftAstScanner {
         final SquidAstVisitorContextImpl<SwiftGrammar> context = new SquidAstVisitorContextImpl<SwiftGrammar>(new SourceProject("Objective-C Project"));
         final Parser<SwiftGrammar> parser = SwiftParser.create(conf);
 
-        AstScanner.Builder<SwiftGrammar> builder = AstScanner.<SwiftGrammar> builder(context).setBaseParser(parser);
+        AstScanner.Builder<SwiftGrammar> builder = AstScanner.builder(context).setBaseParser(parser);
 
         /* Metrics */
         builder.withMetrics(SwiftMetric.values());

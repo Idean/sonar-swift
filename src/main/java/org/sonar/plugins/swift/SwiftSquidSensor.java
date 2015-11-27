@@ -19,17 +19,26 @@
  */
 package org.sonar.plugins.swift;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FilePredicate;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.rule.CheckFactory;
+import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.checks.AnnotationCheckFactory;
+import org.sonar.api.component.ResourcePerspectives;
+import org.sonar.api.issue.Issuable;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.measures.RangeDistributionBuilder;
 import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.resources.File;
-import org.sonar.api.resources.InputFileUtils;
 import org.sonar.api.resources.Project;
-import org.sonar.api.rules.Violation;
+import org.sonar.api.resources.Resource;
+import org.sonar.api.rule.RuleKey;
+import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.swift.lang.SwiftAstScanner;
 import org.sonar.plugins.swift.lang.SwiftConfiguration;
 import org.sonar.plugins.swift.lang.api.SwiftGrammar;
@@ -37,6 +46,7 @@ import org.sonar.plugins.swift.lang.api.SwiftMetric;
 import org.sonar.plugins.swift.lang.checks.CheckList;
 import org.sonar.plugins.swift.lang.core.Swift;
 import org.sonar.squidbridge.AstScanner;
+import org.sonar.squidbridge.SquidAstVisitor;
 import org.sonar.squidbridge.api.CheckMessage;
 import org.sonar.squidbridge.api.SourceCode;
 import org.sonar.squidbridge.api.SourceFile;
@@ -46,6 +56,7 @@ import org.sonar.squidbridge.indexer.QueryByParent;
 import org.sonar.squidbridge.indexer.QueryByType;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -55,19 +66,29 @@ public class SwiftSquidSensor implements Sensor {
     private final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
 
     private final AnnotationCheckFactory annotationCheckFactory;
+    private final FileSystem fileSystem;
+    private final PathResolver pathResolver;
+    private final ResourcePerspectives resourcePerspectives;
+    private final Checks<SquidCheck<SwiftGrammar>> checks;
+    private final FilePredicate mainFilePredicates;
 
     private Project project;
     private SensorContext context;
     private AstScanner<SwiftGrammar> scanner;
 
-    public SwiftSquidSensor(RulesProfile profile) {
+    public SwiftSquidSensor(RulesProfile profile, FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
 
         this.annotationCheckFactory = AnnotationCheckFactory.create(profile, CheckList.REPOSITORY_KEY, CheckList.getChecks());
+        this.fileSystem = fileSystem;
+        this.pathResolver = pathResolver;
+        this.resourcePerspectives = resourcePerspectives;
+        this.checks = checkFactory.<SquidCheck<SwiftGrammar>>create(CheckList.REPOSITORY_KEY).addAnnotatedChecks(CheckList.getChecks());
+        this.mainFilePredicates = fileSystem.predicates().and(fileSystem.predicates().hasLanguage(Swift.KEY), fileSystem.predicates().hasType(InputFile.Type.MAIN));
     }
 
     public boolean shouldExecuteOnProject(Project project) {
 
-        return Swift.KEY.equals(project.getLanguageKey());
+        return project.isRoot() && fileSystem.hasFiles(fileSystem.predicates().hasLanguage(Swift.KEY));
     }
 
     public void analyse(Project project, SensorContext context) {
@@ -75,17 +96,19 @@ public class SwiftSquidSensor implements Sensor {
         this.project = project;
         this.context = context;
 
-        Collection<SquidCheck> squidChecks = annotationCheckFactory.getChecks();
-        this.scanner = SwiftAstScanner.create(createConfiguration(project), squidChecks.toArray(new SquidCheck[squidChecks.size()]));
-        scanner.scanFiles(InputFileUtils.toFiles(project.getFileSystem().mainFiles(Swift.KEY)));
+        List<SquidAstVisitor<SwiftGrammar>> visitors = Lists.<SquidAstVisitor<SwiftGrammar>>newArrayList(checks.all());
+        AstScanner<SwiftGrammar> scanner = SwiftAstScanner.create(createConfiguration(), visitors.toArray(new SquidAstVisitor[visitors.size()]));
+
+
+        scanner.scanFiles(ImmutableList.copyOf(fileSystem.files(mainFilePredicates)));
 
         Collection<SourceCode> squidSourceFiles = scanner.getIndex().search(new QueryByType(SourceFile.class));
         save(squidSourceFiles);
     }
 
-    private SwiftConfiguration createConfiguration(Project project) {
+    private SwiftConfiguration createConfiguration() {
 
-        return new SwiftConfiguration(project.getFileSystem().getSourceCharset());
+        return new SwiftConfiguration(fileSystem.encoding());
     }
 
     private void save(Collection<SourceCode> squidSourceFiles) {
@@ -93,56 +116,53 @@ public class SwiftSquidSensor implements Sensor {
         for (SourceCode squidSourceFile : squidSourceFiles) {
             SourceFile squidFile = (SourceFile) squidSourceFile;
 
-            File sonarFile = File.fromIOFile(new java.io.File(squidFile.getKey()), project);
+            String relativePath = pathResolver.relativePath(fileSystem.baseDir(), new java.io.File(squidFile.getKey()));
+            InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasRelativePath(relativePath));
 
-            saveFilesComplexityDistribution(sonarFile, squidFile);
-            saveFunctionsComplexityDistribution(sonarFile, squidFile);
-            saveMeasures(sonarFile, squidFile);
-            saveViolations(sonarFile, squidFile);
+            saveMeasures(inputFile, squidFile);
+            saveIssues(inputFile, squidFile);
         }
     }
 
-    private void saveMeasures(File sonarFile, SourceFile squidFile) {
+    private void saveMeasures(InputFile inputFile, SourceFile squidFile) {
 
-        context.saveMeasure(sonarFile, CoreMetrics.FILES, squidFile.getDouble(SwiftMetric.FILES));
-        context.saveMeasure(sonarFile, CoreMetrics.LINES, squidFile.getDouble(SwiftMetric.LINES));
-        context.saveMeasure(sonarFile, CoreMetrics.NCLOC, squidFile.getDouble(SwiftMetric.LINES_OF_CODE));
-        context.saveMeasure(sonarFile, CoreMetrics.FUNCTIONS, squidFile.getDouble(SwiftMetric.FUNCTIONS));
-        context.saveMeasure(sonarFile, CoreMetrics.STATEMENTS, squidFile.getDouble(SwiftMetric.STATEMENTS));
-        context.saveMeasure(sonarFile, CoreMetrics.COMPLEXITY, squidFile.getDouble(SwiftMetric.COMPLEXITY));
-        context.saveMeasure(sonarFile, CoreMetrics.COMMENT_LINES, squidFile.getDouble(SwiftMetric.COMMENT_LINES));
+        context.saveMeasure(inputFile, CoreMetrics.FILES, squidFile.getDouble(SwiftMetric.FILES));
+        context.saveMeasure(inputFile, CoreMetrics.LINES, squidFile.getDouble(SwiftMetric.LINES));
+        context.saveMeasure(inputFile, CoreMetrics.NCLOC, squidFile.getDouble(SwiftMetric.LINES_OF_CODE));
+        context.saveMeasure(inputFile, CoreMetrics.FUNCTIONS, squidFile.getDouble(SwiftMetric.FUNCTIONS));
+        context.saveMeasure(inputFile, CoreMetrics.STATEMENTS, squidFile.getDouble(SwiftMetric.STATEMENTS));
+        context.saveMeasure(inputFile, CoreMetrics.COMPLEXITY, squidFile.getDouble(SwiftMetric.COMPLEXITY));
+        context.saveMeasure(inputFile, CoreMetrics.COMMENT_LINES, squidFile.getDouble(SwiftMetric.COMMENT_LINES));
 
     }
 
-    private void saveFunctionsComplexityDistribution(File sonarFile, SourceFile squidFile) {
-
-        Collection<SourceCode> squidFunctionsInFile = scanner.getIndex().search(new QueryByParent(squidFile), new QueryByType(SourceFunction.class));
-        RangeDistributionBuilder complexityDistribution = new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
-        for (SourceCode squidFunction : squidFunctionsInFile) {
-            complexityDistribution.add(squidFunction.getDouble(SwiftMetric.COMPLEXITY));
-        }
-        context.saveMeasure(sonarFile, complexityDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
-    }
-
-    private void saveFilesComplexityDistribution(File sonarFile, SourceFile squidFile) {
-
-        RangeDistributionBuilder complexityDistribution = new RangeDistributionBuilder(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, FILES_DISTRIB_BOTTOM_LIMITS);
-        complexityDistribution.add(squidFile.getDouble(SwiftMetric.COMPLEXITY));
-        context.saveMeasure(sonarFile, complexityDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
-    }
-
-    private void saveViolations(File sonarFile, SourceFile squidFile) {
+    private void saveIssues(InputFile inputFile, SourceFile squidFile) {
 
         Collection<CheckMessage> messages = squidFile.getCheckMessages();
-        if (messages != null) {
+
+        Resource resource = context.getResource(org.sonar.api.resources.File.fromIOFile(inputFile.file(), project));
+
+        if (messages != null && resource != null) {
             for (CheckMessage message : messages) {
-                Violation violation = Violation.create(annotationCheckFactory.getActiveRule(message.getChecker()), sonarFile)
-                        .setLineId(message.getLine())
-                        .setMessage(message.getText(Locale.ENGLISH));
-                context.saveViolation(violation);
+                RuleKey ruleKey = checks.ruleKey((SquidCheck<SwiftGrammar>) message.getCheck());
+                Issuable issuable = resourcePerspectives.as(Issuable.class, resource);
+
+                if (issuable != null) {
+                    Issuable.IssueBuilder issueBuilder = issuable.newIssueBuilder()
+                            .ruleKey(ruleKey)
+                            .line(message.getLine())
+                            .message(message.getText(Locale.ENGLISH));
+
+                    if (message.getCost() != null) {
+                        issueBuilder.effortToFix(message.getCost());
+                    }
+
+                    issuable.addIssue(issueBuilder.build());
+                }
             }
         }
     }
+
 
     @Override
     public String toString() {

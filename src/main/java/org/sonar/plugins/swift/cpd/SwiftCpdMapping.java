@@ -21,6 +21,7 @@ package org.sonar.plugins.swift.cpd;
 
 import net.sourceforge.pmd.cpd.Tokenizer;
 import org.sonar.api.batch.AbstractCpdMapping;
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.resources.Language;
 import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.plugins.swift.lang.core.Swift;
@@ -32,9 +33,9 @@ public class SwiftCpdMapping extends AbstractCpdMapping {
     private final Swift language;
     private final Charset charset;
 
-    public SwiftCpdMapping(Swift language, ProjectFileSystem fs) {
+    public SwiftCpdMapping(Swift language, FileSystem fileSystem) {
         this.language = language;
-        this.charset = fs.getSourceCharset();
+        this.charset = fileSystem.encoding();
     }
 
     public Tokenizer getTokenizer() {

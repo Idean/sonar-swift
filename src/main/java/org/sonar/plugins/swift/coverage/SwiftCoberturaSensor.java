@@ -27,6 +27,7 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoverageMeasuresBuilder;
 import org.sonar.api.resources.Project;
+import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.swift.SwiftPlugin;
 import org.sonar.plugins.swift.lang.core.Swift;
 
@@ -43,42 +44,36 @@ public final class SwiftCoberturaSensor implements Sensor {
     public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage*.xml";
 
     private final ReportFilesFinder reportFilesFinder;
-    private final CoberturaParser parser = new CoberturaParser();
 
-    private final Settings conf;
+    private final Settings settings;
     private final FileSystem fileSystem;
+    private final PathResolver pathResolver;
+    private Project project;
 
-    public SwiftCoberturaSensor(final FileSystem fileSystem, final Settings config) {
+    public SwiftCoberturaSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings) {
 
-        this.conf = config;
+        this.settings = settings;
         this.fileSystem = fileSystem;
+        this.pathResolver = pathResolver;
 
-        reportFilesFinder = new ReportFilesFinder(config, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN);
+        reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN);
     }
 
     public boolean shouldExecuteOnProject(final Project project) {
+
+        this.project = project;
 
         return project.isRoot() && fileSystem.languages().contains(Swift.KEY);
     }
 
     public void analyse(final Project project, final SensorContext context) {
 
-        final CoverageMeasuresPersistor measuresPersistor = new CoverageMeasuresPersistor(project, context);
-        final String projectBaseDir = project.getFileSystem().getBasedir().getPath();
 
-        measuresPersistor.saveMeasures(parseReportsIn(projectBaseDir));
-    }
+        final String projectBaseDir = fileSystem.baseDir().getPath();
 
-    private Map<String, CoverageMeasuresBuilder> parseReportsIn(final String baseDir) {
-
-        final Map<String, CoverageMeasuresBuilder> measuresTotal = new HashMap<String, CoverageMeasuresBuilder>();
-
-        for (final File report : reportFilesFinder.reportsIn(baseDir)) {
+        for (final File report : reportFilesFinder.reportsIn(projectBaseDir)) {
             LOGGER.info("Processing coverage report {}", report);
-            measuresTotal.putAll(parser.parseReport(report));
+            CoberturaReportParser.parseReport(report, fileSystem, project, context);
         }
-
-        return measuresTotal;
     }
-
 }

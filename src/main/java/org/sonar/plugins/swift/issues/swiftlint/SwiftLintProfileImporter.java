@@ -17,7 +17,7 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.swift.violations.swiftlint;
+package org.sonar.plugins.swift.issues.swiftlint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class SwiftLintProfileImporter extends ProfileImporter {
     private final XMLProfileParser profileParser;
 
     public SwiftLintProfileImporter(final XMLProfileParser xmlProfileParser) {
-        super(SwiftLintRuleRepository.REPOSITORY_KEY, SwiftLintRuleRepository.REPOSITORY_KEY);
+        super(SwiftLintRulesDefinition.REPOSITORY_KEY, SwiftLintRulesDefinition.REPOSITORY_KEY);
         setSupportedLanguages(Swift.KEY);
         profileParser = xmlProfileParser;
     }

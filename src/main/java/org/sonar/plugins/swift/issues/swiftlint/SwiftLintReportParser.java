@@ -17,41 +17,37 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.swift.violations.swiftlint;
+package org.sonar.plugins.swift.issues.swiftlint;
 
 import org.apache.commons.io.IOUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.component.ResourcePerspectives;
+import org.sonar.api.issue.Issuable;
+import org.sonar.api.issue.Issue;
 import org.sonar.api.resources.Project;
-import org.sonar.api.rules.Rule;
-import org.sonar.api.rules.Violation;
+import org.sonar.api.rule.RuleKey;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SwiftLintReportParser {
 
-    private final Project project;
-    private final SensorContext context;
-
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftLintReportParser.class);
 
-    public SwiftLintReportParser(final Project p, final SensorContext c) {
-        project = p;
-        context = c;
+    private final Project project;
+    private final SensorContext context;
+    private final ResourcePerspectives resourcePerspectives;
+
+    public SwiftLintReportParser(final Project project, final SensorContext context, final ResourcePerspectives resourcePerspectives) {
+        this.project = project;
+        this.context = context;
+        this.resourcePerspectives = resourcePerspectives;
     }
 
-    public Collection<Violation> parseReport(File reportFile) {
-
-
-        final Collection<Violation> violations = new ArrayList<Violation>();
+    public void parseReport(File reportFile) {
 
         try {
             // Read and parse report
@@ -60,7 +56,7 @@ public class SwiftLintReportParser {
             BufferedReader br = new BufferedReader(fr);
             String line;
             while ((line = br.readLine()) != null) {
-                recordViolation(line, violations);
+                recordIssue(line);
 
             }
             IOUtils.closeQuietly(br);
@@ -72,11 +68,9 @@ public class SwiftLintReportParser {
             LOGGER.error("Failed to parse SwiftLint report file", e);
         }
 
-
-        return violations;
     }
 
-    private void recordViolation(final String line, Collection<Violation> violations) {
+    private void recordIssue(final String line) {
 
 
         Pattern pattern = Pattern.compile("(.*.swift):(\\w+):?(\\w+)?: (warning|error): (.*) \\((\\w+)");
@@ -89,18 +83,19 @@ public class SwiftLintReportParser {
 
             org.sonar.api.resources.File resource = org.sonar.api.resources.File.fromIOFile(new File(filePath), project);
 
-            final Rule rule = Rule.create();
-            final Violation violation = Violation.create(rule, resource);
+            Issuable issuable = resourcePerspectives.as(Issuable.class, resource);
 
-            rule.setRepositoryKey(SwiftLintRuleRepository.REPOSITORY_KEY);
-            rule.setKey(ruleId);
+            if (issuable != null) {
+                Issue issue = issuable.newIssueBuilder()
+                        .ruleKey(RuleKey.of(SwiftLintRulesDefinition.REPOSITORY_KEY, ruleId))
+                        .line(lineNum)
+                        .message(message)
+                        .build();
 
-            violation.setMessage(message);
+                issuable.addIssue(issue);
 
-            violation.setLineId(lineNum);
 
-            violations.add(violation);
-
+            }
 
         }
 

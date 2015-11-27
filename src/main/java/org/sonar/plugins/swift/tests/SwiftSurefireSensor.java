@@ -25,6 +25,8 @@ import org.sonar.api.batch.CoverageExtension;
 import org.sonar.api.batch.DependsUpon;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.swift.lang.core.Swift;
@@ -36,14 +38,16 @@ public class SwiftSurefireSensor implements Sensor {
     private static final Logger LOG = LoggerFactory.getLogger(SwiftSurefireSensor.class);
     public static final String REPORT_PATH_KEY = "sonar.junit.reportsPath";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/";
-    private final Settings conf;
 
-    public SwiftSurefireSensor() {
-        this(null);
-    }
+    private final Settings settings;
+    private final FileSystem fileSystem;
+    private final ResourcePerspectives resourcePerspectives;
 
-    public SwiftSurefireSensor(final Settings config) {
-        conf = config;
+
+    public SwiftSurefireSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
+        this.settings = config;
+        this.fileSystem = fileSystem;
+        this.resourcePerspectives = resourcePerspectives;
     }
 
     @DependsUpon
@@ -52,7 +56,8 @@ public class SwiftSurefireSensor implements Sensor {
     }
 
     public boolean shouldExecuteOnProject(Project project) {
-        return Swift.KEY.equals(project.getLanguageKey());
+
+        return project.isRoot() && fileSystem.hasFiles(fileSystem.predicates().hasLanguage(Swift.KEY));
     }
 
     public void analyse(Project project, SensorContext context) {
@@ -78,10 +83,9 @@ public class SwiftSurefireSensor implements Sensor {
 
     protected void collect(Project project, SensorContext context, File reportsDir) {
         LOG.info("parsing {}", reportsDir);
-        SUREFIRE_PARSER.collect(project, context, reportsDir);
+        SwiftSurefireParser parser = new SwiftSurefireParser(project, fileSystem, resourcePerspectives, context);
+        parser.collect(reportsDir);
     }
-
-    private static final SwiftSurefireParser SUREFIRE_PARSER = new SwiftSurefireParser();
 
     @Override
     public String toString() {
@@ -89,7 +93,7 @@ public class SwiftSurefireSensor implements Sensor {
     }
 
     private String reportPath() {
-        String reportPath = conf.getString(REPORT_PATH_KEY);
+        String reportPath = settings.getString(REPORT_PATH_KEY);
         if (reportPath == null) {
             reportPath = DEFAULT_REPORT_PATH;
         }

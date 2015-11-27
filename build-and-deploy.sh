@@ -15,7 +15,7 @@ fi
 #	exit $?
 #fi
 
-# Deploy new verion of plugin in Sonar dir
+# Deploy new version of plugin in Sonar dir
 cp target/*.jar $SONARQUBE_HOME/extensions/plugins
 
 # Stop/start Sonar

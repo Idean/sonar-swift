@@ -17,7 +17,7 @@
  * License along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
-package org.sonar.plugins.swift.violations.swiftlint;
+package org.sonar.plugins.swift.issues.swiftlint;
 
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.Logger;
@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rules.Violation;
@@ -44,10 +45,12 @@ public class SwiftLintSensor implements Sensor {
 
     private final Settings conf;
     private final FileSystem fileSystem;
+    private final ResourcePerspectives resourcePerspectives;
 
-    public SwiftLintSensor(final FileSystem moduleFileSystem, final Settings config) {
+    public SwiftLintSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
         this.conf = config;
-        this.fileSystem = moduleFileSystem;
+        this.fileSystem = fileSystem;
+        this.resourcePerspectives = resourcePerspectives;
     }
 
     @Override
@@ -58,19 +61,13 @@ public class SwiftLintSensor implements Sensor {
     @Override
     public void analyse(Project module, SensorContext context) {
 
-        final String projectBaseDir = module.getFileSystem().getBasedir().getPath();
+        final String projectBaseDir = fileSystem.baseDir().getAbsolutePath();
 
-        SwiftLintReportParser parser = new SwiftLintReportParser(module, context);
-        saveViolations(parseReportIn(projectBaseDir, parser), context);
+        SwiftLintReportParser parser = new SwiftLintReportParser(module, context, resourcePerspectives);
+        parseReportIn(projectBaseDir, parser);
     }
 
-    private void saveViolations(final Collection<Violation> violations, final SensorContext context) {
-        for (final Violation violation : violations) {
-            context.saveViolation(violation);
-        }
-    }
-
-    private Collection<Violation> parseReportIn(final String baseDir, final SwiftLintReportParser parser) {
+    private void parseReportIn(final String baseDir, final SwiftLintReportParser parser) {
 
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setIncludes(new String[]{reportPath()});
@@ -79,13 +76,10 @@ public class SwiftLintSensor implements Sensor {
         scanner.scan();
         String[] files = scanner.getIncludedFiles();
 
-        Collection<Violation> result = new ArrayList<Violation>();
         for(String filename : files) {
             LOGGER.info("Processing SwiftLint report {}", filename);
-            result.addAll(parser.parseReport(new File(filename)));
+            parser.parseReport(new File(filename));
         }
-
-        return result;
 
     }
 
