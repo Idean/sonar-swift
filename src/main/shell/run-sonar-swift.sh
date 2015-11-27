@@ -156,6 +156,7 @@ fi
 
 #.xcodeproj filename
 projectFile=''; readParameter projectFile 'sonar.swift.project'
+workspaceFile=''; readParameter workspaceFile 'sonar.swift.workspace'
 
 # Count projects
 projectCount=$(echo $projectFile | sed -n 1'p' | tr ',' '\n' | wc -l | tr -d '[[:space:]]')
@@ -176,8 +177,12 @@ if [ -z "$projectFile" -o "$projectFile" = " " ]; then
 	echo >&2 "ERROR - sonar.swift.project parameter is missing in sonar-project.properties. You must specify which projects (comma-separated list) are application code."
 	exit 1
 fi
+if [ -z "$workspaceFile" -o "$workspaceFile" = " " ]; then
+	echo >&2 "ERROR - sonar.swift.workspace parameter is missing in sonar-project.properties. You must specify which workspace to use."
+	exit 1
+fi
 if [ -z "$srcDirs" -o "$srcDirs" = " " ]; then
-	echo >&2 "ERROR - sonar.sources parameter is missing in sonar-project.properties. You must specify which directories contain your .h/.m source files (comma-separated list)."
+	echo >&2 "ERROR - sonar.sources parameter is missing in sonar-project.properties. You must specify which directories contain your .swift source files (comma-separated list)."
 	exit 1
 fi
 if [ -z "$appScheme" -o "$appScheme" = " " ]; then
@@ -214,8 +219,8 @@ echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='A
 echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage.xml
 
 echo -n 'Running tests'
-runCommand /dev/stdout xcodebuild clean -project $projectFile -scheme $appScheme
-runCommand sonar-reports/xcodebuild.log xcodebuild test -project $projectFile -scheme $appScheme -sdk iphonesimulator -configuration Debug -enableCodeCoverage YES
+runCommand /dev/stdout xcodebuild clean -workspace $workspaceFile -scheme $appScheme
+runCommand sonar-reports/xcodebuild.log xcodebuild test -workspace $workspaceFile -scheme $appScheme -sdk iphonesimulator -configuration Debug -enableCodeCoverage YES
 cat sonar-reports/xcodebuild.log  | $XCPRETTY_CMD -t --report junit
 mv build/reports/junit.xml sonar-reports/TEST-report.xml
 
