@@ -17,13 +17,14 @@ def magicSerevityAttribution(rule) {
 
 }
 
-def readSwiftLintRulesTxt(file) {
+def readSwiftLintRules() {
 
     def result = []
 
-    def previousLine = ''
     def rule = null
-    file.eachLine {line ->
+
+    def process = "swiftlint rules".execute()
+    process.text.eachLine {line ->
 
         rule = [:]
 
@@ -35,7 +36,6 @@ def readSwiftLintRulesTxt(file) {
         rule.severity = magicSerevityAttribution(rule)
 
         result.add rule
-
     }
 
     result
@@ -72,12 +72,11 @@ def writeRules(rls, file) {
 }
 
 // Files
-File swiftLintRulesTxt = new File('src/main/resources/org/sonar/plugins/swiftlint/swiftlint_rules.txt')
 File rulesJson = new File('src/main/resources/org/sonar/plugins/swiftlint/rules.json')
 File profileXml = new File('src/main/resources/org/sonar/plugins/swiftlint/profile-swiftlint.xml')
 
 // Read rules from swiftlint_rules.txt
-def rules = readSwiftLintRulesTxt(swiftLintRulesTxt)
+def rules = readSwiftLintRules()
 
 // Write JSON rules
 writeRules(rules, rulesJson)

@@ -5,27 +5,15 @@
   <rules>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
-      <key>line_length</key>
+      <key>colon</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
-      <key>leading_whitespace</key>
+      <key>comma</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
-      <key>trailing_whitespace</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>return_arrow_whitespace</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>trailing_newline</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>operator_whitespace</key>
+      <key>control_statement</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -33,7 +21,31 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
-      <key>file_length</key>
+      <key>force_try</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>leading_whitespace</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>nesting</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>opening_brace</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>operator_whitespace</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>return_arrow_whitespace</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>statement_position</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -41,7 +53,15 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
-      <key>colon</key>
+      <key>trailing_newline</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>trailing_semicolon</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>trailing_whitespace</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -53,7 +73,7 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
-      <key>type_body_length</key>
+      <key>file_length</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -61,23 +81,19 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
-      <key>nesting</key>
+      <key>line_length</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
-      <key>control_statement</key>
+      <key>type_body_length</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
-      <key>opening_brace</key>
+      <key>variable_name_max_length</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
-      <key>comma</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>statement_position</key>
+      <key>variable_name_min_length</key>
     </rule>
   </rules>
 </profile>
