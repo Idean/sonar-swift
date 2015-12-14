@@ -38,6 +38,10 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 
 ###Release history
 
+####0.1.2
+- SwiftLint 0.5.1 support (new rules added).
+- Added *sonar.swift.simulator* key in *sonar-project.properties* to select destination simulator for running tests
+
 ####0.1.1
 - SwiftLint 0.4.0 support (new rules added).
 
@@ -69,7 +73,7 @@ To install slather with profdata support, follow those steps :
 
 ###Installation (once for all your Swift projects)
 - Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
-- Copy [run-sonar.sh](https://rawgithub.com/Backelite/sonar-swift/master/src/main/shell/run-sonar-swift.sh) somewhere in your PATH
+- Copy [run-sonar-swift.sh](https://rawgithub.com/Backelite/sonar-swift/master/src/main/shell/run-sonar-swift.sh) somewhere in your PATH
 - Restart the SonarQube server.
 
 ###Configuration (once per project)
