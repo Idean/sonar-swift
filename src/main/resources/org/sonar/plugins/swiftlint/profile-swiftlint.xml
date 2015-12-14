@@ -29,6 +29,10 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>legacy_constructor</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>nesting</key>
     </rule>
     <rule>
@@ -66,6 +70,10 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>type_name</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>valid_docs</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
