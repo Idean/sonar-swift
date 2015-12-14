@@ -38,6 +38,9 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 
 ###Release history
 
+####0.1.1
+- SwiftLint 0.4.0 support (new rules added).
+
 ####0.1.0
 - Initial release.
 
