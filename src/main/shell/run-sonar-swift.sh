@@ -266,7 +266,7 @@ if [ "$swiftlint" = "on" ]; then
 	while read word; do
 
 		# Run SwiftLint command
-	    $SWIFTLINT_CMD > sonar-reports/$(echo $word | sed 's/\//_/g')-swiftlint.txt
+	    $SWIFTLINT_CMD lint --path $word > sonar-reports/$(echo $word | sed 's/\//_/g')-swiftlint.txt
 
 	done < tmpFileRunSonarSh
 	rm -rf tmpFileRunSonarSh
