@@ -41,6 +41,7 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 ####0.1.2
 - SwiftLint 0.5.1 support (new rules added).
 - Added *sonar.swift.simulator* key in *sonar-project.properties* to select destination simulator for running tests
+- SwiftLint scans source directories only
 
 ####0.1.1
 - SwiftLint 0.4.0 support (new rules added).
