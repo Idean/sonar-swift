@@ -43,6 +43,13 @@
     },
     {
         "category": "SwiftLint",
+        "name": "Legacy Constructor",
+        "key": "legacy_constructor",
+        "description": "Swift constructors are preferred over legacy convenience functions.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
         "name": "Nesting",
         "key": "nesting",
         "description": "Types should be nested at most 1 level deep, and statements should be nested at most 5 levels deep.",
@@ -113,9 +120,16 @@
     },
     {
         "category": "SwiftLint",
+        "name": "Valid Docs",
+        "key": "valid_docs",
+        "description": "Documented declarations should be valid.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
         "name": "Variable Name",
         "key": "variable_name",
-        "description": "Variable name should only contain alphanumeric characters and start with a a lowercase character. In an exception to the above, variable names may start with a capital letter when they are declared static and immutable.",
+        "description": "Variable name should only contain alphanumeric characters and start with a lowercase character or should only contain capital letters. In an exception to the above, variable names may start with a capital letter when they are declared static and immutable.",
         "severity": "CRITICAL"
     },
     {

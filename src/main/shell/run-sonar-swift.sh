@@ -144,9 +144,6 @@ echo "Running run-sonar-swift.sh..."
 
 ## CHECK PREREQUISITES
 
-# Tests installed tools
-## TODO : see original Objc shell
-
 # sonar-project.properties in current directory
 if [ ! -f sonar-project.properties ]; then
 	echo >&2 "ERROR - No sonar-project.properties in current directory"; exit 1;
@@ -169,6 +166,10 @@ srcDirs=''; readParameter srcDirs 'sonar.sources'
 # The name of your application scheme in Xcode
 appScheme=''; readParameter appScheme 'sonar.swift.appScheme'
 
+# Read destination simulator
+destinationSimulator=''; readParameter destinationSimulator 'sonar.swift.simulator'
+
+
 # The file patterns to exclude from coverage report
 excludedPathsFromCoverage=''; readParameter excludedPathsFromCoverage 'sonar.swift.excludedPathsFromCoverage'
 
@@ -189,10 +190,15 @@ if [ -z "$appScheme" -o "$appScheme" = " " ]; then
 	echo >&2 "ERROR - sonar.swift.appScheme parameter is missing in sonar-project.properties. You must specify which scheme is used to build your application."
 	exit 1
 fi
+if [ -z "$destinationSimulator" -o "$destinationSimulator" = " " ]; then
+	echo >&2 "ERROR - sonar.swift.simulator parameter is missing in sonar-project.properties. You must specify which simulator to use."
+	exit 1
+fi
 
 if [ "$vflag" = "on" ]; then
  	echo "Xcode project file is: $projectFile"
  	echo "Xcode application scheme is: $appScheme"
+ 	echo "Destination simulator is: $destinationSimulator"
  	echo "Excluded paths from coverage are: $excludedPathsFromCoverage" 	
 fi
 
@@ -220,7 +226,11 @@ echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourcefo
 
 echo -n 'Running tests'
 runCommand /dev/stdout xcodebuild clean -workspace $workspaceFile -scheme $appScheme
-runCommand sonar-reports/xcodebuild.log xcodebuild test -workspace $workspaceFile -scheme $appScheme -sdk iphonesimulator -configuration Debug -enableCodeCoverage YES
+buildCmd=(xcodebuild test -workspace $workspaceFile -scheme $appScheme -sdk iphonesimulator -configuration Debug -enableCodeCoverage YES)
+if [[ ! -z "$destinationSimulator" ]]; then
+    buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
+fi
+runCommand  sonar-reports/xcodebuild.log "${buildCmd[@]}"
 cat sonar-reports/xcodebuild.log  | $XCPRETTY_CMD -t --report junit
 mv build/reports/junit.xml sonar-reports/TEST-report.xml
 
@@ -256,7 +266,7 @@ if [ "$swiftlint" = "on" ]; then
 	while read word; do
 
 		# Run SwiftLint command
-	    $SWIFTLINT_CMD > sonar-reports/$(echo $word | sed 's/\//_/g')-swiftlint.txt
+	    $SWIFTLINT_CMD lint --path $word > sonar-reports/$(echo $word | sed 's/\//_/g')-swiftlint.txt
 
 	done < tmpFileRunSonarSh
 	rm -rf tmpFileRunSonarSh

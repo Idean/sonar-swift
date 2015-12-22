@@ -47,6 +47,19 @@
             <name>Readability</name>
             <chc>
                 <rule-repo>SwiftLint</rule-repo>
+                <rule-key>valid_docs</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
                 <rule-key>line_length</rule-key>
                 <prop>
                     <key>remediationFunction</key>
