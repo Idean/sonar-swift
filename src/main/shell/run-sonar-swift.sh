@@ -226,7 +226,7 @@ echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourcefo
 
 echo -n 'Running tests'
 runCommand /dev/stdout xcodebuild clean -workspace $workspaceFile -scheme $appScheme
-buildCmd=(xcodebuild test -workspace $workspaceFile -scheme $appScheme -sdk iphonesimulator -configuration Debug -enableCodeCoverage YES)
+buildCmd=(xcodebuild build test -workspace $workspaceFile -scheme $appScheme -configuration Debug -enableCodeCoverage YES)
 if [[ ! -z "$destinationSimulator" ]]; then
     buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
 fi
