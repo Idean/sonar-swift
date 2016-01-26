@@ -225,8 +225,7 @@ echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='A
 echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage.xml
 
 echo -n 'Running tests'
-runCommand /dev/stdout xcodebuild clean -workspace $workspaceFile -scheme $appScheme
-buildCmd=(xcodebuild build test -workspace $workspaceFile -scheme $appScheme -configuration Debug -enableCodeCoverage YES)
+buildCmd=(xcodebuild clean build test -workspace $workspaceFile -scheme $appScheme -configuration Debug -enableCodeCoverage YES)
 if [[ ! -z "$destinationSimulator" ]]; then
     buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
 fi
