@@ -5,6 +5,10 @@
   <rules>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>closing_brace</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>colon</key>
     </rule>
     <rule>

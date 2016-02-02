@@ -1,6 +1,13 @@
 [
     {
         "category": "SwiftLint",
+        "name": "Closing Brace Spacing",
+        "key": "closing_brace",
+        "description": "Closing brace with closing parenthesisshould not have any whitespaces in the middle.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "SwiftLint",
         "name": "Colon",
         "key": "colon",
         "description": "Colons should be next to the identifier when specifying a type.",
