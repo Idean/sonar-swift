@@ -55,7 +55,7 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 
 - a Mac with Xcode 7 or +
 - [SonarQube](http://docs.codehaus.org/display/SONAR/Setup+and+Upgrade) and [SonarQube Runner](http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+SonarQube+Runner) installed ([HomeBrew](http://brew.sh) installed and ```brew install sonar-runner```)
-- [xcpretty](https://github.com/supermarin/xcpretty) (see instructions bellow)
+- [xcpretty](https://github.com/supermarin/xcpretty) (see instructions below)
 - [SwiftLint](https://github.com/realm/SwiftLint) ([HomeBrew](http://brew.sh) installed and ```brew install swiftlint```). Version 0.3.0 or above.
 - [slather](https://github.com/venmo/slather) with profdata support (see instructions below)
 
