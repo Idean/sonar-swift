@@ -55,7 +55,7 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 
 - a Mac with Xcode 7 or +
 - [SonarQube](http://docs.codehaus.org/display/SONAR/Setup+and+Upgrade) and [SonarQube Runner](http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+SonarQube+Runner) installed ([HomeBrew](http://brew.sh) installed and ```brew install sonar-runner```)
-- [xcpretty](https://github.com/supermarin/xcpretty) (```gem install xcpretty```)
+- [xcpretty](https://github.com/supermarin/xcpretty) (see instructions bellow)
 - [SwiftLint](https://github.com/realm/SwiftLint) ([HomeBrew](http://brew.sh) installed and ```brew install swiftlint```). Version 0.3.0 or above.
 - [slather](https://github.com/venmo/slather) with profdata support (see instructions below)
 
@@ -71,6 +71,17 @@ To install slather with profdata support, follow those steps :
 	gem build slather.gemspec
 	gem install --both slather-1.8.1.gem
 
+###Installation of xcpretty with JUnit reports fix
+
+At the time, xcpretty needs to be fixed to work with SonarQube. 
+
+To install the fixed version, follow those steps :
+
+	git clone https://github.com/Backelite/xcpretty.git
+	cd xcpretty
+	git checkout fix/duration_of_failed_tests_workaround
+	gem build xcpretty.gemspec
+	sudo gem install --both xcpretty-0.2.2.gem
 
 ###Installation (once for all your Swift projects)
 - Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
