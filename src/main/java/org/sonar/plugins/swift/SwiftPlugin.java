@@ -24,6 +24,7 @@ import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
 import org.sonar.plugins.swift.colorizer.SwiftCodeColorizerFormat;
+import org.sonar.plugins.swift.complexity.LizardSensor;
 import org.sonar.plugins.swift.coverage.SwiftCoberturaSensor;
 import org.sonar.plugins.swift.cpd.SwiftCpdMapping;
 import org.sonar.plugins.swift.lang.core.Swift;
@@ -66,7 +67,9 @@ public class SwiftPlugin extends SonarPlugin {
                 SwiftLintSensor.class,
                 SwiftLintRulesDefinition.class,
                 SwiftLintProfile.class,
-                SwiftLintProfileImporter.class
+                SwiftLintProfileImporter.class,
+
+                LizardSensor.class
                 );
     }
 }

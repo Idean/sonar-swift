@@ -129,9 +129,9 @@ public class SwiftSquidSensor implements Sensor {
         context.saveMeasure(inputFile, CoreMetrics.FILES, squidFile.getDouble(SwiftMetric.FILES));
         context.saveMeasure(inputFile, CoreMetrics.LINES, squidFile.getDouble(SwiftMetric.LINES));
         context.saveMeasure(inputFile, CoreMetrics.NCLOC, squidFile.getDouble(SwiftMetric.LINES_OF_CODE));
-        context.saveMeasure(inputFile, CoreMetrics.FUNCTIONS, squidFile.getDouble(SwiftMetric.FUNCTIONS));
+        //context.saveMeasure(inputFile, CoreMetrics.FUNCTIONS, squidFile.getDouble(SwiftMetric.FUNCTIONS));
         context.saveMeasure(inputFile, CoreMetrics.STATEMENTS, squidFile.getDouble(SwiftMetric.STATEMENTS));
-        context.saveMeasure(inputFile, CoreMetrics.COMPLEXITY, squidFile.getDouble(SwiftMetric.COMPLEXITY));
+        //context.saveMeasure(inputFile, CoreMetrics.COMPLEXITY, squidFile.getDouble(SwiftMetric.COMPLEXITY));
         context.saveMeasure(inputFile, CoreMetrics.COMMENT_LINES, squidFile.getDouble(SwiftMetric.COMMENT_LINES));
 
     }

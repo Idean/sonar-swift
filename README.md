@@ -22,7 +22,7 @@ The structure of the plugin is based on the [sonar-objective-c](https://github.c
 
 | Feature 		| Supported	| Details	|
 |---------------|----------|:-----------:|
-| Complexity	|NO			|			|
+| Complexity	|YES			|Uses [Lizard](https://github.com/terryyin/lizard)			|
 | Design		|NO			|			|
 | Documentation	|YES		|			|
 | Duplications	|YES		|			|
@@ -37,6 +37,9 @@ The structure of the plugin is based on the [sonar-objective-c](https://github.c
 Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 
 ###Release history
+
+####0.2.0
+- Lizard complexity report support (thanks to [akshaysyaduvanshi](https://github.com/akshaysyaduvanshi))
 
 ####0.1.2
 - SwiftLint 0.5.1 support (new rules added).
@@ -58,6 +61,7 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 - [xcpretty](https://github.com/supermarin/xcpretty) (see instructions below)
 - [SwiftLint](https://github.com/realm/SwiftLint) ([HomeBrew](http://brew.sh) installed and ```brew install swiftlint```). Version 0.3.0 or above.
 - [slather](https://github.com/venmo/slather) with profdata support (see instructions below)
+- [lizard](https://github.com/terryyin/lizard) installed
 
 ###Installation of slather with profdata support
 
