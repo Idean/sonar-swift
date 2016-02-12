@@ -38,6 +38,9 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 
 ###Release history
 
+####0.2.1
+- SwiftLint 0.8 support (new rules added).
+
 ####0.2.0
 - Lizard complexity report support (thanks to [akshaysyaduvanshi](https://github.com/akshaysyaduvanshi))
 
