@@ -124,6 +124,8 @@ function runCommand() {
 vflag=""
 nflag=""
 swiftlint="on"
+lizard="on"
+
 while [ $# -gt 0 ]
 do
     case "$1" in
@@ -165,6 +167,8 @@ fi
 srcDirs=''; readParameter srcDirs 'sonar.sources'
 # The name of your application scheme in Xcode
 appScheme=''; readParameter appScheme 'sonar.swift.appScheme'
+# The name of your test scheme in Xcode
+testScheme=''; readParameter testScheme 'sonar.swift.testScheme'
 
 # Read destination simulator
 destinationSimulator=''; readParameter destinationSimulator 'sonar.swift.simulator'
@@ -274,6 +278,18 @@ if [ "$swiftlint" = "on" ]; then
 
 else
 	echo 'Skipping SwiftLint (test purposes only!)'
+fi
+
+# Lizard Complexity
+if [ "$lizard" = "on" ]; then
+	if hash lizard 2>/dev/null; then
+		echo -n 'Running Lizard...'
+  		lizard --xml "$srcDirs" > sonar-reports/lizard-report.xml
+  	else
+  		echo 'Skipping Lizard (not installed!)'
+  	fi
+else
+ 	echo 'Skipping Lizard (test purposes only!)'
 fi
 
 # SonarQube
