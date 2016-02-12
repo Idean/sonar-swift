@@ -47,6 +47,58 @@
             <name>Readability</name>
             <chc>
                 <rule-repo>SwiftLint</rule-repo>
+                <rule-key>legacy_constant</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>legacy_constructor</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>10</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>function_parameter_count</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>30</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>conditional_binding_cascade</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>10</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
                 <rule-key>valid_docs</rule-key>
                 <prop>
                     <key>remediationFunction</key>
@@ -272,6 +324,32 @@
             <name>Understandability</name>
             <chc>
                 <rule-repo>SwiftLint</rule-repo>
+                <rule-key>missing_docs</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>empty_count</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
                 <rule-key>type_name</rule-key>
                 <prop>
                     <key>remediationFunction</key>
@@ -348,6 +426,19 @@
                     <txt>min</txt>
                 </prop>
             </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>cyclomatic_complexity</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>30</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
         </chc>
     </chc>
     <chc>
@@ -420,6 +511,19 @@
         <chc>
             <key>INSTRUCTION_RELIABILITY</key>
             <name>Instruction</name>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>force_unwrapping</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>10</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
             <chc>
                 <rule-repo>SwiftLint</rule-repo>
                 <rule-key>force_cast</rule-key>

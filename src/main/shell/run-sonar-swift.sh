@@ -10,6 +10,7 @@ XCTOOL_CMD=xctool
 SLATHER_CMD=slather
 SWIFTLINT_CMD=swiftlint
 XCPRETTY_CMD=xcpretty
+LIZARD_CMD=lizard
 
 
 trap "echo 'Script interrupted by Ctrl+C'; stopProgress; exit 1" SIGHUP SIGINT SIGTERM
@@ -283,9 +284,9 @@ fi
 
 # Lizard Complexity
 if [ "$lizard" = "on" ]; then
-	if hash lizard 2>/dev/null; then
+	if hash $LIZARD_CMD 2>/dev/null; then
 		echo -n 'Running Lizard...'
-  		lizard --xml "$srcDirs" > sonar-reports/lizard-report.xml
+  		$LIZARD_CMD --xml "$srcDirs" > sonar-reports/lizard-report.xml
   	else
   		echo 'Skipping Lizard (not installed!)'
   	fi

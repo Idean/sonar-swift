@@ -17,7 +17,27 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>conditional_binding_cascade</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>control_statement</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>custom_rules</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>cyclomatic_complexity</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>empty_count</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>file_length</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -29,11 +49,35 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>force_unwrapping</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>function_body_length</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>function_parameter_count</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>leading_whitespace</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>legacy_constant</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>legacy_constructor</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>line_length</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>missing_docs</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -73,6 +117,10 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>type_body_length</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>type_name</key>
     </rule>
     <rule>
@@ -82,30 +130,6 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>variable_name</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>file_length</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>function_body_length</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>line_length</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>type_body_length</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>variable_name_max_length</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>variable_name_min_length</key>
     </rule>
   </rules>
 </profile>

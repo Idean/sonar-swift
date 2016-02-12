@@ -61,7 +61,7 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 - [xcpretty](https://github.com/supermarin/xcpretty) (see instructions below)
 - [SwiftLint](https://github.com/realm/SwiftLint) ([HomeBrew](http://brew.sh) installed and ```brew install swiftlint```). Version 0.3.0 or above.
 - [slather](https://github.com/venmo/slather) with profdata support (see instructions below)
-- [lizard](https://github.com/terryyin/lizard) installed
+- [lizard](https://github.com/terryyin/lizard) ([PIP](https://pip.pypa.io/en/stable/installing/) installed and ```sudo pip install lizard```)
 
 ###Installation of slather with profdata support
 

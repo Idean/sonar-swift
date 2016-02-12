@@ -1,184 +1,226 @@
 [
     {
+        "key": "closing_brace",
         "category": "SwiftLint",
         "name": "Closing Brace Spacing",
-        "key": "closing_brace",
-        "description": "Closing brace with closing parenthesisshould not have any whitespaces in the middle.",
+        "description": "Closing brace with closing parenthesis should not have any whitespaces in the middle.",
         "severity": "MINOR"
     },
     {
+        "key": "colon",
         "category": "SwiftLint",
         "name": "Colon",
-        "key": "colon",
         "description": "Colons should be next to the identifier when specifying a type.",
         "severity": "MINOR"
     },
     {
+        "key": "comma",
         "category": "SwiftLint",
         "name": "Comma Spacing",
-        "key": "comma",
-        "description": "One space before and no after must be present next to any comma.",
+        "description": "There should be no space before and one after any comma.",
         "severity": "MINOR"
     },
     {
+        "key": "conditional_binding_cascade",
+        "category": "SwiftLint",
+        "name": "Conditional Binding Cascade",
+        "description": "Repeated `let` statements in conditional binding cascade should be avoided.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "control_statement",
         "category": "SwiftLint",
         "name": "Control Statement",
-        "key": "control_statement",
         "description": "if,for,while,do statements shouldn't wrap their conditionals in parentheses.",
         "severity": "MINOR"
     },
     {
+        "key": "custom_rules",
         "category": "SwiftLint",
-        "name": "Force Cast",
-        "key": "force_cast",
-        "description": "Force casts should be avoided.",
-        "severity": "MAJOR"
-    },
-    {
-        "category": "SwiftLint",
-        "name": "Force Try",
-        "key": "force_try",
-        "description": "Force tries should be avoided.",
-        "severity": "MAJOR"
-    },
-    {
-        "category": "SwiftLint",
-        "name": "Leading Whitespace",
-        "key": "leading_whitespace",
-        "description": "Files should not contain leading whitespace.",
+        "name": "Customs",
+        "description": "Create custom rules by providing a regex string. Optionally specify what syntax kinds to match against, the severity level, and what message to display.",
         "severity": "MINOR"
     },
     {
+        "key": "cyclomatic_complexity",
         "category": "SwiftLint",
-        "name": "Legacy Constructor",
-        "key": "legacy_constructor",
-        "description": "Swift constructors are preferred over legacy convenience functions.",
-        "severity": "MINOR"
-    },
-    {
-        "category": "SwiftLint",
-        "name": "Nesting",
-        "key": "nesting",
-        "description": "Types should be nested at most 1 level deep, and statements should be nested at most 5 levels deep.",
+        "name": "Cyclomatic Complexity",
+        "description": "Complexity of function bodies should be limited.",
         "severity": "CRITICAL"
     },
     {
+        "key": "empty_count",
         "category": "SwiftLint",
-        "name": "Opening Brace Spacing",
-        "key": "opening_brace",
-        "description": "Opening braces should be preceded by a single space and on the same line as the declaration.",
+        "name": "Empty Count",
+        "description": "Prefer checking `isEmpty` over comparing `count` to zero.",
         "severity": "MINOR"
     },
     {
-        "category": "SwiftLint",
-        "name": "Operator Function Whitespace",
-        "key": "operator_whitespace",
-        "description": "Operators should be surrounded by a single whitespace when defining them.",
-        "severity": "MINOR"
-    },
-    {
-        "category": "SwiftLint",
-        "name": "Returning Whitespace",
-        "key": "return_arrow_whitespace",
-        "description": "Return arrow and return type should be separated by a single space or on a separate line.",
-        "severity": "MINOR"
-    },
-    {
-        "category": "SwiftLint",
-        "name": "Statement Position",
-        "key": "statement_position",
-        "description": "Else and catch should be on the same line, one space after the previous declaration.",
-        "severity": "MINOR"
-    },
-    {
-        "category": "SwiftLint",
-        "name": "Todo",
-        "key": "todo",
-        "description": "TODOs and FIXMEs should be avoided.",
-        "severity": "MINOR"
-    },
-    {
-        "category": "SwiftLint",
-        "name": "Trailing Newline",
-        "key": "trailing_newline",
-        "description": "Files should have a single trailing newline.",
-        "severity": "MINOR"
-    },
-    {
-        "category": "SwiftLint",
-        "name": "Trailing Semicolon",
-        "key": "trailing_semicolon",
-        "description": "Lines should not have trailing semicolons.",
-        "severity": "MINOR"
-    },
-    {
-        "category": "SwiftLint",
-        "name": "Trailing Whitespace",
-        "key": "trailing_whitespace",
-        "description": "Lines should not have trailing whitespace.",
-        "severity": "MINOR"
-    },
-    {
-        "category": "SwiftLint",
-        "name": "Type Name",
-        "key": "type_name",
-        "description": "Type name should only contain alphanumeric characters, start with an uppercase character and span between 3 and 40 characters in length.",
-        "severity": "MINOR"
-    },
-    {
-        "category": "SwiftLint",
-        "name": "Valid Docs",
-        "key": "valid_docs",
-        "description": "Documented declarations should be valid.",
-        "severity": "MINOR"
-    },
-    {
-        "category": "SwiftLint",
-        "name": "Variable Name",
-        "key": "variable_name",
-        "description": "Variable name should only contain alphanumeric characters and start with a lowercase character or should only contain capital letters. In an exception to the above, variable names may start with a capital letter when they are declared static and immutable.",
-        "severity": "CRITICAL"
-    },
-    {
+        "key": "file_length",
         "category": "SwiftLint",
         "name": "File Line Length",
-        "key": "file_length",
         "description": "Files should not span too many lines.",
         "severity": "MAJOR"
     },
     {
+        "key": "force_cast",
+        "category": "SwiftLint",
+        "name": "Force Cast",
+        "description": "Force casts should be avoided.",
+        "severity": "MAJOR"
+    },
+    {
+        "key": "force_try",
+        "category": "SwiftLint",
+        "name": "Force Try",
+        "description": "Force tries should be avoided.",
+        "severity": "MAJOR"
+    },
+    {
+        "key": "force_unwrapping",
+        "category": "SwiftLint",
+        "name": "Force Unwrapping",
+        "description": "Force unwrapping should be avoided.",
+        "severity": "MAJOR"
+    },
+    {
+        "key": "function_body_length",
         "category": "SwiftLint",
         "name": "Function Body Length",
-        "key": "function_body_length",
         "description": "Functions bodies should not span too many lines.",
         "severity": "MAJOR"
     },
     {
+        "key": "function_parameter_count",
+        "category": "SwiftLint",
+        "name": "Function Parameter Count",
+        "description": "Number of function parameters should be low.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "leading_whitespace",
+        "category": "SwiftLint",
+        "name": "Leading Whitespace",
+        "description": "Files should not contain leading whitespace.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "legacy_constant",
+        "category": "SwiftLint",
+        "name": "Legacy Constant",
+        "description": "Struct-scoped constants are preferred over legacy global constants.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "legacy_constructor",
+        "category": "SwiftLint",
+        "name": "Legacy Constructor",
+        "description": "Swift constructors are preferred over legacy convenience functions.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "line_length",
         "category": "SwiftLint",
         "name": "Line Length",
-        "key": "line_length",
         "description": "Lines should not span too many characters.",
         "severity": "MAJOR"
     },
     {
+        "key": "missing_docs",
+        "category": "SwiftLint",
+        "name": "Missing Docs",
+        "description": "Public declarations should be documented.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "nesting",
+        "category": "SwiftLint",
+        "name": "Nesting",
+        "description": "Types should be nested at most 1 level deep, and statements should be nested at most 5 levels deep.",
+        "severity": "CRITICAL"
+    },
+    {
+        "key": "opening_brace",
+        "category": "SwiftLint",
+        "name": "Opening Brace Spacing",
+        "description": "Opening braces should be preceded by a single space and on the same line as the declaration.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "operator_whitespace",
+        "category": "SwiftLint",
+        "name": "Operator Function Whitespace",
+        "description": "Operators should be surrounded by a single whitespace when defining them.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "return_arrow_whitespace",
+        "category": "SwiftLint",
+        "name": "Returning Whitespace",
+        "description": "Return arrow and return type should be separated by a single space or on a separate line.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "statement_position",
+        "category": "SwiftLint",
+        "name": "Statement Position",
+        "description": "Else and catch should be on the same line, one space after the previous declaration.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "todo",
+        "category": "SwiftLint",
+        "name": "Todo",
+        "description": "TODOs and FIXMEs should be avoided.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "trailing_newline",
+        "category": "SwiftLint",
+        "name": "Trailing Newline",
+        "description": "Files should have a single trailing newline.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "trailing_semicolon",
+        "category": "SwiftLint",
+        "name": "Trailing Semicolon",
+        "description": "Lines should not have trailing semicolons.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "trailing_whitespace",
+        "category": "SwiftLint",
+        "name": "Trailing Whitespace",
+        "description": "Lines should not have trailing whitespace.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "type_body_length",
         "category": "SwiftLint",
         "name": "Type Body Length",
-        "key": "type_body_length",
         "description": "Type bodies should not span too many lines.",
         "severity": "MAJOR"
     },
     {
+        "key": "type_name",
         "category": "SwiftLint",
-        "name": "Variable Name Max Length",
-        "key": "variable_name_max_length",
-        "description": "Variable name should not be too long.",
-        "severity": "CRITICAL"
+        "name": "Type Name",
+        "description": "Type name should only contain alphanumeric characters, start with an uppercase character and span between 3 and 40 characters in length.",
+        "severity": "MINOR"
     },
     {
+        "key": "valid_docs",
         "category": "SwiftLint",
-        "name": "Variable Name Min Length",
-        "key": "variable_name_min_length",
-        "description": "Variable name should not be too short.",
+        "name": "Valid Docs",
+        "description": "Documented declarations should be valid.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "variable_name",
+        "category": "SwiftLint",
+        "name": "Variable Name",
+        "description": "Variable names should only contain alphanumeric characters and start with a lowercase character or should only contain capital letters. In an exception to the above, variable names may start with a capital letter when they are declared static and immutable. Variable names should not be too long or too short.",
         "severity": "CRITICAL"
     }
 ]

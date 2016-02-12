@@ -12,6 +12,7 @@ def magicSerevityAttribution(rule) {
     if (rule.key.contains('whitespace')) return 'MINOR'
     if (rule.key.contains('trailing')) return 'MINOR'
     if (rule.key.contains('length')) return 'MAJOR'
+    if (rule.key.contains('cyclomatic')) return 'CRITICAL'
 
     return 'MINOR'
 
@@ -21,21 +22,39 @@ def readSwiftLintRules() {
 
     def result = []
 
-    def rule = null
+    def processRules = "swiftlint rules".execute()
+    // Extract rule identifiers
+    processRules.text.eachLine {line ->
 
-    def process = "swiftlint rules".execute()
-    process.text.eachLine {line ->
+        def rule = [:]
 
-        rule = [:]
 
-        def matcher = line =~ /(.*) \((\w+)\): (.*)/
+        if (!line.startsWith('+')) {
+
+            def matcher = line =~ /\| (\w+)/
+
+            rule.key = matcher[0][1]
+
+            if (rule.key != 'identifier') {
+                result.add rule
+            }
+        }
+
+    }
+
+    // Get details of each rule
+    result.each {rule ->
+        def processRuleDetails = "swiftlint rules ${rule.key}".execute()
+        def details = processRuleDetails.text.readLines().first()
+
+        println "Processing rule ${rule.key}"
+
+        def matcher = details =~ /(.*) \((\w+)\): (.*)/
         rule.category = 'SwiftLint'
         rule.name = matcher[0][1] - ' Rule'
-        rule.key = matcher[0][2]
         rule.description = matcher[0][3]
         rule.severity = magicSerevityAttribution(rule)
 
-        result.add rule
     }
 
     result
