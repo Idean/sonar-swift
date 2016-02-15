@@ -55,10 +55,11 @@ public class LizardSensor implements Sensor {
 
     @Override
     public void analyse(Project project, SensorContext sensorContext) {
-        final String projectBaseDir = project.getFileSystem().getBasedir().getPath();
+
+        final String projectBaseDir = fileSystem.baseDir().getPath();
         Map<String, List<Measure>> measures = parseReportsIn(projectBaseDir, new LizardReportParser());
         LoggerFactory.getLogger(getClass()).info("Saving results of complexity analysis");
-        new LizardMeasurePersistor(project, sensorContext).saveMeasures(measures);
+        new LizardMeasurePersistor(project, sensorContext, fileSystem).saveMeasures(measures);
     }
 
     private Map<String, List<Measure>> parseReportsIn(final String baseDir, LizardReportParser parser) {

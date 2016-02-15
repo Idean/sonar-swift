@@ -17,6 +17,7 @@ fi
 
 # Deploy new version of plugin in Sonar dir
 rm target/*sources.jar
+rm $SONARQUBE_HOME/extensions/plugins/sonar-swift*
 cp target/*.jar $SONARQUBE_HOME/extensions/plugins
 
 # Stop/start Sonar

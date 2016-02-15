@@ -21,6 +21,7 @@ package org.sonar.plugins.swift.complexity;
 
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
 
@@ -32,10 +33,12 @@ public class LizardMeasurePersistor {
 
     private Project project;
     private SensorContext sensorContext;
+    private FileSystem fileSystem;
 
-    public LizardMeasurePersistor(final Project p, final SensorContext c) {
+    public LizardMeasurePersistor(final Project p, final SensorContext c, FileSystem fileSystem) {
         this.project = p;
         this.sensorContext = c;
+        this.fileSystem = fileSystem;
     }
 
     public void saveMeasures(final Map<String, List<Measure>> measures) {
@@ -45,7 +48,7 @@ public class LizardMeasurePersistor {
         }
 
         for (Map.Entry<String, List<Measure>> entry : measures.entrySet()) {
-            final org.sonar.api.resources.File objcfile = org.sonar.api.resources.File.fromIOFile(new File(project.getFileSystem().getBasedir(), entry.getKey()), project);
+            final org.sonar.api.resources.File objcfile = org.sonar.api.resources.File.fromIOFile(new File(fileSystem.baseDir(), entry.getKey()), project);
             if (fileExists(sensorContext, objcfile)) {
                 for (Measure measure : entry.getValue()) {
                     try {
