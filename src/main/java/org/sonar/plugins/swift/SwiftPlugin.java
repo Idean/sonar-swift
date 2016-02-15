@@ -36,7 +36,8 @@ import java.util.List;
 
 @Properties({
         @Property(key = SwiftCoberturaSensor.REPORT_PATTERN_KEY, defaultValue = SwiftCoberturaSensor.DEFAULT_REPORT_PATTERN, name = "Path to unit test coverage report(s)", description = "Relative to projects' root. Ant patterns are accepted", global = false, project = true),
-        @Property(key = SwiftLintSensor.REPORT_PATH_KEY, defaultValue = SwiftLintSensor.DEFAULT_REPORT_PATH, name = "Path to SwiftLint report", description = "Relative to projects' root.", global = false, project = true)
+        @Property(key = SwiftLintSensor.REPORT_PATH_KEY, defaultValue = SwiftLintSensor.DEFAULT_REPORT_PATH, name = "Path to SwiftLint report", description = "Relative to projects' root.", global = false, project = true),
+        @Property(key = LizardSensor.REPORT_PATH_KEY, defaultValue = LizardSensor.DEFAULT_REPORT_PATH, name = "Path to lizard report", description = "Relative to projects' root.", global = false, project = true)
 })
 public class SwiftPlugin extends SonarPlugin {
 
