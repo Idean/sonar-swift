@@ -159,9 +159,11 @@ projectFile=''; readParameter projectFile 'sonar.swift.project'
 workspaceFile=''; readParameter workspaceFile 'sonar.swift.workspace'
 
 # Count projects
-projectCount=$(echo $projectFile | sed -n 1'p' | tr ',' '\n' | wc -l | tr -d '[[:space:]]')
-if [ "$vflag" = "on" ]; then
-    echo "Project count is [$projectCount]"
+if [[ ! -z "$projectFile" ]]; then
+	projectCount=$(echo $projectFile | sed -n 1'p' | tr ',' '\n' | wc -l | tr -d '[[:space:]]')
+	if [ "$vflag" = "on" ]; then
+	    echo "Project count is [$projectCount]"
+	fi
 fi
 
 # Source directories for .swift files
@@ -179,12 +181,11 @@ destinationSimulator=''; readParameter destinationSimulator 'sonar.swift.simulat
 excludedPathsFromCoverage=''; readParameter excludedPathsFromCoverage 'sonar.swift.excludedPathsFromCoverage'
 
 # Check for mandatory parameters
-if [ -z "$projectFile" -o "$projectFile" = " " ]; then
-	echo >&2 "ERROR - sonar.swift.project parameter is missing in sonar-project.properties. You must specify which projects (comma-separated list) are application code."
+if [ -z "$projectFile" -o "$projectFile" = " " ] && [ -z "$workspaceFile" -o "$workspaceFile" = " " ]; then
+	echo >&2 "ERROR - sonar.swift.project or sonar.swift.workspace parameter is missing in sonar-project.properties. You must either specify which projects (comma-separated list) are application code or which workspace to use."
 	exit 1
-fi
-if [ -z "$workspaceFile" -o "$workspaceFile" = " " ]; then
-	echo >&2 "ERROR - sonar.swift.workspace parameter is missing in sonar-project.properties. You must specify which workspace to use."
+elif [ ! -z "$workspaceFile" ] && [ ! -z "$projectFile" ]; then
+	echo >&2 "ERROR - sonar.swift.project and sonar.swift.workspace parameter are present in sonar-project.properties. You must either specify which projects (comma-separated list) are application code or which workspace to use."
 	exit 1
 fi
 if [ -z "$srcDirs" -o "$srcDirs" = " " ]; then
@@ -202,6 +203,7 @@ fi
 
 if [ "$vflag" = "on" ]; then
  	echo "Xcode project file is: $projectFile"
+	echo "Xcode workspace file is: $workspaceFile"
  	echo "Xcode application scheme is: $appScheme"
  	echo "Destination simulator is: $destinationSimulator"
  	echo "Excluded paths from coverage are: $excludedPathsFromCoverage" 	
@@ -230,10 +232,17 @@ echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='A
 echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage.xml
 
 echo -n 'Running tests'
-buildCmd=(xcodebuild clean build test -workspace $workspaceFile -scheme $appScheme -configuration Debug -enableCodeCoverage YES)
+buildCmd=(xcodebuild clean build test)
+if [[ ! -z "$workspaceFile" ]]; then
+    buildCmd+=(-workspace $workspaceFile)
+elif [[ ! -z "$projectFile" ]]; then
+	  buildCmd+=(-project $projectFile)
+fi
+buildCmd+=( -scheme $appScheme -configuration Debug -enableCodeCoverage YES)
 if [[ ! -z "$destinationSimulator" ]]; then
     buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
 fi
+
 runCommand  sonar-reports/xcodebuild.log "${buildCmd[@]}"
 cat sonar-reports/xcodebuild.log  | $XCPRETTY_CMD -t --report junit
 mv build/reports/junit.xml sonar-reports/TEST-report.xml
