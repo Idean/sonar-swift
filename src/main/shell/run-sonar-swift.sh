@@ -182,10 +182,10 @@ excludedPathsFromCoverage=''; readParameter excludedPathsFromCoverage 'sonar.swi
 
 # Check for mandatory parameters
 if [ -z "$projectFile" -o "$projectFile" = " " ] && [ -z "$workspaceFile" -o "$workspaceFile" = " " ]; then
-	echo >&2 "ERROR - sonar.swift.project or sonar.swift.workspace parameter is missing in sonar-project.properties. You must either specify which projects (comma-separated list) are application code or which workspace to use."
+	echo >&2 "ERROR - sonar.swift.project or/and sonar.swift.workspace parameter is missing in sonar-project.properties. You must specify which projects (comma-separated list) are application code or which workspace and project to use."
 	exit 1
-elif [ ! -z "$workspaceFile" ] && [ ! -z "$projectFile" ]; then
-	echo >&2 "ERROR - sonar.swift.project and sonar.swift.workspace parameter are present in sonar-project.properties. You must either specify which projects (comma-separated list) are application code or which workspace to use."
+elif [ ! -z "$workspaceFile" ] && [ -z "$projectFile" ]; then
+	echo >&2 "ERROR - sonar.swift.workspace parameter is present in sonar-project.properties but sonar.swift.project and is not. You must specify which projects (comma-separated list) are application code or which workspace and project to use."
 	exit 1
 fi
 if [ -z "$srcDirs" -o "$srcDirs" = " " ]; then
