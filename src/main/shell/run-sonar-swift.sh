@@ -238,7 +238,7 @@ if [[ ! -z "$workspaceFile" ]]; then
 elif [[ ! -z "$projectFile" ]]; then
 	  buildCmd+=(-project $projectFile)
 fi
-buildCmd+=( -scheme $appScheme -configuration Debug -enableCodeCoverage YES)
+buildCmd+=( -scheme "$appScheme" -configuration Debug -enableCodeCoverage YES)
 if [[ ! -z "$destinationSimulator" ]]; then
     buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
 fi
@@ -265,7 +265,7 @@ fi
 
 projectArray=(${projectFile//,/ })
 firstProject=${projectArray[0]}
-runCommand /dev/stdout $SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports --scheme $appScheme $firstProject
+runCommand /dev/stdout $SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports --scheme "$appScheme" $firstProject
 mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
 
 
