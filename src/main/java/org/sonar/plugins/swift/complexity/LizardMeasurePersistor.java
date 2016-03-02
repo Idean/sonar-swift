@@ -48,12 +48,12 @@ public class LizardMeasurePersistor {
         }
 
         for (Map.Entry<String, List<Measure>> entry : measures.entrySet()) {
-            final org.sonar.api.resources.File objcfile = org.sonar.api.resources.File.fromIOFile(new File(fileSystem.baseDir(), entry.getKey()), project);
-            if (fileExists(sensorContext, objcfile)) {
+            final org.sonar.api.resources.File file = org.sonar.api.resources.File.fromIOFile(new File(entry.getKey()), project);
+            if (fileExists(sensorContext, file)) {
                 for (Measure measure : entry.getValue()) {
                     try {
-                        LoggerFactory.getLogger(getClass()).debug("Save measure {} for file {}", measure.getMetric().getName(), objcfile);
-                        sensorContext.saveMeasure(objcfile, measure);
+                        LoggerFactory.getLogger(getClass()).debug("Save measure {} for file {}", measure.getMetric().getName(), file);
+                        sensorContext.saveMeasure(file, measure);
                     } catch (Exception e) {
                         LoggerFactory.getLogger(getClass()).error(" Exception -> {} -> {}", entry.getKey(), measure.getMetric().getName());
                     }
