@@ -17,7 +17,7 @@ fi
 
 # Deploy new version of plugin in Sonar dir
 rm target/*sources.jar
-rm $SONARQUBE_HOME/extensions/plugins/sonar-swift*
+rm $SONARQUBE_HOME/extensions/plugins/backelite-sonar-swift*
 cp target/*.jar $SONARQUBE_HOME/extensions/plugins
 rm $SONARQUBE_HOME/extensions/plugins/*sources.jar
 

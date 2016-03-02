@@ -38,6 +38,9 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 
 ###Release history
 
+####0.2.3
+- Fixed Lizard Sensor wrong file path
+
 ####0.2.2
 - Added support for .xcodeproj only projects (thanks to [delannoyk](https://github.com/delannoyk))
 - Fix for Lizard Sensor to find indexed files (thanks to [gretzki](https://github.com/gretzki))
