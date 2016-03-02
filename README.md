@@ -38,6 +38,11 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 
 ###Release history
 
+####0.2.2
+- Added support for .xcodeproj only projects (thanks to [delannoyk](https://github.com/delannoyk))
+- Fix for Lizard Sensor to find indexed files (thanks to [gretzki](https://github.com/gretzki))
+- Got rid of confusion with commercial plugin in the update center
+
 ####0.2.1
 - SwiftLint 0.8 support (new rules added).
 

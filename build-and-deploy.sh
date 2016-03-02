@@ -19,6 +19,7 @@ fi
 rm target/*sources.jar
 rm $SONARQUBE_HOME/extensions/plugins/sonar-swift*
 cp target/*.jar $SONARQUBE_HOME/extensions/plugins
+rm $SONARQUBE_HOME/extensions/plugins/*sources.jar
 
 # Stop/start Sonar
 unset GEM_PATH GEM_HOME

@@ -25,8 +25,8 @@
     </parent>
 
     <groupId>com.backelite.sonarqube</groupId>
-    <artifactId>sonar-swift-plugin</artifactId>
-    <version>0.2.1</version>
+    <artifactId>backelite-sonar-swift-plugin</artifactId>
+    <version>0.2.2-SNAPSHOT</version>
 
     <packaging>sonar-plugin</packaging>
 
@@ -72,7 +72,7 @@
 
         <!-- Configuration for sonar-packaging-maven-plugin -->
         <sonar.pluginClass>org.sonar.plugins.swift.SwiftPlugin</sonar.pluginClass>
-        <sonar.pluginName>Swift</sonar.pluginName>
+        <sonar.pluginName>Swift (Backelite)</sonar.pluginName>
 
     </properties>
 
