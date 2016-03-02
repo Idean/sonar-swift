@@ -48,7 +48,7 @@ public class LizardMeasurePersistor {
         }
 
         for (Map.Entry<String, List<Measure>> entry : measures.entrySet()) {
-            final org.sonar.api.resources.File file = org.sonar.api.resources.File.fromIOFile(new File(entry.getKey()), project);
+            final org.sonar.api.resources.File file = org.sonar.api.resources.File.fromIOFile(new File(fileSystem.baseDir(), entry.getKey()), project);
             if (fileExists(sensorContext, file)) {
                 for (Measure measure : entry.getValue()) {
                     try {
