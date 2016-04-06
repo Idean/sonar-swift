@@ -265,7 +265,14 @@ fi
 
 projectArray=(${projectFile//,/ })
 firstProject=${projectArray[0]}
-runCommand /dev/stdout $SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports --scheme "$appScheme" $firstProject
+
+slatherCmd=($SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
+if [[ ! -z "$workspaceFile" ]]; then
+    slatherCmd+=( --workspace $workspaceFile)
+fi
+slatherCmd+=( --scheme "$appScheme" $firstProject)
+
+runCommand /dev/stdout "${slatherCmd[@]}"
 mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
 
 
