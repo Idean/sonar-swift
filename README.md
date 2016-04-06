@@ -74,7 +74,7 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 - [slather](https://github.com/SlatherOrg/slather) (see instructions below)
 - [lizard](https://github.com/terryyin/lizard) ([PIP](https://pip.pypa.io/en/stable/installing/) installed and ```sudo pip install lizard```)
 
-###Installation of slather with profdata support
+###Installation of slather from master repository
 
 At the time, no Xcode 7.3 compliant slather version is released. You need to install it from the master.
 
