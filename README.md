@@ -71,19 +71,8 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 - [SonarQube](http://docs.codehaus.org/display/SONAR/Setup+and+Upgrade) and [SonarQube Runner](http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+SonarQube+Runner) installed ([HomeBrew](http://brew.sh) installed and ```brew install sonar-runner```)
 - [xcpretty](https://github.com/supermarin/xcpretty) (see instructions below)
 - [SwiftLint](https://github.com/realm/SwiftLint) ([HomeBrew](http://brew.sh) installed and ```brew install swiftlint```). Version 0.3.0 or above.
-- [slather](https://github.com/SlatherOrg/slather) (see instructions below)
+- [slather](https://github.com/SlatherOrg/slather) (```gem install slather```). Version 2.1.0 or above.
 - [lizard](https://github.com/terryyin/lizard) ([PIP](https://pip.pypa.io/en/stable/installing/) installed and ```sudo pip install lizard```)
-
-###Installation of slather from master repository
-
-At the time, no Xcode 7.3 compliant slather version is released. You need to install it from the master.
-
-Follow those steps :
-
-	git clone https://github.com/SlatherOrg/slather.git
-	cd slather
-	gem build slather.gemspec
-	gem install --both slather-2.0.2.gem
 
 ###Installation of xcpretty with JUnit reports fix
 
