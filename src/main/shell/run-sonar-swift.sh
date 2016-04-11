@@ -38,7 +38,7 @@ function testIsInstalled() {
 }
 
 function readParameter() {
-	
+
 	variable=$1
 	shift
 	parameter=$1
@@ -50,7 +50,7 @@ function readParameter() {
 # Run a set of commands with logging and error handling
 function runCommand() {
 
-	# 1st arg: redirect stdout 
+	# 1st arg: redirect stdout
 	# 2nd arg: command to run
 	# 3rd..nth arg: args
 	redirect=$1
@@ -58,11 +58,11 @@ function runCommand() {
 
 	command=$1
 	shift
-	
+
 	if [ "$nflag" = "on" ]; then
 		# don't execute command, just echo it
 		echo
-		if [ "$redirect" = "/dev/stdout" ]; then	
+		if [ "$redirect" = "/dev/stdout" ]; then
 			if [ "$vflag" = "on" ]; then
 				echo "+" $command "$@"
 			else
@@ -73,35 +73,35 @@ function runCommand() {
 		else
 			echo "+" $command "$@"
 		fi
-		
+
 	elif [ "$vflag" = "on" ]; then
 		echo
 
-		if [ "$redirect" = "/dev/stdout" ]; then	
+		if [ "$redirect" = "/dev/stdout" ]; then
 			set -x #echo on
 			$command "$@"
-			returnValue=$?	
-			set +x #echo off			
+			returnValue=$?
+			set +x #echo off
 		elif [ "$redirect" != "no" ]; then
 			set -x #echo on
 			$command "$@" > $redirect
-			returnValue=$?	
-			set +x #echo off			
+			returnValue=$?
+			set +x #echo off
 		else
 			set -x #echo on
 			$command "$@"
-			returnValue=$?	
-			set +x #echo off			
+			returnValue=$?
+			set +x #echo off
 		fi
-		
+
 		if [[ $returnValue != 0 && $returnValue != 5 ]] ; then
 			stopProgress
 			echo "ERROR - Command '$command $@' failed with error code: $returnValue"
 			exit $returnValue
 		fi
 	else
-	
-		if [ "$redirect" = "/dev/stdout" ]; then	
+
+		if [ "$redirect" = "/dev/stdout" ]; then
 			$command "$@" > /dev/null
 		elif [ "$redirect" != "no" ]; then
 			$command "$@" > $redirect
@@ -116,9 +116,9 @@ function runCommand() {
 			exit $?
 		fi
 
-	
-		echo	
-	fi	
+
+		echo
+	fi
 }
 
 ## COMMAND LINE OPTIONS
@@ -170,6 +170,8 @@ fi
 srcDirs=''; readParameter srcDirs 'sonar.sources'
 # The name of your application scheme in Xcode
 appScheme=''; readParameter appScheme 'sonar.swift.appScheme'
+# The app configuration to use for the build
+appConfiguration=''; readParameter appConfiguration 'sonar.swift.appConfiguration'
 # The name of your test scheme in Xcode
 testScheme=''; readParameter testScheme 'sonar.swift.testScheme'
 
@@ -201,12 +203,19 @@ if [ -z "$destinationSimulator" -o "$destinationSimulator" = " " ]; then
 	exit 1
 fi
 
+# if the appConfiguration is not specified then set to Debug
+if [ -z "$appConfiguration" -o "$appConfiguration" = " " ]; then
+	appConfiguration = "Debug"
+fi
+
+
+
 if [ "$vflag" = "on" ]; then
  	echo "Xcode project file is: $projectFile"
 	echo "Xcode workspace file is: $workspaceFile"
  	echo "Xcode application scheme is: $appScheme"
  	echo "Destination simulator is: $destinationSimulator"
- 	echo "Excluded paths from coverage are: $excludedPathsFromCoverage" 	
+ 	echo "Excluded paths from coverage are: $excludedPathsFromCoverage"
 fi
 
 ## SCRIPT
@@ -238,7 +247,7 @@ if [[ ! -z "$workspaceFile" ]]; then
 elif [[ ! -z "$projectFile" ]]; then
 	  buildCmd+=(-project $projectFile)
 fi
-buildCmd+=( -scheme "$appScheme" -configuration Debug -enableCodeCoverage YES)
+buildCmd+=( -scheme "$appScheme" -configuration "$appConfiguration" -enableCodeCoverage YES)
 if [[ ! -z "$destinationSimulator" ]]; then
     buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
 fi
@@ -313,7 +322,7 @@ fi
 # SonarQube
 echo -n 'Running SonarQube using SonarQube Runner'
 runCommand /dev/stdout sonar-runner
-	
+
 # Kill progress indicator
 stopProgress
 
