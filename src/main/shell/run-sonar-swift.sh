@@ -173,6 +173,9 @@ appScheme=''; readParameter appScheme 'sonar.swift.appScheme'
 # The name of your test scheme in Xcode
 testScheme=''; readParameter testScheme 'sonar.swift.testScheme'
 
+# The configuration to build (Debug, Release)
+appConfiguration=''; readParameter appConfiguration 'sonar.swift.appConfiguration'
+
 # Read destination simulator
 destinationSimulator=''; readParameter destinationSimulator 'sonar.swift.simulator'
 
@@ -200,11 +203,16 @@ if [ -z "$destinationSimulator" -o "$destinationSimulator" = " " ]; then
 	echo >&2 "ERROR - sonar.swift.simulator parameter is missing in sonar-project.properties. You must specify which simulator to use."
 	exit 1
 fi
+# If appConfiguration is not given, default to 'Debug'
+if [ -z "$appConfiguration" -o "$appConfiguration" = " " ]; then
+	appConfiguration='Debug'
+fi
 
 if [ "$vflag" = "on" ]; then
  	echo "Xcode project file is: $projectFile"
 	echo "Xcode workspace file is: $workspaceFile"
  	echo "Xcode application scheme is: $appScheme"
+ 	echo "Xcode application configuration is: $appConfiguration"
  	echo "Destination simulator is: $destinationSimulator"
  	echo "Excluded paths from coverage are: $excludedPathsFromCoverage" 	
 fi
@@ -238,7 +246,7 @@ if [[ ! -z "$workspaceFile" ]]; then
 elif [[ ! -z "$projectFile" ]]; then
 	  buildCmd+=(-project $projectFile)
 fi
-buildCmd+=( -scheme "$appScheme" -configuration Debug -enableCodeCoverage YES)
+buildCmd+=( -scheme "$appScheme" -configuration "$appConfiguration" -enableCodeCoverage YES)
 if [[ ! -z "$destinationSimulator" ]]; then
     buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
 fi
