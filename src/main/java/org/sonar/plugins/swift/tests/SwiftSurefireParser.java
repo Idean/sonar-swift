@@ -21,13 +21,12 @@ package org.sonar.plugins.swift.tests;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.component.ResourcePerspectives;
+import org.sonar.api.config.Settings;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.Metric;
@@ -36,6 +35,7 @@ import org.sonar.api.resources.Qualifiers;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.utils.ParsingUtils;
 import org.sonar.api.utils.StaxParser;
+import org.sonar.api.utils.WildcardPattern;
 import org.sonar.api.utils.XmlParserException;
 import org.sonar.plugins.surefire.TestCaseDetails;
 import org.sonar.plugins.surefire.TestSuiteParser;
@@ -52,27 +52,38 @@ class SwiftSurefireParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(SwiftSurefireParser.class);
 
+    private static final String INCLUDE_KEY = "sonar.junit.include";
+    private static final String DEFAULT_INCLUDE = "*.junit";
+
     private final Project project;
     private final FileSystem fileSystem;
-    private final  ResourcePerspectives resourcePerspectives;
     private final SensorContext context;
+    private final Settings settings;
 
-    public SwiftSurefireParser(Project project, FileSystem fileSystem, ResourcePerspectives resourcePerspectives, SensorContext context) {
+    SwiftSurefireParser(Project project, FileSystem fileSystem, final Settings config, SensorContext context) {
+        this.settings = config;
         this.project = project;
         this.fileSystem = fileSystem;
-        this.resourcePerspectives = resourcePerspectives;
         this.context = context;
     }
 
-    public void collect(File reportsDir) {
+    void collect(File reportsDir) {
 
         File[] xmlFiles = getReports(reportsDir);
 
         if (xmlFiles.length == 0) {
-            insertZeroWhenNoReports(project, context);
+            insertZeroWhenNoReports();
         } else {
-            parseFiles(context, xmlFiles);
+            parseFiles(xmlFiles);
         }
+    }
+
+    private String inclusionPattern() {
+        String inclusionPattern = settings.getString(INCLUDE_KEY);
+        if (inclusionPattern == null) {
+            return DEFAULT_INCLUDE;
+        }
+        return inclusionPattern;
     }
 
     private File[] getReports(File dir) {
@@ -81,25 +92,20 @@ class SwiftSurefireParser {
             return new File[0];
         }
 
-        File[] list = dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.startsWith("TEST") && name.endsWith(".xml");
-            }
-        });
+        final WildcardPattern matcher = WildcardPattern.create(inclusionPattern());
 
         return dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
-                return name.startsWith("TEST") && name.endsWith(".xml");
+                return matcher.match(name);
             }
         });
     }
 
-    private void insertZeroWhenNoReports(Project pom, SensorContext context) {
-
+    private void insertZeroWhenNoReports() {
         context.saveMeasure(CoreMetrics.TESTS, 0.0);
     }
 
-    private void parseFiles(SensorContext context, File[] reports) {
+    private void parseFiles(File[] reports) {
 
         Set<TestSuiteReport> analyzedReports = new HashSet<TestSuiteReport>();
 
@@ -165,15 +171,12 @@ class SwiftSurefireParser {
     }
 
     private void saveClassMeasure(TestSuiteReport fileReport, Metric metric, double value) {
-
         if ( !Double.isNaN(value)) {
-
             context.saveMeasure(getUnitTestResource(fileReport.getClassKey()), metric, value);
-
         }
     }
 
-    public Resource getUnitTestResource(String classname) {
+    private Resource getUnitTestResource(String classname) {
 
         String fileName = classname.replace('.', '/') + ".swift";
 

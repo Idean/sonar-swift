@@ -26,7 +26,6 @@ import org.sonar.api.batch.DependsUpon;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.swift.lang.core.Swift;
@@ -36,18 +35,16 @@ import java.io.File;
 public class SwiftSurefireSensor implements Sensor {
 
     private static final Logger LOG = LoggerFactory.getLogger(SwiftSurefireSensor.class);
-    public static final String REPORT_PATH_KEY = "sonar.junit.reportsPath";
-    public static final String DEFAULT_REPORT_PATH = "sonar-reports/";
+    private static final String REPORT_PATH_KEY = "sonar.junit.reportsPath";
+    private static final String DEFAULT_REPORT_PATH = "sonar-reports/";
 
     private final Settings settings;
     private final FileSystem fileSystem;
-    private final ResourcePerspectives resourcePerspectives;
 
 
-    public SwiftSurefireSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
+    public SwiftSurefireSensor(final FileSystem fileSystem, final Settings config) {
         this.settings = config;
         this.fileSystem = fileSystem;
-        this.resourcePerspectives = resourcePerspectives;
     }
 
     @DependsUpon
@@ -83,7 +80,7 @@ public class SwiftSurefireSensor implements Sensor {
 
     protected void collect(Project project, SensorContext context, File reportsDir) {
         LOG.info("parsing {}", reportsDir);
-        SwiftSurefireParser parser = new SwiftSurefireParser(project, fileSystem, resourcePerspectives, context);
+        SwiftSurefireParser parser = new SwiftSurefireParser(project, fileSystem, this.settings, context);
         parser.collect(reportsDir);
     }
 

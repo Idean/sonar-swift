@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites tests='2' failures='0'>
+  <testsuite name='FixtureProjTests.FixtureProjTests' tests='2' failures='0'>
+    <testcase classname='FixtureProjTests.FixtureProjTests' name='testExample' time='0.000'/>
+    <testcase classname='FixtureProjTests.FixtureProjTests' name='testPerformanceExample' time='0.252'/>
+  </testsuite>
+</testsuites>
