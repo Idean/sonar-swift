@@ -177,8 +177,8 @@ class SwiftSurefireParser {
     }
 
     private Resource getUnitTestResource(String classname) {
-
         String fileName = classname.replace('.', '/') + ".swift";
+        String wildcardFileName = classname.replace(".", "/**/") + ".swift";
 
         File file = new File(fileName);
         if (!file.isAbsolute()) {
@@ -192,10 +192,10 @@ class SwiftSurefireParser {
         if (!file.isFile() || !file.exists()) {
             List<File> files = ImmutableList.copyOf(fileSystem.files(fileSystem.predicates().and(
                     fileSystem.predicates().hasType(InputFile.Type.TEST),
-                    fileSystem.predicates().matchesPathPattern("**/" + fileName))));
+                    fileSystem.predicates().matchesPathPattern("**/" + wildcardFileName))));
 
             if (files.isEmpty()) {
-                LOG.info("Unable to locate test source file {}", fileName);
+                LOG.info("Unable to locate test source file {}", wildcardFileName);
             } else {
                 /*
                  * Lazily get the first file, since we wouldn't be able to determine the correct one from just the

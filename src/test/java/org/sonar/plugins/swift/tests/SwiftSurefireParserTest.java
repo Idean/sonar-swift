@@ -25,16 +25,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.sonar.api.batch.SensorContext;
-import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.fs.internal.DefaultFileSystem;
+import org.sonar.api.batch.fs.internal.DefaultInputFile;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.Metric;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.api.resources.Resource;
-import org.sonar.plugins.swift.lang.core.Swift;
 import java.io.File;
-import java.io.IOException;
-import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -42,24 +41,59 @@ import static org.mockito.Mockito.*;
 public class SwiftSurefireParserTest {
 
     private SensorContext context;
-    private SwiftSurefireParser parser;
+    private Settings config = mock(Settings.class);
     private static Project project;
-    private static FileSystem fileSystem;
 
-    @BeforeClass public static void setupClass() {
-        File baseDir = new File("src/test/resources/");
-        fileSystem = mock(FileSystem.class);
-        when(fileSystem.baseDir()).thenReturn(baseDir);
-        project = mock(Project.class);
+    private DefaultFileSystem createFileSystem(File baseDir) {
+        DefaultFileSystem fileSystem = new DefaultFileSystem();
+        fileSystem.setBaseDir(baseDir);
         ProjectFileSystem projectFileSystem = mock(ProjectFileSystem.class);
         when(projectFileSystem.getBasedir()).thenReturn(baseDir);
         when(project.getFileSystem()).thenReturn(projectFileSystem);
+        return fileSystem;
+    }
+
+    private DefaultInputFile createTestFile(File baseDir, String path) {
+        DefaultInputFile file = new DefaultInputFile(baseDir.getPath() + "/" + path);
+        file.setType(InputFile.Type.TEST);
+        file.setBasedir(baseDir);
+        file.setAbsolutePath(baseDir.getAbsolutePath() + "/" + path);
+        return file;
+    }
+
+    @BeforeClass public static void setupClass() {
+        project = mock(Project.class);
     }
 
     @Before public void setupTest() {
         context = mock(SensorContext.class);
-        Settings config = mock(Settings.class);
-        parser = new SwiftSurefireParser(project, fileSystem, config, context);
+    }
+
+    /**
+     * This method tests collecting the correct test files from the report, even when they are in subfolders
+     */
+    @Test
+    public void testRetrieveTestInSubFolder() {
+
+        // Setup fileSystem
+        String baseDirPath = "src/test/resources/tests-project-with-subfolder/";
+        File baseDir = new File(baseDirPath);
+        DefaultFileSystem fileSystem = createFileSystem(baseDir);
+        fileSystem.add(createTestFile(baseDir, "FixtureProjTests/FixtureProjTests.swift"));
+        fileSystem.add(createTestFile(baseDir, "FixtureProjTests/Folder/FolderTests.swift"));
+
+        // Setup parser
+        SwiftSurefireParser parser = new SwiftSurefireParser(project, fileSystem, config, context);
+        ArgumentCaptor<Resource> resourceArg = ArgumentCaptor.forClass(Resource.class);
+        ArgumentCaptor<Metric> metricArg = ArgumentCaptor.forClass(Metric.class);
+        ArgumentCaptor<Double> valueArg = ArgumentCaptor.forClass(Double.class);
+
+        // Execute
+        parser.collect(new File(baseDirPath + "reports/"));
+
+        // Verify
+        verify(context, times(6)).saveMeasure(resourceArg.capture(), metricArg.capture(), valueArg.capture());
+        assertEquals(resourceArg.getValue().getPath(), "FixtureProjTests/Folder/FolderTests.swift");
     }
 
     /**
@@ -68,14 +102,20 @@ public class SwiftSurefireParserTest {
     @Test
     public void testGetReportsFromJUnitFiles() {
 
-        // Setup
-        File reportsFolder = new File("src/test/resources/reports/");
+        // Setup fileSystem
+        String baseDirPath = "src/test/resources/tests-simple-project/";
+        File baseDir = new File(baseDirPath);
+        DefaultFileSystem fileSystem = createFileSystem(baseDir);
+        fileSystem.add(createTestFile(baseDir, "FixtureProjTests/FixtureProjTests.swift"));
+
+        // Setup parser
+        SwiftSurefireParser parser = new SwiftSurefireParser(project, fileSystem, config, context);
         ArgumentCaptor<Resource> resourceArg = ArgumentCaptor.forClass(Resource.class);
         ArgumentCaptor<Metric> metricArg = ArgumentCaptor.forClass(Metric.class);
         ArgumentCaptor<Double> valueArg = ArgumentCaptor.forClass(Double.class);
 
         // Execute
-        parser.collect(reportsFolder);
+        parser.collect(new File(baseDirPath + "reports/"));
 
         // Verify
         verify(context, times(6)).saveMeasure(resourceArg.capture(), metricArg.capture(), valueArg.capture());
