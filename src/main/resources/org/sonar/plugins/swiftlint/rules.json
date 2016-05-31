@@ -105,6 +105,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "legacy_cggeometry_functions",
+        "category": "SwiftLint",
+        "name": "Legacy CGGeometry Functions",
+        "description": "Struct extension properties and methods are preferred over legacy functions",
+        "severity": "MINOR"
+    },
+    {
         "key": "legacy_constant",
         "category": "SwiftLint",
         "name": "Legacy Constant",

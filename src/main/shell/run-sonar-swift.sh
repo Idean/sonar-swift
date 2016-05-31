@@ -205,7 +205,7 @@ fi
 
 # if the appConfiguration is not specified then set to Debug
 if [ -z "$appConfiguration" -o "$appConfiguration" = " " ]; then
-	appConfiguration = "Debug"
+	appConfiguration="Debug"
 fi
 
 
