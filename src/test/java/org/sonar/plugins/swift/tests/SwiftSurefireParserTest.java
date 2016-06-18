@@ -40,6 +40,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Every.everyItem;
 import static org.junit.Assert.assertTrue;
 
 public class SwiftSurefireParserTest {
