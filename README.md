@@ -36,6 +36,10 @@ The structure of the plugin is based on the [sonar-objective-c](https://github.c
 
 Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 
+###Launching an analysis
+If you use [Fastlane](https://fastlane.tools), please read [our Fastlane integration doc](docs/sonarqube-fastlane.md).
+Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root folder
+
 ###Release history
 
 ####0.2.3
@@ -76,7 +80,7 @@ Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 
 ###Installation of xcpretty with JUnit reports fix
 
-At the time, xcpretty needs to be fixed to work with SonarQube. 
+At the time, xcpretty needs to be fixed to work with SonarQube.
 
 To install the fixed version, follow those steps :
 
@@ -96,10 +100,6 @@ To install the fixed version, follow those steps :
 - Edit the ```sonar-project.properties``` file to match your Xcode iOS/MacOS project
 
 **The good news is that you don't have to modify your Xcode project to enable SonarQube!**. Ok, there might be one needed modification if you don't have a specific scheme for your test target, but that's all.
-
-###Analysis
-- Run the script ```run-sonar-swift.sh``` in your Xcode project root folder
-- Enjoy or file an issue!
 
 ###Update (once per plugin update)
 - Install the lastest plugin version
