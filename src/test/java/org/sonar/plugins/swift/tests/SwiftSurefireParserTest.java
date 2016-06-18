@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.fs.internal.DefaultFileSystem;
@@ -34,22 +35,27 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.resources.ProjectFileSystem;
 import org.sonar.api.resources.Resource;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class SwiftSurefireParserTest {
 
     private SensorContext context;
-    private Settings config = mock(Settings.class);
+    private Settings config = Mockito.mock(Settings.class);
     private static Project project;
+
+    /* Helpers */
 
     private DefaultFileSystem createFileSystem(File baseDir) {
         DefaultFileSystem fileSystem = new DefaultFileSystem();
         fileSystem.setBaseDir(baseDir);
-        ProjectFileSystem projectFileSystem = mock(ProjectFileSystem.class);
-        when(projectFileSystem.getBasedir()).thenReturn(baseDir);
-        when(project.getFileSystem()).thenReturn(projectFileSystem);
+        ProjectFileSystem projectFileSystem = Mockito.mock(ProjectFileSystem.class);
+        Mockito.when(projectFileSystem.getBasedir()).thenReturn(baseDir);
+        Mockito.when(project.getFileSystem()).thenReturn(projectFileSystem);
         return fileSystem;
     }
 
@@ -61,46 +67,50 @@ public class SwiftSurefireParserTest {
         return file;
     }
 
+    private static List<String> pathsFromResources(List<Resource> resources) {
+        List<String> paths = new ArrayList<String>();
+        for (Resource resource : resources) { paths.add(resource.getPath()); }
+        return paths;
+    }
+
     @BeforeClass public static void setupClass() {
-        project = mock(Project.class);
+        project = Mockito.mock(Project.class);
     }
 
     @Before public void setupTest() {
-        context = mock(SensorContext.class);
+        context = Mockito.mock(SensorContext.class);
     }
 
     /**
      * This method tests collecting the correct test files from the report, even when they are in subfolders
      */
     @Test
-    public void testRetrieveTestInSubFolder() {
+    public void testCollectReportsInSubFolder() {
 
         // Setup fileSystem
         String baseDirPath = "src/test/resources/tests-project-with-subfolder/";
         File baseDir = new File(baseDirPath);
         DefaultFileSystem fileSystem = createFileSystem(baseDir);
-        fileSystem.add(createTestFile(baseDir, "FixtureProjTests/FixtureProjTests.swift"));
         fileSystem.add(createTestFile(baseDir, "FixtureProjTests/Folder/FolderTests.swift"));
 
         // Setup parser
         SwiftSurefireParser parser = new SwiftSurefireParser(project, fileSystem, config, context);
-        ArgumentCaptor<Resource> resourceArg = ArgumentCaptor.forClass(Resource.class);
-        ArgumentCaptor<Metric> metricArg = ArgumentCaptor.forClass(Metric.class);
-        ArgumentCaptor<Double> valueArg = ArgumentCaptor.forClass(Double.class);
 
         // Execute
         parser.collect(new File(baseDirPath + "reports/"));
 
         // Verify
-        verify(context, times(6)).saveMeasure(resourceArg.capture(), metricArg.capture(), valueArg.capture());
-        assertEquals(resourceArg.getValue().getPath(), "FixtureProjTests/Folder/FolderTests.swift");
+        ArgumentCaptor<Resource> resourceArg = ArgumentCaptor.forClass(Resource.class);
+        Mockito.verify(context, Mockito.atLeastOnce()).saveMeasure(resourceArg.capture(), Mockito.any(Metric.class), Mockito.anyDouble());
+        List<String> paths = SwiftSurefireParserTest.pathsFromResources(resourceArg.getAllValues());
+        assertThat(paths, everyItem(is(equalTo("FixtureProjTests/Folder/FolderTests.swift"))));
     }
 
     /**
      * This method tests retrieving and parsing a *.junit file
      */
     @Test
-    public void testGetReportsFromJUnitFiles() {
+    public void testCollectReports() {
 
         // Setup fileSystem
         String baseDirPath = "src/test/resources/tests-simple-project/";
@@ -110,15 +120,45 @@ public class SwiftSurefireParserTest {
 
         // Setup parser
         SwiftSurefireParser parser = new SwiftSurefireParser(project, fileSystem, config, context);
-        ArgumentCaptor<Resource> resourceArg = ArgumentCaptor.forClass(Resource.class);
-        ArgumentCaptor<Metric> metricArg = ArgumentCaptor.forClass(Metric.class);
-        ArgumentCaptor<Double> valueArg = ArgumentCaptor.forClass(Double.class);
 
         // Execute
         parser.collect(new File(baseDirPath + "reports/"));
 
         // Verify
-        verify(context, times(6)).saveMeasure(resourceArg.capture(), metricArg.capture(), valueArg.capture());
-        assertEquals(resourceArg.getValue().getPath(), "FixtureProjTests/FixtureProjTests.swift");
+        ArgumentCaptor<Resource> resourceArg = ArgumentCaptor.forClass(Resource.class);
+        Mockito.verify(context, Mockito.atLeastOnce()).saveMeasure(resourceArg.capture(), Mockito.any(Metric.class), Mockito.anyDouble());
+        List<String> paths = SwiftSurefireParserTest.pathsFromResources(resourceArg.getAllValues());
+        assertThat(paths, everyItem(is(equalTo("FixtureProjTests/FixtureProjTests.swift"))));
+    }
+
+    /**
+     * This method tests collecting the correct test files from the report, even when they are in subfolders
+     */
+    @Test
+    public void testCollectReportsInMixedFolder() {
+
+        // Setup fileSystem
+        String baseDirPath = "src/test/resources/tests-project-with-mixed-folder/";
+        File baseDir = new File(baseDirPath);
+        DefaultFileSystem fileSystem = createFileSystem(baseDir);
+        fileSystem.add(createTestFile(baseDir, "FixtureProjTests/RootTests.swift"));
+        fileSystem.add(createTestFile(baseDir, "FixtureProjTests/Folder/FolderTests.swift"));
+
+        // Setup parser
+        SwiftSurefireParser parser = new SwiftSurefireParser(project, fileSystem, config, context);
+
+        // Execute
+        parser.collect(new File(baseDirPath + "reports/"));
+
+        // Verify
+        ArgumentCaptor<Resource> resourceArg = ArgumentCaptor.forClass(Resource.class);
+        Mockito.verify(context, Mockito.atLeastOnce()).saveMeasure(resourceArg.capture(), Mockito.any(Metric.class), Mockito.anyDouble());
+        List<String> paths = SwiftSurefireParserTest.pathsFromResources(resourceArg.getAllValues());
+        assertThat(paths, everyItem(is(anyOf(
+                equalTo("FixtureProjTests/Folder/FolderTests.swift"),
+                equalTo("FixtureProjTests/RootTests.swift")
+        ))));
+        assertTrue(paths.contains("FixtureProjTests/Folder/FolderTests.swift"));
+        assertTrue(paths.contains("FixtureProjTests/RootTests.swift"));
     }
 }
