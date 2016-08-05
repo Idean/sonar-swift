@@ -113,7 +113,7 @@ function runCommand() {
 		if [[ $returnValue != 0 && $returnValue != 5 ]] ; then
 			stopProgress
 			echo "ERROR - Command '$command $@' failed with error code: $returnValue"
-			exit $?
+			exit $returnValue
 		fi
 
 
