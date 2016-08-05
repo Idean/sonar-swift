@@ -81,15 +81,10 @@ class SwiftSurefireParser {
             return new File[0];
         }
 
-        File[] list = dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.startsWith("TEST") && name.endsWith(".xml");
-            }
-        });
-
         return dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
-                return name.startsWith("TEST") && name.endsWith(".xml");
+                // .junit is for Fastlane support
+                return (name.startsWith("TEST") && name.endsWith(".xml")) || (name.endsWith(".junit"));
             }
         });
     }

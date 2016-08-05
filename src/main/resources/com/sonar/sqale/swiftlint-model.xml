@@ -60,6 +60,19 @@
             </chc>
             <chc>
                 <rule-repo>SwiftLint</rule-repo>
+                <rule-key>legacy_cggeometry_functions</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>10</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
                 <rule-key>legacy_constructor</rule-key>
                 <prop>
                     <key>remediationFunction</key>
