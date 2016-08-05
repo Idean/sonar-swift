@@ -4,8 +4,8 @@ If you already use Fastlane, you can simply setup a new lane performing the anal
 
 ```ruby
 lane :metrics do
-    scan(scheme: "[SCHEME]", code_coverage: true, output_directory: "./reports")
-    slather(cobertura_xml: true, scheme: "[SCHEME]", output_directory: "./reports", proj: "./[PROJECT].xcodeproj")
+    scan(scheme: "[SCHEME]", code_coverage: true, xcargs: "-derivedDataPath ./DerivedData", output_directory: "./reports")
+    slather(cobertura_xml: true, jenkins: true, scheme: "[SCHEME]", build_directory: "./DerivedData", output_directory: "./reports", proj: "./[PROJECT].xcodeproj")
     sh("cd .. && lizard ./[SOURCE_FOLDER] -l swift --xml > ./reports/lizard-report.xml")
     swiftlint(output_file: "./reports/swiftlint.txt", ignore_exit_status: true)
     sonar
