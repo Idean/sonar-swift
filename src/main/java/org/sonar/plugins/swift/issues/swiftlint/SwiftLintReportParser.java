@@ -92,7 +92,14 @@ public class SwiftLintReportParser {
                         .message(message)
                         .build();
 
-                issuable.addIssue(issue);
+                try {
+                    issuable.addIssue(issue);
+                } catch (Exception e) {
+                    // Unable to add issue : probably because does not exist in the repository
+                    LOGGER.warn(e.getMessage());
+                }
+
+
 
 
             }

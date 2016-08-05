@@ -28,13 +28,10 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import org.sonar.api.rules.Violation;
 import org.sonar.plugins.swift.SwiftPlugin;
 import org.sonar.plugins.swift.lang.core.Swift;
-
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
+
 
 public class SwiftLintSensor implements Sensor {
 
