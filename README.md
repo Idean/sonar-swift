@@ -45,6 +45,7 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 ####0.2.4
 - Analysis does not fail anymore when an unkwown issue is reported by SwiftLint. See [issue 35](https://github.com/Backelite/sonar-swift/issues/35)
 - Fastlane documentation (thanks to [viteinfinite](https://github.com/viteinfinite)). See [PR 33](https://github.com/Backelite/sonar-swift/pull/33)
+- Fixed Fastlane JUnit report support
 - SwiftLint 0.11.1 support
 - Better return code suppot for run-sonar-swift.sh
 
