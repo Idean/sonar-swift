@@ -65,7 +65,6 @@ public class SwiftSquidSensor implements Sensor {
     private final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12, 20, 30};
     private final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
 
-    private final AnnotationCheckFactory annotationCheckFactory;
     private final FileSystem fileSystem;
     private final PathResolver pathResolver;
     private final ResourcePerspectives resourcePerspectives;
@@ -78,7 +77,6 @@ public class SwiftSquidSensor implements Sensor {
 
     public SwiftSquidSensor(RulesProfile profile, FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
 
-        this.annotationCheckFactory = AnnotationCheckFactory.create(profile, CheckList.REPOSITORY_KEY, CheckList.getChecks());
         this.fileSystem = fileSystem;
         this.pathResolver = pathResolver;
         this.resourcePerspectives = resourcePerspectives;
