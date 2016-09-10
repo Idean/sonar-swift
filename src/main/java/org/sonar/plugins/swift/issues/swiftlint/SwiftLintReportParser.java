@@ -48,7 +48,6 @@ public class SwiftLintReportParser {
     }
 
     public void parseReport(File reportFile) {
-
         try {
             // Read and parse report
             FileReader fr = new FileReader(reportFile);
@@ -67,16 +66,13 @@ public class SwiftLintReportParser {
         } catch (IOException e) {
             LOGGER.error("Failed to parse SwiftLint report file", e);
         }
-
     }
 
     private void recordIssue(final String line) {
-
-
         Pattern pattern = Pattern.compile("(.*.swift):(\\w+):?(\\w+)?: (warning|error): (.*) \\((\\w+)");
         Matcher matcher = pattern.matcher(line);
         while (matcher.find()) {
-            String filePath =  matcher.group(1);
+            String filePath = matcher.group(1);
             int lineNum = Integer.parseInt(matcher.group(2));
             String message = matcher.group(5);
             String ruleId = matcher.group(6);
@@ -98,14 +94,7 @@ public class SwiftLintReportParser {
                     // Unable to add issue : probably because does not exist in the repository
                     LOGGER.warn(e.getMessage());
                 }
-
-
-
-
             }
-
         }
-
     }
-
 }
