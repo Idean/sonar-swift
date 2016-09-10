@@ -89,12 +89,6 @@
             <version>${sonar.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.sonar</groupId>
-            <artifactId>sonar-deprecated</artifactId>
-            <version>${sonar.version}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.codehaus.sonar.sslr</groupId>
