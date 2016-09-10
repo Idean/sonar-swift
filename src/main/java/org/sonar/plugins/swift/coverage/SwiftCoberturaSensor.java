@@ -25,15 +25,12 @@ import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
-import org.sonar.api.measures.CoverageMeasuresBuilder;
 import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.swift.SwiftPlugin;
 import org.sonar.plugins.swift.lang.core.Swift;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public final class SwiftCoberturaSensor implements Sensor {

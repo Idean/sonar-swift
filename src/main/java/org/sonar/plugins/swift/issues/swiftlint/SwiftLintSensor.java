@@ -30,6 +30,7 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.plugins.swift.SwiftPlugin;
 import org.sonar.plugins.swift.lang.core.Swift;
+
 import java.io.File;
 
 

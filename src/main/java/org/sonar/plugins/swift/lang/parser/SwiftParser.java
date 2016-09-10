@@ -20,7 +20,6 @@
 package org.sonar.plugins.swift.lang.parser;
 
 import com.sonar.sslr.impl.Parser;
-import com.sonar.sslr.impl.events.ParsingEventListener;
 import org.sonar.plugins.swift.lang.SwiftConfiguration;
 import org.sonar.plugins.swift.lang.api.SwiftGrammar;
 import org.sonar.plugins.swift.lang.lexer.SwiftLexer;

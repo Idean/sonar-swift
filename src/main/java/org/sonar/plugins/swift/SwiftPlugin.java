@@ -27,10 +27,13 @@ import org.sonar.plugins.swift.colorizer.SwiftCodeColorizerFormat;
 import org.sonar.plugins.swift.complexity.LizardSensor;
 import org.sonar.plugins.swift.coverage.SwiftCoberturaSensor;
 import org.sonar.plugins.swift.cpd.SwiftCpdMapping;
-import org.sonar.plugins.swift.lang.core.Swift;
 import org.sonar.plugins.swift.issues.SwiftProfile;
+import org.sonar.plugins.swift.issues.swiftlint.SwiftLintProfile;
+import org.sonar.plugins.swift.issues.swiftlint.SwiftLintProfileImporter;
+import org.sonar.plugins.swift.issues.swiftlint.SwiftLintRulesDefinition;
+import org.sonar.plugins.swift.issues.swiftlint.SwiftLintSensor;
+import org.sonar.plugins.swift.lang.core.Swift;
 import org.sonar.plugins.swift.tests.SwiftSurefireSensor;
-import org.sonar.plugins.swift.issues.swiftlint.*;
 
 import java.util.List;
 
