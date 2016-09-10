@@ -61,7 +61,7 @@ public class SwiftLintSensor implements Sensor {
 
         final String projectBaseDir = fileSystem.baseDir().getAbsolutePath();
 
-        SwiftLintReportParser parser = new SwiftLintReportParser(module, context, resourcePerspectives);
+        SwiftLintReportParser parser = new SwiftLintReportParser(module, context, resourcePerspectives, fileSystem);
         parseReportIn(projectBaseDir, parser);
     }
 

@@ -23,6 +23,8 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
@@ -40,11 +42,13 @@ public class SwiftLintReportParser {
     private final Project project;
     private final SensorContext context;
     private final ResourcePerspectives resourcePerspectives;
+    private final FileSystem fileSystem;
 
-    public SwiftLintReportParser(final Project project, final SensorContext context, final ResourcePerspectives resourcePerspectives) {
+    public SwiftLintReportParser(final Project project, final SensorContext context, final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
         this.project = project;
         this.context = context;
         this.resourcePerspectives = resourcePerspectives;
+        this.fileSystem = fileSystem;
     }
 
     public void parseReport(File reportFile) {
@@ -69,6 +73,8 @@ public class SwiftLintReportParser {
     }
 
     private void recordIssue(final String line) {
+        LOGGER.debug(String.format("record issue \"%s\"", line));
+
         Pattern pattern = Pattern.compile("(.*.swift):(\\w+):?(\\w+)?: (warning|error): (.*) \\((\\w+)");
         Matcher matcher = pattern.matcher(line);
         while (matcher.find()) {
@@ -77,9 +83,9 @@ public class SwiftLintReportParser {
             String message = matcher.group(5);
             String ruleId = matcher.group(6);
 
-            org.sonar.api.resources.File resource = org.sonar.api.resources.File.fromIOFile(new File(filePath), project);
+            InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(filePath));
 
-            Issuable issuable = resourcePerspectives.as(Issuable.class, resource);
+            Issuable issuable = resourcePerspectives.as(Issuable.class, inputFile);
 
             if (issuable != null) {
                 Issue issue = issuable.newIssueBuilder()
