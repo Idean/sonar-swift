@@ -133,7 +133,7 @@ public class SwiftSquidSensor implements Sensor {
 
         Collection<CheckMessage> messages = squidFile.getCheckMessages();
 
-        Resource resource = context.getResource(org.sonar.api.resources.File.fromIOFile(inputFile.file(), project));
+        Resource resource = context.getResource(inputFile);
 
         if (messages != null && resource != null) {
             for (CheckMessage message : messages) {
