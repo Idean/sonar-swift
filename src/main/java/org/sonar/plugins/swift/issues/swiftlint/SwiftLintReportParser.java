@@ -73,7 +73,7 @@ public class SwiftLintReportParser {
     }
 
     private void recordIssue(final String line) {
-        LOGGER.debug(String.format("record issue \"%s\"", line));
+        LOGGER.debug("record issue {}", line);
 
         Pattern pattern = Pattern.compile("(.*.swift):(\\w+):?(\\w+)?: (warning|error): (.*) \\((\\w+)");
         Matcher matcher = pattern.matcher(line);
