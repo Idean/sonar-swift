@@ -19,6 +19,7 @@
  */
 package org.sonar.plugins.swift.complexity;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LizardMeasurePersistor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LizardMeasurePersistor.class);
 
     private Project project;
     private SensorContext sensorContext;
@@ -57,10 +59,10 @@ public class LizardMeasurePersistor {
             if (resource != null) {
                 for (Measure measure : entry.getValue()) {
                     try {
-                        LoggerFactory.getLogger(getClass()).debug("Save measure {} for file {}", measure.getMetric().getName(), file);
+                        LOGGER.debug("Save measure {} for file {}", measure.getMetric().getName(), file);
                         sensorContext.saveMeasure(resource, measure);
                     } catch (Exception e) {
-                        LoggerFactory.getLogger(getClass()).error(" Exception -> {} -> {}", entry.getKey(), measure.getMetric().getName());
+                        LOGGER.error(" Exception -> {} -> {}", entry.getKey(), measure.getMetric().getName());
                     }
                 }
             }
