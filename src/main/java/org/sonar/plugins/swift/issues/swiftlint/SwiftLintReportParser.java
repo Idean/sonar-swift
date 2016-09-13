@@ -85,6 +85,11 @@ public class SwiftLintReportParser {
 
             InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(filePath));
 
+            if (inputFile == null) {
+                LOGGER.warn("file not included in sonar {}", filePath);
+                continue;
+            }
+
             Issuable issuable = resourcePerspectives.as(Issuable.class, inputFile);
 
             if (issuable != null) {
