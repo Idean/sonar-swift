@@ -24,6 +24,8 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -42,6 +44,8 @@ import java.util.Locale;
 import java.util.Map;
 
 final class CoberturaReportParser {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaReportParser.class);
 
     private final FileSystem fileSystem;
     private final Project project;
@@ -84,6 +88,12 @@ final class CoberturaReportParser {
                 String filePath = entry.getKey();
                 File file = new File(fileSystem.baseDir(), filePath);
                 InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
+
+                if (inputFile == null) {
+                    LOGGER.warn("file not included in sonar {}", filePath);
+                    continue;
+                }
+
                 Resource resource = context.getResource(inputFile);
                 if (resourceExists(resource)) {
                     for (Measure measure : entry.getValue().createMeasures()) {
