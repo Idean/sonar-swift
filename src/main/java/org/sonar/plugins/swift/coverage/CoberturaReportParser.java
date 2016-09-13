@@ -26,6 +26,7 @@ import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.CoverageMeasuresBuilder;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
@@ -81,7 +82,9 @@ final class CoberturaReportParser {
             collectFileMeasures(pack.descendantElementCursor("class"), builderByFilename);
             for (Map.Entry<String, CoverageMeasuresBuilder> entry : builderByFilename.entrySet()) {
                 String filePath = entry.getKey();
-                Resource resource = org.sonar.api.resources.File.fromIOFile(new File(fileSystem.baseDir(), filePath), project);
+                File file = new File(fileSystem.baseDir(), filePath);
+                InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
+                Resource resource = context.getResource(inputFile);
                 if (resourceExists(resource)) {
                     for (Measure measure : entry.getValue().createMeasures()) {
                         context.saveMeasure(resource, measure);
