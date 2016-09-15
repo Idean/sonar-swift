@@ -39,6 +39,8 @@ import org.sonar.plugins.surefire.TestCaseDetails;
 import org.sonar.plugins.surefire.TestSuiteParser;
 import org.sonar.plugins.surefire.TestSuiteReport;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -112,17 +114,25 @@ class SwiftSurefireParser {
 
                     if (fileReport.getTests() > 0) {
                         double testsCount = fileReport.getTests() - fileReport.getSkipped();
-                        saveClassMeasure(fileReport, CoreMetrics.SKIPPED_TESTS, fileReport.getSkipped());
-                        saveClassMeasure(fileReport, CoreMetrics.TESTS, testsCount);
-                        saveClassMeasure(fileReport, CoreMetrics.TEST_ERRORS, fileReport.getErrors());
-                        saveClassMeasure(fileReport, CoreMetrics.TEST_FAILURES, fileReport.getFailures());
-                        saveClassMeasure(fileReport, CoreMetrics.TEST_EXECUTION_TIME, fileReport.getTimeMS());
+                        String testClass = fileReport.getClassKey();
+                        Resource resource = getUnitTestResource(testClass);
+
+                        if(resource == null) {
+                            LOG.warn("file for test class {} not found", testClass);
+                            continue;
+                        }
+
+                        saveClassMeasure(resource, CoreMetrics.SKIPPED_TESTS, fileReport.getSkipped());
+                        saveClassMeasure(resource, CoreMetrics.TESTS, testsCount);
+                        saveClassMeasure(resource, CoreMetrics.TEST_ERRORS, fileReport.getErrors());
+                        saveClassMeasure(resource, CoreMetrics.TEST_FAILURES, fileReport.getFailures());
+                        saveClassMeasure(resource, CoreMetrics.TEST_EXECUTION_TIME, fileReport.getTimeMS());
                         double passedTests = testsCount - fileReport.getErrors() - fileReport.getFailures();
                         if (testsCount > 0) {
                             double percentage = passedTests * 100d / testsCount;
-                            saveClassMeasure(fileReport, CoreMetrics.TEST_SUCCESS_DENSITY, ParsingUtils.scaleValue(percentage));
+                            saveClassMeasure(resource, CoreMetrics.TEST_SUCCESS_DENSITY, ParsingUtils.scaleValue(percentage));
                         }
-                        saveTestsDetails(fileReport);
+                        saveTestsDetails(resource, fileReport);
                         analyzedReports.add(fileReport);
                     }
                 }
@@ -133,7 +143,7 @@ class SwiftSurefireParser {
         }
     }
 
-    private void saveTestsDetails(TestSuiteReport fileReport) throws TransformerException {
+    private void saveTestsDetails(@Nonnull Resource resource, @Nonnull TestSuiteReport fileReport) throws TransformerException {
 
         StringBuilder testCaseDetails = new StringBuilder(256);
         testCaseDetails.append("<tests-details>");
@@ -154,25 +164,28 @@ class SwiftSurefireParser {
             }
         }
         testCaseDetails.append("</tests-details>");
-        context.saveMeasure(getUnitTestResource(fileReport.getClassKey()), new Measure(CoreMetrics.TEST_DATA, testCaseDetails.toString()));
+        context.saveMeasure(resource, new Measure(CoreMetrics.TEST_DATA, testCaseDetails.toString()));
     }
 
-    private void saveClassMeasure(TestSuiteReport fileReport, Metric metric, double value) {
+    private void saveClassMeasure(@Nonnull Resource resource, Metric metric, double value) {
 
-        if ( !Double.isNaN(value)) {
-
-            context.saveMeasure(getUnitTestResource(fileReport.getClassKey()), metric, value);
-
+        if (Double.isNaN(value)) {
+            return;
         }
+        context.saveMeasure(resource, metric, value);
     }
 
-    public Resource getUnitTestResource(String classname) {
+    private @Nullable Resource getUnitTestResource(String classname) {
 
         String[] classNameParts = classname.split("\\.");
         String classNameWithoutModule = classNameParts.length > 1 ? classNameParts[1] : classNameParts[0];
         String fileName = classNameWithoutModule + ".swift";
 
         InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().matchesPathPattern("**/" + fileName));
+        if (inputFile == null) {
+            return null;
+        }
+
         Resource resource = context.getResource(inputFile);
 
         if(resource instanceof org.sonar.api.resources.File) {

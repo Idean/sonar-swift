@@ -54,6 +54,12 @@ public class LizardMeasurePersistor {
         for (Map.Entry<String, List<Measure>> entry : measures.entrySet()) {
             File file = new File(fileSystem.baseDir(), entry.getKey());
             InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
+
+            if (inputFile == null) {
+                LOGGER.warn("file not included in sonar {}", entry.getKey());
+                continue;
+            }
+
             Resource resource = sensorContext.getResource(inputFile);
 
             if (resource != null) {
