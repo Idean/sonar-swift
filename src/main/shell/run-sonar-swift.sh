@@ -124,6 +124,7 @@ function runCommand() {
 ## COMMAND LINE OPTIONS
 vflag=""
 nflag=""
+unittests="on"
 swiftlint="on"
 lizard="on"
 
@@ -132,12 +133,13 @@ do
     case "$1" in
     -v)	vflag=on;;
     -n) nflag=on;;
-	-noswiftlint) swiftlint="";;
-	--)	shift; break;;
-	-*)
+    -nounittests) unittests="";;
+	  -noswiftlint) swiftlint="";;
+	  --)	shift; break;;
+	  -*)
         echo >&2 "Usage: $0 [-v]"
-		exit 1;;
-	*)	break;;		# terminate while loop
+		    exit 1;;
+	  *)	break;;		# terminate while loop
     esac
     shift
 done
@@ -198,9 +200,11 @@ if [ -z "$appScheme" -o "$appScheme" = " " ]; then
 	echo >&2 "ERROR - sonar.swift.appScheme parameter is missing in sonar-project.properties. You must specify which scheme is used to build your application."
 	exit 1
 fi
-if [ -z "$destinationSimulator" -o "$destinationSimulator" = " " ]; then
-	echo >&2 "ERROR - sonar.swift.simulator parameter is missing in sonar-project.properties. You must specify which simulator to use."
-	exit 1
+if [ "$unittests" = "on" ]; then
+    if [ -z "$destinationSimulator" -o "$destinationSimulator" = " " ]; then
+	      echo >&2 "ERROR - sonar.swift.simulator parameter is missing in sonar-project.properties. You must specify which simulator to use."
+	      exit 1
+    fi
 fi
 
 # if the appConfiguration is not specified then set to Debug
@@ -214,8 +218,12 @@ if [ "$vflag" = "on" ]; then
  	echo "Xcode project file is: $projectFile"
 	echo "Xcode workspace file is: $workspaceFile"
  	echo "Xcode application scheme is: $appScheme"
- 	echo "Destination simulator is: $destinationSimulator"
- 	echo "Excluded paths from coverage are: $excludedPathsFromCoverage"
+  if [ -n "$unittests"]; then
+ 	    echo "Destination simulator is: $destinationSimulator"
+ 	    echo "Excluded paths from coverage are: $excludedPathsFromCoverage"
+  else
+      echo "Unit tests are disabled"
+  fi
 fi
 
 ## SCRIPT
@@ -234,56 +242,57 @@ fi
 rm -rf sonar-reports
 mkdir sonar-reports
 
-# Unit tests and coverage
+if [ "$unittests" = "on" ]; then
+    # Unit tests and coverage
 
-# Put default xml files with no tests and no coverage...
-echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='AllTestUnits'></testsuites>" > sonar-reports/TEST-report.xml
-echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage.xml
+    # Put default xml files with no tests and no coverage...
+    echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='AllTestUnits'></testsuites>" > sonar-reports/TEST-report.xml
+    echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage.xml
 
-echo -n 'Running tests'
-buildCmd=(xcodebuild clean build test)
-if [[ ! -z "$workspaceFile" ]]; then
-    buildCmd+=(-workspace $workspaceFile)
-elif [[ ! -z "$projectFile" ]]; then
-	  buildCmd+=(-project $projectFile)
+    echo -n 'Running tests'
+    buildCmd=(xcodebuild clean build test)
+    if [[ ! -z "$workspaceFile" ]]; then
+        buildCmd+=(-workspace $workspaceFile)
+    elif [[ ! -z "$projectFile" ]]; then
+	      buildCmd+=(-project $projectFile)
+    fi
+    buildCmd+=( -scheme "$appScheme" -configuration "$appConfiguration" -enableCodeCoverage YES)
+    if [[ ! -z "$destinationSimulator" ]]; then
+        buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
+    fi
+
+    runCommand  sonar-reports/xcodebuild.log "${buildCmd[@]}"
+    cat sonar-reports/xcodebuild.log  | $XCPRETTY_CMD -t --report junit
+    mv build/reports/junit.xml sonar-reports/TEST-report.xml
+
+
+    echo -n 'Computing coverage report'
+
+    # Build the --exclude flags
+    excludedCommandLineFlags=""
+    if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
+	      echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
+	      while read word; do
+		        excludedCommandLineFlags+=" -i $word"
+	      done < tmpFileRunSonarSh2
+	      rm -rf tmpFileRunSonarSh2
+    fi
+    if [ "$vflag" = "on" ]; then
+	      echo "Command line exclusion flags for slather is:$excludedCommandLineFlags"
+    fi
+
+    projectArray=(${projectFile//,/ })
+    firstProject=${projectArray[0]}
+
+    slatherCmd=($SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
+    if [[ ! -z "$workspaceFile" ]]; then
+        slatherCmd+=( --workspace $workspaceFile)
+    fi
+    slatherCmd+=( --scheme "$appScheme" $firstProject)
+
+    runCommand /dev/stdout "${slatherCmd[@]}"
+    mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
 fi
-buildCmd+=( -scheme "$appScheme" -configuration "$appConfiguration" -enableCodeCoverage YES)
-if [[ ! -z "$destinationSimulator" ]]; then
-    buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
-fi
-
-runCommand  sonar-reports/xcodebuild.log "${buildCmd[@]}"
-cat sonar-reports/xcodebuild.log  | $XCPRETTY_CMD -t --report junit
-mv build/reports/junit.xml sonar-reports/TEST-report.xml
-
-
-echo -n 'Computing coverage report'
-
-# Build the --exclude flags
-excludedCommandLineFlags=""
-if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
-	echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
-	while read word; do
-		excludedCommandLineFlags+=" -i $word"
-	done < tmpFileRunSonarSh2
-	rm -rf tmpFileRunSonarSh2
-fi
-if [ "$vflag" = "on" ]; then
-	echo "Command line exclusion flags for slather is:$excludedCommandLineFlags"
-fi
-
-projectArray=(${projectFile//,/ })
-firstProject=${projectArray[0]}
-
-slatherCmd=($SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
-if [[ ! -z "$workspaceFile" ]]; then
-    slatherCmd+=( --workspace $workspaceFile)
-fi
-slatherCmd+=( --scheme "$appScheme" $firstProject)
-
-runCommand /dev/stdout "${slatherCmd[@]}"
-mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
-
 
 # SwiftLint
 if [ "$swiftlint" = "on" ]; then
