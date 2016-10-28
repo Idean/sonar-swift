@@ -200,6 +200,9 @@ class SwiftLint < Tool
     logger.info('Running SwiftLint...')
     @sources.each do |source|
       report_name = "#{source.tr(' ', '_')}-swiftlint.txt"
+      cmd = "swiftlint lint --path #{source} > sonar-reports/#{report_name}"
+      logger.debug("Will run #{cmd}")
+      system(cmd)
     end
   end
 
@@ -221,6 +224,9 @@ class Lizard < Tool
 
   def run
     logger.info('Running Lizard...')
+    cmd = "lizard --xml #{@sources.join(' ')} > sonar-reports/lizard-reports.xml"
+    logger.info("Will run #{cmd}")
+    system(cmd)
   end
 
   private
