@@ -8,12 +8,11 @@
 # /usr/local/cellar/sonar-scanner/<version>/libexec/conf/sonar-scanner.properties
 # (if using HomeBrew to install Sonar Scanner).
 #
-# TODO: add an arg to disable unit tests execution and reports
-# TODO: add command args to disable tools/steps
 # TODO: disable tool if not installed and show a warning message
 require 'fileutils'
 require 'java-properties'
 require 'logger'
+require 'optparse'
 
 # Adds logging capability where included.
 module Logging
@@ -22,17 +21,23 @@ module Logging
   end
 
   # Use a hash class-ivar to cache a unique Logger per class:
-  @loggers = {}
+  @@loggers = {}
+  @@logger_level = Logger::INFO
 
   class << self
     def logger_for(classname)
-      @loggers[classname] ||= configure_logger_for(classname)
+      @@loggers[classname] ||= configure_logger_for(classname)
     end
 
     def configure_logger_for(classname)
       logger = Logger.new(STDOUT)
       logger.progname = classname
+      logger.level = @@logger_level
       logger
+    end
+
+    def logger_level=(level)
+      @@logger_level = level
     end
   end
 end
@@ -195,7 +200,6 @@ class SwiftLint < Tool
     logger.info('Running SwiftLint...')
     @sources.each do |source|
       report_name = "#{source.tr(' ', '_')}-swiftlint.txt"
-      system("swiftlint lint --path #{source} > sonar-reports/#{report_name}")
     end
   end
 
@@ -217,7 +221,6 @@ class Lizard < Tool
 
   def run
     logger.info('Running Lizard...')
-    system("lizard --xml #{@sources.join(' ')} > sonar-reports/lizard-reports.xml")
   end
 
   private
@@ -235,18 +238,35 @@ class RunSonarSwift
   include Logging
 
   def run
+    tools = [UnitTests, SwiftLint, Lizard]
+    upload = true
+
+    # Read command line options
+    OptionParser.new do |opt|
+      opt.on('-v', '--verbose', 'Vervose mode') { |_| Logging.logger_level = Logger::DEBUG }
+      opt.on('--disable-upload', 'Only execute tools, do not call Sonar Scanner. Useful to ensure all tools are configured') do |_|
+        upload = false
+      end
+      opt.on('--disable-unit-tests', 'Disable unit tests') { |_| tools.delete(UnitTests) }
+      opt.on('--disable-swiftlint', 'Disable SwiftLint') { |_| tools.delete(SwiftLint) }
+      opt.on('--disable-lizard', 'Disable Lizard') { |_| tools.delete(Lizard) }
+    end.parse!
+
+    # Read properties
     opts_reader = PropertiesReader.new('sonar-project.properties')
     options = opts_reader.read
 
+    # Initiate reports
     bootstrap_reports_folder
     bootstrap_mandatory_reports
 
-    tools = [UnitTests, SwiftLint, Lizard]
+    # Call tools
     tools.each do |tool|
       tool.new(options).run
     end
 
-    send_reports
+    # Send reports
+    send_reports if upload
   end
 
   private
