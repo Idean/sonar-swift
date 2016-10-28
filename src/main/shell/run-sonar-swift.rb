@@ -15,99 +15,262 @@ require 'fileutils'
 require 'java-properties'
 require 'logger'
 
-logger = Logger.new(STDOUT)
-logger.level = Logger::DEBUG
+# Adds logging capability where included.
+module Logging
+  def logger
+    @logger ||= Logging.logger_for(self.class.name)
+  end
 
-def fatal_error(msg)
-  logger.error(msg)
-  exit(false)
+  # Use a hash class-ivar to cache a unique Logger per class:
+  @loggers = {}
+
+  class << self
+    def logger_for(classname)
+      @loggers[classname] ||= configure_logger_for(classname)
+    end
+
+    def configure_logger_for(classname)
+      logger = Logger.new(STDOUT)
+      logger.progname = classname
+      logger
+    end
+  end
 end
 
-## Initialization
-
-props_file = 'sonar-project.properties'
-unless File.exist?(props_file)
-  fatal_error 'No sonar-project.properties in current directory'
+# Adds a fatal_error method that logs and exit.
+# This module expects the Logging module included.
+module CanFail
+  def fatal_error(msg)
+    logger.error(msg)
+    exit(false)
+  end
 end
 
-properties = JavaProperties.load(props_file)
+# PropertiesReader reads and check the sonar-project.properties file.
+# It also creates a Hash with all read properties.
+class PropertiesReader
+  include Logging
+  include CanFail
 
-project = properties[:'sonar.swift.project']
-workspace = properties[:'sonar.swift.workspace']
-sources = properties[:'sonar.sources'].split(',')
-scheme = properties[:'sonar.swift.appScheme']
-configuration = properties[:'sonar.swift.appConfiguration'] || 'Debug'
+  def initialize(file)
+    fatal_error('No sonar-project.properties in current directory') unless File.exist?(file)
+    @file = file
+  end
 
-fatal_error('No project or workspace specified in sonar-project.properties.') if (workspace.nil? && project.nil?)
-fatal_error('No sources folder specified in sonar-project.properties') if sources.nil?
-fatal_error('No scheme specified in sonar-project.properties') if scheme.nil?
-logger.warn('No build configuration set in sonar-project.properties, defaulting to Debug') if properties[:'sonar.swift.appConfiguration'].nil?
+  # Read the Java properties file and return a Hash suitable for the script.
+  def read
+    properties = JavaProperties.load(@file)
+    options = read_properties(properties)
+    validate_settings!(options)
+  end
 
-## Tools and unit tests
+  private
 
-logger.info('Deleting and creating directory sonar-reports/')
-FileUtils.rm_rf('sonar-reports')
-Dir.mkdir('sonar-reports')
+  # Map the Java properties hash to more Ruby hash
+  def read_properties(properties)
+    options = {}
+    options[:project] = properties[:'sonar.swift.project']
+    options[:workspace] = properties[:'sonar.swift.workspace']
+    options[:sources] = properties[:'sonar.sources'].split(',')
+    options[:scheme] = properties[:'sonar.swift.appScheme']
+    options[:configuration] = properties[:'sonar.swift.appConfiguration']
+    options[:simulator] = properties[:'sonar.swift.simulator']
+    options[:exclude_from_coverage] = properties[:'sonar.swift.excludedPathsFromCoverage'].split(',')
+    options
+  end
 
-### Unit Tests
-# TODO: check unit tests are enabled
-
-simulator = properties[:'sonar.swift.simulator']
-logger.warn('No simulator specified in sonar-project.properties') if simulator.nil?
-
-# Put default xml files with no tests and no coverage. This is neeided to
-# ensure a file is present, either the Xcode build test step worked or
-# not. Without this, Sonar Scanner will fail uploading results.
-File.write('sonar-reports/TEST-report.xml', "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='AllTestUnits'></testsuites>")
-File.write('sonar-reports/coverage.xml', "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>")
-
-logger.info('Running clean/build/test')
-
-# Run tests with Xcode
-prj_or_wspc = if project
-                "-project \"#{project}\""
-              else
-                "-workspace \"#{workspace}\""
-              end
-
-cmd = "xcodebuild clean build test #{prj_or_wspc} -scheme \"#{scheme}\" -configuration \"#{configuration}\" -enableCodeCoverage YES"
-unless simulator.nil?
-  cmd += " -destination '#{simulator}' -destination-timeout 60"
+  def validate_settings!(options)
+    fatal_error('No project or workspace specified in sonar-project.properties.') if (options[:workspace].nil? && options[:project].nil?)
+    fatal_error('No sources folder specified in sonar-project.properties') if options[:sources].nil?
+    fatal_error('No scheme specified in sonar-project.properties') if options[:scheme].nil?
+    if options[:configuration].nil?
+      logger.warn('No build configuration set in sonar-project.properties, defaulting to Debug')
+      options[:configuration] = 'Debug'
+    end
+    options
+  end
 end
 
-full_cmd = "set -o pipefail && #{cmd} | tee xcodebuild.log | xcpretty -t -r junit -o sonar-reports/TEST-report.xml"
-logger.debug("Will run #{full_cmd}")
-system(full_cmd)
+# A base class for tool wrappers.
+#
+# Mainly defines a common interface + includes some usefule modules.
+class Tool
+  include Logging
+  include CanFail
 
-### Compute coverage with Slather
-logger.info('Running Slather...')
+  def initialize(_options)
+    validate_settings!
+  end
 
-# TODO: could we automatically find the project to use?
-fatal_error('a project must be set in order to compute coverage') if project.nil?
+  def run
+  end
 
-exclude_from_coverage = properties[:'sonar.swift.excludedPathsFromCoverage']
-exclusion = exclude_from_coverage.split(',').join(' -i ')
-exclusion = "-i #{exclusion}" unless exclusion.empty?
+  protected
 
-cmd = "slather coverage --input-format profdata #{exclusion} --cobertura-xml --output-directory sonar-reports"
-cmd += " --workspace #{workspace}" unless workspace.nil?
-cmd += " --scheme #{scheme} #{project}"
-logger.debug("Slather command: #{cmd}")
-
-system(cmd)
-FileUtils.mv('sonar-reports/cobertura.xml', 'sonar-reports/coverage.xml')
-
-### SwiftLint
-logger.info('Running SwiftLint...')
-sources.each do |source|
-  system("swiftlint lint --path #{source} > sonar-reports/#{source.gsub(' ', '_')}-swiftlint.txt")
+  def validate_settings!
+  end
 end
 
+# Runs unit tests using Xcode with `xcodebuild`, and slather to report
+# the code coverage.
+class UnitTests < Tool
+  def initialize(options)
+    @workspace = options[:workspace]
+    @project = options[:project]
+    @scheme = options[:scheme]
+    @configuration = options[:configuration]
+    @simulator = options[:simulator]
 
-### Lizard
-logger.info('Running Lizard...')
-system("lizard --xml #{sources} > sonar-reports/lizard-reports.xml")
+    @exclude_from_coverage = options[:exclude_from_coverage]
 
-## Sending to Sonar
-system('sonar-scanner')
+    super(options)
+  end
 
+  def run
+    logger.info('Running clean/build/test')
+    build_and_test
+
+    logger.info('Running Slather...')
+    compute_coverage
+  end
+
+  private
+
+  def validate_settings!
+    # @workspace is optional
+    fatal_error('A project must be set in order to compute coverage') if @project.nil?
+    fatal_error('A scheme must be set in order to build and test the app') if @scheme.nil?
+    fatal_error('A configuration must be set in order to build and test the app') if @configuration.nil?
+    logger.warn('No simulator specified in sonar-project.properties') if @simulator.nil?
+    # @exclude_from_coverage is optional
+  end
+
+  # Run tests with Xcode
+  def build_and_test
+    container = if @project
+                  "-project \"#{@project}\""
+                else
+                  "-workspace \"#{@workspace}\""
+                end
+
+    xcode_cmd = "xcodebuild clean build test #{container} -scheme \"#{@scheme}\" -configuration \"#{@configuration}\" -enableCodeCoverage YES"
+    unless @simulator.nil?
+      xcode_cmd += " -destination '#{@simulator}' -destination-timeout 60"
+    end
+
+    cmd = "set -o pipefail && #{xcode_cmd} | tee xcodebuild.log | xcpretty -t -r junit -o sonar-reports/TEST-report.xml"
+    logger.debug("Will run #{cmd}")
+    system(cmd)
+  end
+
+  def compute_coverage
+    exclusion = @exclude_from_coverage.join(' -i ')
+    exclusion = "-i #{exclusion}" unless exclusion.empty?
+
+    cmd = "slather coverage --input-format profdata #{exclusion} --cobertura-xml --output-directory sonar-reports"
+    cmd += " --workspace #{@workspace}" unless @workspace.nil?
+    cmd += " --scheme #{@scheme} #{@project}"
+
+    logger.debug("Slather command: #{cmd}")
+    system(cmd)
+
+    FileUtils.mv('sonar-reports/cobertura.xml', 'sonar-reports/coverage.xml')
+  end
+end
+
+# SwiftLint checks code style and conventions.
+#
+# It is mainly based on the [Swift Style
+# Guide](https://github.com/github/swift-style-guide) and it may also be
+# used to enforce custom conventions.
+#
+# https://github.com/realm/SwiftLint
+class SwiftLint < Tool
+  def initialize(options)
+    @sources = options[:sources]
+    super(options)
+  end
+
+  def run
+    logger.info('Running SwiftLint...')
+    @sources.each do |source|
+      report_name = "#{source.tr(' ', '_')}-swiftlint.txt"
+      system("swiftlint lint --path #{source} > sonar-reports/#{report_name}")
+    end
+  end
+
+  private
+
+  def validate_settings!
+    fatal_error('Sources must be set') if @sources.nil?
+  end
+end
+
+# Lizard computes the code complexity.
+#
+# @see http://www.lizard.ws
+class Lizard < Tool
+  def initialize(options)
+    @sources = options[:sources]
+    super(options)
+  end
+
+  def run
+    logger.info('Running Lizard...')
+    system("lizard --xml #{@sources.join(' ')} > sonar-reports/lizard-reports.xml")
+  end
+
+  private
+
+  def validate_settings!
+    fatal_error('Sources must be set') if @sources.nil?
+  end
+end
+
+# Entry point of the script.
+#
+# It reads the configurations, run all analytic tools and send reports
+# to Sonar.
+class RunSonarSwift
+  include Logging
+
+  def run
+    opts_reader = PropertiesReader.new('sonar-project.properties')
+    options = opts_reader.read
+
+    bootstrap_reports_folder
+    bootstrap_mandatory_reports
+
+    tools = [UnitTests, SwiftLint, Lizard]
+    tools.each do |tool|
+      tool.new(options).run
+    end
+
+    send_reports
+  end
+
+  private
+
+  # Put default xml files with no tests and no coverage. This is needed to
+  # ensure a file is present, either the Xcode build test step worked or
+  # not. Without this, Sonar Scanner will fail uploading results.
+  def bootstrap_mandatory_reports
+    empty_test_report = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='AllTestUnits'></testsuites>"
+    File.write('sonar-reports/TEST-report.xml', empty_test_report)
+
+    empty_coverage_report = "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>"
+    File.write('sonar-reports/coverage.xml', empty_coverage_report)
+  end
+
+  def bootstrap_reports_folder
+    logger.info('Deleting and creating directory sonar-reports/')
+    FileUtils.rm_rf('sonar-reports')
+    Dir.mkdir('sonar-reports')
+  end
+
+  def send_reports
+    system('sonar-scanner')
+  end
+end
+
+RunSonarSwift.new.run
