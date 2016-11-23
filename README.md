@@ -17,6 +17,12 @@ The structure of the plugin is based on the [sonar-objective-c](https://github.c
   <img src="screenshot.png" alt="Example iOS SonarQube dashboard" width="100%"/>
 </p>
 
+In SonarQube under Quality Profiles the used Linter can be specified by selecting either the SwiftLint Profile or the Tailor Profile as Default profile for Swift Projects:
+<p align="center">
+
+  <img src="SwitchProfiles.png" alt="Set preferred profile (SwiftLint or Tailor) to default in SonarQube." width="100%"/>
+</p>
+
 ###Features
 
 
