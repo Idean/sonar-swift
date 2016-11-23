@@ -9,6 +9,7 @@
 XCTOOL_CMD=xctool
 SLATHER_CMD=slather
 SWIFTLINT_CMD=swiftlint
+TAILOR_CMD=tailor
 XCPRETTY_CMD=xcpretty
 LIZARD_CMD=lizard
 
@@ -126,6 +127,7 @@ vflag=""
 nflag=""
 unittests="on"
 swiftlint="on"
+tailor="on"
 lizard="on"
 
 while [ $# -gt 0 ]
@@ -135,6 +137,7 @@ do
     -n) nflag=on;;
     -nounittests) unittests="";;
 	  -noswiftlint) swiftlint="";;
+	  -notailor) tailor="";;
 	  --)	shift; break;;
 	  -*)
         echo >&2 "Usage: $0 [-v]"
@@ -180,6 +183,8 @@ testScheme=''; readParameter testScheme 'sonar.swift.testScheme'
 # Read destination simulator
 destinationSimulator=''; readParameter destinationSimulator 'sonar.swift.simulator'
 
+# Read tailor configuration
+tailorConfiguration=''; readParameter tailorConfiguration 'sonar.swift.tailor.config'
 
 # The file patterns to exclude from coverage report
 excludedPathsFromCoverage=''; readParameter excludedPathsFromCoverage 'sonar.swift.excludedPathsFromCoverage'
@@ -296,24 +301,48 @@ fi
 
 # SwiftLint
 if [ "$swiftlint" = "on" ]; then
+	if hash $SWIFTLINT_CMD 2>/dev/null; then
+		echo -n 'Running SwiftLint...'
 
-	echo -n 'Running SwiftLint...'
+		# Build the --include flags
+		currentDirectory=${PWD##*/}
+		echo "$srcDirs" | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
+		while read word; do
 
+			# Run SwiftLint command
+		    $SWIFTLINT_CMD lint --path $word > sonar-reports/$(echo $word | sed 's/\//_/g')-swiftlint.txt
 
-	# Build the --include flags
-	currentDirectory=${PWD##*/}
-	echo "$srcDirs" | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
-	while read word; do
-
-		# Run SwiftLint command
-	    $SWIFTLINT_CMD lint --path $word > sonar-reports/$(echo $word | sed 's/\//_/g')-swiftlint.txt
-
-	done < tmpFileRunSonarSh
-	rm -rf tmpFileRunSonarSh
-
+		done < tmpFileRunSonarSh
+		rm -rf tmpFileRunSonarSh
+	else
+		echo "Skipping SwiftLint (not installed!)"
+	fi
 
 else
 	echo 'Skipping SwiftLint (test purposes only!)'
+fi
+
+# Tailor
+if [ "$tailor" = "on" ]; then
+	if hash $TAILOR_CMD 2>/dev/null; then
+		echo -n 'Running Tailor...'
+
+		# Build the --include flags
+		currentDirectory=${PWD##*/}
+		echo "$srcDirs" | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
+		while read word; do
+
+			  # Run tailor command
+		    $TAILOR_CMD $tailorConfiguration $word > sonar-reports/$(echo $word | sed 's/\//_/g')-tailor.txt
+
+		done < tmpFileRunSonarSh
+		rm -rf tmpFileRunSonarSh
+	else
+		echo "Skipping Tailor (not installed!)"
+	fi
+
+else
+	echo 'Skipping Tailor!'
 fi
 
 # Lizard Complexity
