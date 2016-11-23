@@ -22,11 +22,11 @@ The structure of the plugin is based on the [sonar-objective-c](https://github.c
 
 | Feature 		| Supported	| Details	|
 |---------------|----------|:-----------:|
-| Complexity	|YES			|Uses [Lizard](https://github.com/terryyin/lizard)			|
+| Complexity	|YES			|Uses [Lizard](https://github.com/terryyin/lizard)|
 | Design		|NO			|			|
 | Documentation	|YES		|			|
 | Duplications	|YES		|			|
-| Issues		|YES		| Uses [SwiftLint](https://github.com/realm/SwiftLint)|
+| Issues		|YES		| Uses [SwiftLint](https://github.com/realm/SwiftLint) and/or [Tailor](https://github.com/sleekbyte/tailor)|
 | Size			|YES		|			|
 | Tests			|YES		| Uses xcodebuild + xcpretty [xcpretty](https://github.com/supermarin/xcpretty)			|
 | Code coverage	|YES			| Uses [slather](https://github.com/venmo/slather)			|
@@ -82,6 +82,7 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 - [SonarQube](http://docs.codehaus.org/display/SONAR/Setup+and+Upgrade) and [SonarQube Runner](http://docs.codehaus.org/display/SONAR/Installing+and+Configuring+SonarQube+Runner) installed ([HomeBrew](http://brew.sh) installed and ```brew install sonar-runner```)
 - [xcpretty](https://github.com/supermarin/xcpretty) (see instructions below)
 - [SwiftLint](https://github.com/realm/SwiftLint) ([HomeBrew](http://brew.sh) installed and ```brew install swiftlint```). Version 0.3.0 or above.
+- [Tailor](https://github.com/sleekbyte/tailor) ([HomeBrew](http://brew.sh) installed and ```brew install tailor```). Version 0.11.1 or above.
 - [slather](https://github.com/SlatherOrg/slather) (```gem install slather```). Version 2.1.0 or above.
 - [lizard](https://github.com/terryyin/lizard) ([PIP](https://pip.pypa.io/en/stable/installing/) installed and ```sudo pip install lizard```)
 
