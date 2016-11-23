@@ -25,17 +25,16 @@ In SonarQube under Quality Profiles the used Linter can be specified by selectin
 
 ###Features
 
-
-| Feature 		| Supported	| Details	|
-|---------------|----------|:-----------:|
-| Complexity	|YES			|Uses [Lizard](https://github.com/terryyin/lizard)|
-| Design		|NO			|			|
-| Documentation	|YES		|			|
-| Duplications	|YES		|			|
-| Issues		|YES		| Uses [SwiftLint](https://github.com/realm/SwiftLint) and/or [Tailor](https://github.com/sleekbyte/tailor)|
-| Size			|YES		|			|
-| Tests			|YES		| Uses xcodebuild + xcpretty [xcpretty](https://github.com/supermarin/xcpretty)			|
-| Code coverage	|YES			| Uses [slather](https://github.com/venmo/slather)			|
+| Feature 		| Supported	| MacOS	| Unix |
+|---------------|----------|:-----------:|:-----------:|
+| Complexity	|YES			|Uses [Lizard](https://github.com/terryyin/lizard)| Uses [Lizard](https://github.com/terryyin/lizard)|
+| Design		|NO			|			| |
+| Documentation	|YES		|			| |
+| Duplications	|YES		|			| |
+| Issues		|YES		| Uses [SwiftLint](https://github.com/realm/SwiftLint) and/or [Tailor](https://github.com/sleekbyte/tailor)| Uses [Tailor](https://github.com/sleekbyte/tailor)|
+| Size			|YES		|			||
+| Tests			|YES		| Uses xcodebuild + xcpretty [xcpretty](https://github.com/supermarin/xcpretty)	| Not Supported |
+| Code coverage	|YES			| Uses [slather](https://github.com/venmo/slather)			| Not Supported|
 
 
 ###Download
