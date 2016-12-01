@@ -294,8 +294,17 @@ class RunSonarSwift
     Dir.mkdir('sonar-reports')
   end
 
+  # Check if command is available in PATH
+  def command?(command)
+    system("which #{command} 2>&1 > /dev/null")
+  end
+
   def send_reports
-    system('sonar-scanner')
+    if command? 'sonar-scanner'
+      system('sonar-scanner')
+    else
+      system('sonar-runner')
+    end
   end
 end
 
