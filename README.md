@@ -45,6 +45,7 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 ####0.3.0
 - SonarQube 6 support. Important : will work with SonarQube 5.x and above only. Will not work anymore with SonarQube 4.5.x anymore.
 - SwiftLint 0.13.1 support (49 rules now).
+- Desactivation of unit tests and coverage is now allowed. Use **run-sonar-swift.sh -nounittests** to do it.
 
 ####0.2.4
 - Analysis does not fail anymore when an unkwown issue is reported by SwiftLint. See [issue 35](https://github.com/Backelite/sonar-swift/issues/35)
