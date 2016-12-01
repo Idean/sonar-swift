@@ -24,8 +24,11 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.CoverageMeasuresBuilder;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
@@ -41,6 +44,8 @@ import java.util.Locale;
 import java.util.Map;
 
 final class CoberturaReportParser {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaReportParser.class);
 
     private final FileSystem fileSystem;
     private final Project project;
@@ -81,7 +86,15 @@ final class CoberturaReportParser {
             collectFileMeasures(pack.descendantElementCursor("class"), builderByFilename);
             for (Map.Entry<String, CoverageMeasuresBuilder> entry : builderByFilename.entrySet()) {
                 String filePath = entry.getKey();
-                Resource resource = org.sonar.api.resources.File.fromIOFile(new File(fileSystem.baseDir(), filePath), project);
+                File file = new File(fileSystem.baseDir(), filePath);
+                InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
+
+                if (inputFile == null) {
+                    LOGGER.warn("file not included in sonar {}", filePath);
+                    continue;
+                }
+
+                Resource resource = context.getResource(inputFile);
                 if (resourceExists(resource)) {
                     for (Measure measure : entry.getValue().createMeasures()) {
                         context.saveMeasure(resource, measure);

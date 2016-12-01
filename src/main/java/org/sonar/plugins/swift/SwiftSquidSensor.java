@@ -28,12 +28,9 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
-import org.sonar.api.checks.AnnotationCheckFactory;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.PersistenceMode;
-import org.sonar.api.measures.RangeDistributionBuilder;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
@@ -50,9 +47,7 @@ import org.sonar.squidbridge.SquidAstVisitor;
 import org.sonar.squidbridge.api.CheckMessage;
 import org.sonar.squidbridge.api.SourceCode;
 import org.sonar.squidbridge.api.SourceFile;
-import org.sonar.squidbridge.api.SourceFunction;
 import org.sonar.squidbridge.checks.SquidCheck;
-import org.sonar.squidbridge.indexer.QueryByParent;
 import org.sonar.squidbridge.indexer.QueryByType;
 
 import java.util.Collection;
@@ -65,7 +60,6 @@ public class SwiftSquidSensor implements Sensor {
     private final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12, 20, 30};
     private final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
 
-    private final AnnotationCheckFactory annotationCheckFactory;
     private final FileSystem fileSystem;
     private final PathResolver pathResolver;
     private final ResourcePerspectives resourcePerspectives;
@@ -78,7 +72,6 @@ public class SwiftSquidSensor implements Sensor {
 
     public SwiftSquidSensor(RulesProfile profile, FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
 
-        this.annotationCheckFactory = AnnotationCheckFactory.create(profile, CheckList.REPOSITORY_KEY, CheckList.getChecks());
         this.fileSystem = fileSystem;
         this.pathResolver = pathResolver;
         this.resourcePerspectives = resourcePerspectives;
@@ -140,7 +133,7 @@ public class SwiftSquidSensor implements Sensor {
 
         Collection<CheckMessage> messages = squidFile.getCheckMessages();
 
-        Resource resource = context.getResource(org.sonar.api.resources.File.fromIOFile(inputFile.file(), project));
+        Resource resource = context.getResource(inputFile);
 
         if (messages != null && resource != null) {
             for (CheckMessage message : messages) {

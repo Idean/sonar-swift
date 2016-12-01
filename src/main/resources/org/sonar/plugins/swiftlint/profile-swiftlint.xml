@@ -9,6 +9,10 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>closure_spacing</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>colon</key>
     </rule>
     <rule>
@@ -17,7 +21,7 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
-      <key>conditional_binding_cascade</key>
+      <key>conditional_returns_on_newline</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -34,6 +38,10 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>empty_count</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>explicit_init</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -61,6 +69,10 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>implicit_getter</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>leading_whitespace</key>
     </rule>
     <rule>
@@ -77,7 +89,15 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>legacy_nsgeometry_functions</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>line_length</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>mark</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -89,11 +109,31 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>nimble_operator</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>opening_brace</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>operator_whitespace</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>overridden_super_call</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>private_outlet</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>private_unit_test</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>redundant_nil_coalescing</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -105,7 +145,19 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>switch_case_on_newline</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>syntactic_sugar</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>todo</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>trailing_comma</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -133,7 +185,19 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>valid_ibinspectable</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>variable_name</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>vertical_whitespace</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>weak_delegate</key>
     </rule>
   </rules>
 </profile>

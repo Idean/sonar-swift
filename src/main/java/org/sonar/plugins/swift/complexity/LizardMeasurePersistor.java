@@ -19,17 +19,21 @@
  */
 package org.sonar.plugins.swift.complexity;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
+import org.sonar.api.resources.Resource;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 public class LizardMeasurePersistor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LizardMeasurePersistor.class);
 
     private Project project;
     private SensorContext sensorContext;
@@ -48,22 +52,26 @@ public class LizardMeasurePersistor {
         }
 
         for (Map.Entry<String, List<Measure>> entry : measures.entrySet()) {
-            final org.sonar.api.resources.File file = org.sonar.api.resources.File.fromIOFile(new File(fileSystem.baseDir(), entry.getKey()), project);
-            if (fileExists(sensorContext, file)) {
+            File file = new File(fileSystem.baseDir(), entry.getKey());
+            InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
+
+            if (inputFile == null) {
+                LOGGER.warn("file not included in sonar {}", entry.getKey());
+                continue;
+            }
+
+            Resource resource = sensorContext.getResource(inputFile);
+
+            if (resource != null) {
                 for (Measure measure : entry.getValue()) {
                     try {
-                        LoggerFactory.getLogger(getClass()).debug("Save measure {} for file {}", measure.getMetric().getName(), file);
-                        sensorContext.saveMeasure(file, measure);
+                        LOGGER.debug("Save measure {} for file {}", measure.getMetric().getName(), file);
+                        sensorContext.saveMeasure(resource, measure);
                     } catch (Exception e) {
-                        LoggerFactory.getLogger(getClass()).error(" Exception -> {} -> {}", entry.getKey(), measure.getMetric().getName());
+                        LOGGER.error(" Exception -> {} -> {}", entry.getKey(), measure.getMetric().getName());
                     }
                 }
             }
         }
-    }
-
-    private boolean fileExists(final SensorContext context,
-                               final org.sonar.api.resources.File file) {
-        return context.getResource(file) != null;
     }
 }

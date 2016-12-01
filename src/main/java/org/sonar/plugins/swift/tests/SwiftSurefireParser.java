@@ -19,9 +19,7 @@
  */
 package org.sonar.plugins.swift.tests;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
@@ -41,6 +39,8 @@ import org.sonar.plugins.surefire.TestCaseDetails;
 import org.sonar.plugins.surefire.TestSuiteParser;
 import org.sonar.plugins.surefire.TestSuiteReport;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -114,17 +114,25 @@ class SwiftSurefireParser {
 
                     if (fileReport.getTests() > 0) {
                         double testsCount = fileReport.getTests() - fileReport.getSkipped();
-                        saveClassMeasure(fileReport, CoreMetrics.SKIPPED_TESTS, fileReport.getSkipped());
-                        saveClassMeasure(fileReport, CoreMetrics.TESTS, testsCount);
-                        saveClassMeasure(fileReport, CoreMetrics.TEST_ERRORS, fileReport.getErrors());
-                        saveClassMeasure(fileReport, CoreMetrics.TEST_FAILURES, fileReport.getFailures());
-                        saveClassMeasure(fileReport, CoreMetrics.TEST_EXECUTION_TIME, fileReport.getTimeMS());
+                        String testClass = fileReport.getClassKey();
+                        Resource resource = getUnitTestResource(testClass);
+
+                        if(resource == null) {
+                            LOG.warn("file for test class {} not found", testClass);
+                            continue;
+                        }
+
+                        saveClassMeasure(resource, CoreMetrics.SKIPPED_TESTS, fileReport.getSkipped());
+                        saveClassMeasure(resource, CoreMetrics.TESTS, testsCount);
+                        saveClassMeasure(resource, CoreMetrics.TEST_ERRORS, fileReport.getErrors());
+                        saveClassMeasure(resource, CoreMetrics.TEST_FAILURES, fileReport.getFailures());
+                        saveClassMeasure(resource, CoreMetrics.TEST_EXECUTION_TIME, fileReport.getTimeMS());
                         double passedTests = testsCount - fileReport.getErrors() - fileReport.getFailures();
                         if (testsCount > 0) {
                             double percentage = passedTests * 100d / testsCount;
-                            saveClassMeasure(fileReport, CoreMetrics.TEST_SUCCESS_DENSITY, ParsingUtils.scaleValue(percentage));
+                            saveClassMeasure(resource, CoreMetrics.TEST_SUCCESS_DENSITY, ParsingUtils.scaleValue(percentage));
                         }
-                        saveTestsDetails(fileReport);
+                        saveTestsDetails(resource, fileReport);
                         analyzedReports.add(fileReport);
                     }
                 }
@@ -135,7 +143,7 @@ class SwiftSurefireParser {
         }
     }
 
-    private void saveTestsDetails(TestSuiteReport fileReport) throws TransformerException {
+    private void saveTestsDetails(@Nonnull Resource resource, @Nonnull TestSuiteReport fileReport) throws TransformerException {
 
         StringBuilder testCaseDetails = new StringBuilder(256);
         testCaseDetails.append("<tests-details>");
@@ -156,49 +164,35 @@ class SwiftSurefireParser {
             }
         }
         testCaseDetails.append("</tests-details>");
-        context.saveMeasure(getUnitTestResource(fileReport.getClassKey()), new Measure(CoreMetrics.TEST_DATA, testCaseDetails.toString()));
+        context.saveMeasure(resource, new Measure(CoreMetrics.TEST_DATA, testCaseDetails.toString()));
     }
 
-    private void saveClassMeasure(TestSuiteReport fileReport, Metric metric, double value) {
+    private void saveClassMeasure(@Nonnull Resource resource, Metric metric, double value) {
 
-        if ( !Double.isNaN(value)) {
-
-            context.saveMeasure(getUnitTestResource(fileReport.getClassKey()), metric, value);
-
+        if (Double.isNaN(value)) {
+            return;
         }
+        context.saveMeasure(resource, metric, value);
     }
 
-    public Resource getUnitTestResource(String classname) {
+    private @Nullable Resource getUnitTestResource(String classname) {
 
-        String fileName = classname.replace('.', '/') + ".swift";
+        String[] classNameParts = classname.split("\\.");
+        String classNameWithoutModule = classNameParts.length > 1 ? classNameParts[1] : classNameParts[0];
+        String fileName = classNameWithoutModule + ".swift";
 
-        File file = new File(fileName);
-        if (!file.isAbsolute()) {
-            file = new File(fileSystem.baseDir(), fileName);
+        InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().matchesPathPattern("**/" + fileName));
+        if (inputFile == null) {
+            return null;
         }
 
-        /*
-         * Most xcodebuild JUnit parsers don't include the path to the class in the class field, so search for it if it
-         * wasn't found in the root.
-         */
-        if (!file.isFile() || !file.exists()) {
-            List<File> files = ImmutableList.copyOf(fileSystem.files(fileSystem.predicates().and(
-                    fileSystem.predicates().hasType(InputFile.Type.TEST),
-                    fileSystem.predicates().matchesPathPattern("**/" + fileName))));
+        Resource resource = context.getResource(inputFile);
 
-            if (files.isEmpty()) {
-                LOG.info("Unable to locate test source file {}", fileName);
-            } else {
-                /*
-                 * Lazily get the first file, since we wouldn't be able to determine the correct one from just the
-                 * test class name in the event that there are multiple matches.
-                 */
-                file = files.get(0);
-            }
+        if(resource instanceof org.sonar.api.resources.File) {
+            org.sonar.api.resources.File sonarFile = (org.sonar.api.resources.File) resource;
+            sonarFile.setQualifier(Qualifiers.UNIT_TEST_FILE);
         }
 
-        org.sonar.api.resources.File sonarFile = org.sonar.api.resources.File.fromIOFile(file, project);
-        sonarFile.setQualifier(Qualifiers.UNIT_TEST_FILE);
-        return sonarFile;
+        return resource;
     }
 }
