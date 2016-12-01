@@ -288,7 +288,7 @@ if [ "$unittests" = "on" ]; then
     if [[ ! -z "$workspaceFile" ]]; then
         slatherCmd+=( --workspace $workspaceFile)
     fi
-    slatherCmd+=( --scheme "$appScheme" $firstProject)
+    slatherCmd+=( --scheme "$appScheme" "$firstProject")
 
     runCommand /dev/stdout "${slatherCmd[@]}"
     mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
@@ -330,7 +330,7 @@ fi
 
 # SonarQube
 echo -n 'Running SonarQube using SonarQube Runner'
-runCommand /dev/stdout sonar-runner
+runCommand /dev/stdout sonar-runner || runCommand /dev/stdout sonar-scanner
 
 # Kill progress indicator
 stopProgress
