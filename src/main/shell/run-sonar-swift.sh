@@ -332,7 +332,7 @@ fi
 
 # SonarQube
 echo -n 'Running SonarQube using SonarQube Runner'
-runCommand /dev/stdout sonar-runner || runCommand /dev/stdout sonar-scanner
+runCommand /dev/stdout sonar-runner
 
 # Kill progress indicator
 stopProgress
