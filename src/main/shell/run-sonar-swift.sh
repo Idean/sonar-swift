@@ -176,6 +176,8 @@ appScheme=''; readParameter appScheme 'sonar.swift.appScheme'
 appConfiguration=''; readParameter appConfiguration 'sonar.swift.appConfiguration'
 # The name of your test scheme in Xcode
 testScheme=''; readParameter testScheme 'sonar.swift.testScheme'
+# The name of your binary file (application)
+binaryName=''; readParameter binaryName 'sonar.projectKey'
 
 # Read destination simulator
 destinationSimulator=''; readParameter destinationSimulator 'sonar.swift.simulator'
@@ -288,7 +290,7 @@ if [ "$unittests" = "on" ]; then
     if [[ ! -z "$workspaceFile" ]]; then
         slatherCmd+=( --workspace $workspaceFile)
     fi
-    slatherCmd+=( --scheme "$appScheme" $firstProject)
+    slatherCmd+=( --scheme "$appScheme" --binary-file "$binaryName" "$firstProject")
 
     runCommand /dev/stdout "${slatherCmd[@]}"
     mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
@@ -330,7 +332,7 @@ fi
 
 # SonarQube
 echo -n 'Running SonarQube using SonarQube Runner'
-runCommand /dev/stdout sonar-runner
+runCommand /dev/stdout sonar-runner || runCommand /dev/stdout sonar-scanner
 
 # Kill progress indicator
 stopProgress
