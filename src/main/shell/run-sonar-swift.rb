@@ -7,8 +7,6 @@
 # Ensure this file exists in
 # /usr/local/cellar/sonar-scanner/<version>/libexec/conf/sonar-scanner.properties
 # (if using HomeBrew to install Sonar Scanner).
-#
-# TODO: disable tool if not installed and show a warning message
 require 'fileutils'
 require 'java-properties'
 require 'logger'
@@ -98,10 +96,14 @@ end
 
 # A base class for tool wrappers.
 #
-# Mainly defines a common interface + includes some usefule modules.
+# Mainly defines a common interface + includes some useful modules.
 class Tool
   include Logging
   include CanFail
+
+  def self.command
+    '<not specified>'
+  end
 
   def initialize(_options)
     validate_settings!
@@ -119,6 +121,10 @@ end
 # Runs unit tests using Xcode with `xcodebuild`, and slather to report
 # the code coverage.
 class UnitTests < Tool
+  def self.command
+    'xcodebuild'
+  end
+
   def initialize(options)
     @workspace = options[:workspace]
     @project = options[:project]
@@ -191,6 +197,10 @@ end
 #
 # https://github.com/realm/SwiftLint
 class SwiftLint < Tool
+  def self.command
+    'swiftlint'
+  end
+
   def initialize(options)
     @sources = options[:sources]
     super(options)
@@ -217,6 +227,10 @@ end
 #
 # @see http://www.lizard.ws
 class Lizard < Tool
+  def self.command
+    'lizard'
+  end
+
   def initialize(options)
     @sources = options[:sources]
     super(options)
@@ -266,6 +280,9 @@ class RunSonarSwift
     bootstrap_reports_folder
     bootstrap_mandatory_reports
 
+    # Filter tools by availability
+    tools = available_tools(tools)
+
     # Call tools
     tools.each do |tool|
       tool.new(options).run
@@ -292,6 +309,18 @@ class RunSonarSwift
     logger.info('Deleting and creating directory sonar-reports/')
     FileUtils.rm_rf('sonar-reports')
     Dir.mkdir('sonar-reports')
+  end
+
+  # Check each tool is available and return an updated list of tool.
+  def available_tools(tools)
+    tools.select do |tool|
+      if command? tool.command
+        true
+      else
+        logger.warn("#{tool.command} is not found in PATH and won't be available in reports.")
+        false
+      end
+    end
   end
 
   # Check if command is available in PATH
