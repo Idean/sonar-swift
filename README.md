@@ -42,6 +42,10 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 
 ###Release history
 
+####0.3.1 - in progress
+- Now falls back to sonar-scanner if sonar-runner is not installed (thanks to [MaikoHermans](https://github.com/MaikoHermans). See [PR 55](https://github.com/Backelite/sonar-swift/pull/55))
+
+
 ####0.3.0
 - SonarQube 6 support. Important : will work with SonarQube 5.x and above only. Will not work anymore with SonarQube 4.5.x anymore.
 - SwiftLint 0.13.1 support (49 rules now).
