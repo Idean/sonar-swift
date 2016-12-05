@@ -59,19 +59,13 @@ public class SwiftProfile extends ProfileDefinition {
 		profile.setDefaultProfile(true);
 
 		try {
-			// add swift lint rules
+			// Add swift lint rules
 			config = new InputStreamReader(getClass().getResourceAsStream(SwiftLintProfile.PROFILE_PATH));
 			RulesProfile ocLintRulesProfile = this.swiftLintProfileImporter.importProfile(config, messages);
 			for (ActiveRule rule : ocLintRulesProfile.getActiveRules()) {
 				profile.addActiveRule(rule);
 			}
 
-			//add tailor rules
-			config = new InputStreamReader(getClass().getResourceAsStream(TailorProfile.PROFILE_PATH));
-			RulesProfile ocTailorRulesProfile = this.tailorProfileImporter.importProfile(config, messages);
-			for (ActiveRule rule : ocTailorRulesProfile.getActiveRules()) {
-				profile.addActiveRule(rule);
-			}
 
 			return profile;
 		} finally {

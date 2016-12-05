@@ -273,7 +273,7 @@ if [ "$unittests" = "on" ]; then
     mv build/reports/junit.xml sonar-reports/TEST-report.xml
 
 
-    fprint '\nComputing coverage report\n'
+    echo '\nComputing coverage report\n'
 
     # Build the --exclude flags
     excludedCommandLineFlags=""
