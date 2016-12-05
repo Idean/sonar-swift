@@ -50,6 +50,7 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 ####0.3.1 - in progress
 - Now falls back to sonar-scanner if sonar-runner is not installed (thanks to [MaikoHermans](https://github.com/MaikoHermans). See [PR 59](https://github.com/Backelite/sonar-swift/pull/59))
 - Ability to set *sonar.swift.appName*. Useful when basename is different from targeted scheme, or when slather fails with 'No product binary found' (thanks to [MaikoHermans](https://github.com/MaikoHermans). See [PR 58](https://github.com/Backelite/sonar-swift/pull/58))
+- Added a second linter: Tailor. Enables analysis of Swift code on linux. (thanks to [tzwickl](https://github.com/tzwickl) for the hard work. See [PR 51](https://github.com/Backelite/sonar-swift/pull/51))
 
 
 ####0.3.0
