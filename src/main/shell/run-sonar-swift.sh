@@ -176,6 +176,8 @@ appScheme=''; readParameter appScheme 'sonar.swift.appScheme'
 appConfiguration=''; readParameter appConfiguration 'sonar.swift.appConfiguration'
 # The name of your test scheme in Xcode
 testScheme=''; readParameter testScheme 'sonar.swift.testScheme'
+# The name of your binary file (application)
+binaryName=''; readParameter binaryName 'sonar.swift.appName'
 
 # Read destination simulator
 destinationSimulator=''; readParameter destinationSimulator 'sonar.swift.simulator'
@@ -266,7 +268,7 @@ if [ "$unittests" = "on" ]; then
     mv build/reports/junit.xml sonar-reports/TEST-report.xml
 
 
-    echo -n 'Computing coverage report'
+    fprint '\nComputing coverage report\n'
 
     # Build the --exclude flags
     excludedCommandLineFlags=""
@@ -284,11 +286,19 @@ if [ "$unittests" = "on" ]; then
     projectArray=(${projectFile//,/ })
     firstProject=${projectArray[0]}
 
-    slatherCmd=($SLATHER_CMD coverage --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
+    slatherCmd=($SLATHER_CMD coverage)
+    if [[ ! -z "$binaryName" ]]; then
+    	slatherCmd+=( --binary-basename "$binaryName")
+    fi
+
+    slatherCmd+=( --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
+
     if [[ ! -z "$workspaceFile" ]]; then
         slatherCmd+=( --workspace $workspaceFile)
     fi
     slatherCmd+=( --scheme "$appScheme" "$firstProject")
+
+    echo "${slatherCmd[@]}"
 
     runCommand /dev/stdout "${slatherCmd[@]}"
     mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
@@ -330,7 +340,11 @@ fi
 
 # SonarQube
 echo -n 'Running SonarQube using SonarQube Runner'
-runCommand /dev/stdout sonar-runner || runCommand /dev/stdout sonar-scanner
+if hash /dev/stdout sonar-runner 2>/dev/null; then
+	runCommand /dev/stdout sonar-runner 
+else
+	runCommand /dev/stdout sonar-scanner
+fi
 
 # Kill progress indicator
 stopProgress
