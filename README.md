@@ -43,7 +43,8 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 ###Release history
 
 ####0.3.1 - in progress
-- Now falls back to sonar-scanner if sonar-runner is not installed (thanks to [MaikoHermans](https://github.com/MaikoHermans). See [PR 55](https://github.com/Backelite/sonar-swift/pull/55))
+- Now falls back to sonar-scanner if sonar-runner is not installed (thanks to [MaikoHermans](https://github.com/MaikoHermans). See [PR 59](https://github.com/Backelite/sonar-swift/pull/59))
+- Ability to set *sonar.swift.appName*. Useful when basename is different from targeted scheme, or when slather fails with 'No product binary found' (thanks to [MaikoHermans](https://github.com/MaikoHermans). See [PR 58](https://github.com/Backelite/sonar-swift/pull/58))
 
 
 ####0.3.0
