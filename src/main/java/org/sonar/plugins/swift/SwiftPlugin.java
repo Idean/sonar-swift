@@ -19,7 +19,8 @@
  */
 package org.sonar.plugins.swift;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
+
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
@@ -32,10 +33,14 @@ import org.sonar.plugins.swift.issues.swiftlint.SwiftLintProfile;
 import org.sonar.plugins.swift.issues.swiftlint.SwiftLintProfileImporter;
 import org.sonar.plugins.swift.issues.swiftlint.SwiftLintRulesDefinition;
 import org.sonar.plugins.swift.issues.swiftlint.SwiftLintSensor;
+import org.sonar.plugins.swift.issues.tailor.TailorProfile;
+import org.sonar.plugins.swift.issues.tailor.TailorProfileImporter;
+import org.sonar.plugins.swift.issues.tailor.TailorRulesDefinition;
+import org.sonar.plugins.swift.issues.tailor.TailorSensor;
 import org.sonar.plugins.swift.lang.core.Swift;
 import org.sonar.plugins.swift.tests.SwiftSurefireSensor;
 
-import java.util.List;
+import com.google.common.collect.ImmutableList;
 
 @Properties({
         @Property(
@@ -49,6 +54,13 @@ import java.util.List;
                 key = SwiftLintSensor.REPORT_PATH_KEY,
                 defaultValue = SwiftLintSensor.DEFAULT_REPORT_PATH,
                 name = "Path to SwiftLint report",
+                description = "Relative to projects' root.",
+                global = false,
+                project = true),
+        @Property(
+                key = TailorSensor.REPORT_PATH_KEY,
+                defaultValue = TailorSensor.DEFAULT_REPORT_PATH,
+                name = "Path to Tailor report",
                 description = "Relative to projects' root.",
                 global = false,
                 project = true),
@@ -87,6 +99,14 @@ public class SwiftPlugin extends SonarPlugin {
                 // SwiftLint guality profile
                 SwiftLintProfile.class,
                 SwiftLintProfileImporter.class,
+                
+                // Tailor rules
+                TailorSensor.class,
+                TailorRulesDefinition.class,
+                
+                // Tailor quality profile
+                TailorProfile.class,
+                TailorProfileImporter.class,
 
                 // duplications search
                 SwiftCpdMapping.class,

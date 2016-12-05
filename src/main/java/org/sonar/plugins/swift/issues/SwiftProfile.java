@@ -19,7 +19,9 @@
  */
 package org.sonar.plugins.swift.issues;
 
-import com.google.common.io.Closeables;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.profiles.ProfileDefinition;
@@ -28,42 +30,53 @@ import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.utils.ValidationMessages;
 import org.sonar.plugins.swift.issues.swiftlint.SwiftLintProfile;
 import org.sonar.plugins.swift.issues.swiftlint.SwiftLintProfileImporter;
+import org.sonar.plugins.swift.issues.tailor.TailorProfile;
+import org.sonar.plugins.swift.issues.tailor.TailorProfileImporter;
 import org.sonar.plugins.swift.lang.core.Swift;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
+import com.google.common.io.Closeables;
 
 public class SwiftProfile extends ProfileDefinition {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftProfile.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(SwiftProfile.class);
 
-    private final SwiftLintProfileImporter swiftLintProfileImporter;
+	private final SwiftLintProfileImporter swiftLintProfileImporter;
+	private final TailorProfileImporter tailorProfileImporter;
 
-    public SwiftProfile(final SwiftLintProfileImporter swiftLintProfileImporter) {
-        this.swiftLintProfileImporter = swiftLintProfileImporter;
-    }
+	public SwiftProfile(final SwiftLintProfileImporter swiftLintProfileImporter,
+			final TailorProfileImporter tailorProfileImporter) {
+		this.swiftLintProfileImporter = swiftLintProfileImporter;
+		this.tailorProfileImporter = tailorProfileImporter;
+	}
 
+	@Override
+	public RulesProfile createProfile(final ValidationMessages messages) {
 
-    @Override
-    public RulesProfile createProfile(ValidationMessages messages) {
+		LOGGER.info("Creating Swift Profile");
 
-        LOGGER.info("Creating Swift Profile");
+		Reader config = null;
+		final RulesProfile profile = RulesProfile.create("Swift", Swift.KEY);
+		profile.setDefaultProfile(true);
 
-        Reader config = null;
-        final RulesProfile profile = RulesProfile.create("Swift", Swift.KEY);
-        profile.setDefaultProfile(true);
+		try {
+			// add swift lint rules
+			config = new InputStreamReader(getClass().getResourceAsStream(SwiftLintProfile.PROFILE_PATH));
+			RulesProfile ocLintRulesProfile = this.swiftLintProfileImporter.importProfile(config, messages);
+			for (ActiveRule rule : ocLintRulesProfile.getActiveRules()) {
+				profile.addActiveRule(rule);
+			}
 
-        try {
-            config = new InputStreamReader(getClass().getResourceAsStream(SwiftLintProfile.PROFILE_PATH));
-            RulesProfile ocLintRulesProfile = swiftLintProfileImporter.importProfile(config, messages);
-            for (ActiveRule rule : ocLintRulesProfile.getActiveRules()) {
-                profile.addActiveRule(rule);
-            }
+			//add tailor rules
+			config = new InputStreamReader(getClass().getResourceAsStream(TailorProfile.PROFILE_PATH));
+			RulesProfile ocTailorRulesProfile = this.tailorProfileImporter.importProfile(config, messages);
+			for (ActiveRule rule : ocTailorRulesProfile.getActiveRules()) {
+				profile.addActiveRule(rule);
+			}
 
-            return profile;
-        } finally {
+			return profile;
+		} finally {
 
-            Closeables.closeQuietly(config);
-        }
-    }
+			Closeables.closeQuietly(config);
+		}
+	}
 }
