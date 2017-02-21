@@ -139,6 +139,8 @@ If you still have *run-sonar-swift.sh* file in each of your project (not recomme
 
 Feel free to contribute to this plugin by issuing pull requests to this repository.
 
+When creating a pull request: always create it for the *develop* branch. 
+
 ###License
 
 SonarQube Plugin for Swift is released under the [GNU LGPL 3 license](http://www.gnu.org/licenses/lgpl.txt).
