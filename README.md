@@ -50,6 +50,8 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 ####0.3.2
 - SwiftLint 0.16.1 (75 rules now).
 - Fixed [Metric 'test_data' should not be computed by a Sensor](https://github.com/Backelite/sonar-swift/issues/61) with SonarQube 6.2
+- Fastlane documentation update by [mammuth](https://github.com/mammuth). See [PR 62](https://github.com/Backelite/sonar-swift/pull/62)
+- run-sonar-swift.sh fix by [TheSkwiggs](https://github.com/mammuth). See [PR 64](https://github.com/Backelite/sonar-swift/pull/64)
 
 ####0.3.1
 - Now falls back to sonar-scanner if sonar-runner is not installed (thanks to [MaikoHermans](https://github.com/MaikoHermans). See [PR 59](https://github.com/Backelite/sonar-swift/pull/59))
