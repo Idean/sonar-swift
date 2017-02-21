@@ -26,7 +26,7 @@
 
     <groupId>com.backelite.sonarqube</groupId>
     <artifactId>backelite-sonar-swift-plugin</artifactId>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
 
     <packaging>sonar-plugin</packaging>
 

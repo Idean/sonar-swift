@@ -1,9 +1,37 @@
 [
     {
+        "key": "attributes",
+        "category": "SwiftLint",
+        "name": "Attributes",
+        "description": "Attributes should be on their own lines in functions and types, but on the same line as variables and imports.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "class_delegate_protocol",
+        "category": "SwiftLint",
+        "name": "Class Delegate Protocol",
+        "description": "Delegate protocols should be class-only so they can be weakly referenced.",
+        "severity": "MINOR"
+    },
+    {
         "key": "closing_brace",
         "category": "SwiftLint",
         "name": "Closing Brace Spacing",
         "description": "Closing brace with closing parenthesis should not have any whitespaces in the middle.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "closure_end_indentation",
+        "category": "SwiftLint",
+        "name": "Closure End Indentation",
+        "description": "Closure end should have the same indentation as the line that started it.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "closure_parameter_position",
+        "category": "SwiftLint",
+        "name": "Closure Parameter Position",
+        "description": "Closure parameters should be on the same line as opening brace.",
         "severity": "MINOR"
     },
     {
@@ -17,7 +45,7 @@
         "key": "colon",
         "category": "SwiftLint",
         "name": "Colon",
-        "description": "Colons should be next to the identifier when specifying a type.",
+        "description": "Colons should be next to the identifier when specifying a type and next to the key in dictionary literals.",
         "severity": "MINOR"
     },
     {
@@ -25,6 +53,13 @@
         "category": "SwiftLint",
         "name": "Comma Spacing",
         "description": "There should be no space before and one after any comma.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "compiler_protocol_init",
+        "category": "SwiftLint",
+        "name": "Compiler Protocol Init",
+        "description": "The initializers declared in compiler protocols such as `ExpressibleByArrayLiteral` shouldn't be called directly.",
         "severity": "MINOR"
     },
     {
@@ -56,10 +91,31 @@
         "severity": "CRITICAL"
     },
     {
+        "key": "dynamic_inline",
+        "category": "SwiftLint",
+        "name": "Dynamic Inline",
+        "description": "avoid using 'dynamic' and '@inline(__always)' together.",
+        "severity": "MINOR"
+    },
+    {
         "key": "empty_count",
         "category": "SwiftLint",
         "name": "Empty Count",
         "description": "Prefer checking `isEmpty` over comparing `count` to zero.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "empty_parameters",
+        "category": "SwiftLint",
+        "name": "Empty Parameters",
+        "description": "Prefer `() -> ` over `Void -> `.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "empty_parentheses_with_trailing_closure",
+        "category": "SwiftLint",
+        "name": "Empty Parentheses with Trailing Closure",
+        "description": "When using trailing closures, empty parentheses should be avoided after the method call.",
         "severity": "MINOR"
     },
     {
@@ -70,11 +126,25 @@
         "severity": "MINOR"
     },
     {
+        "key": "file_header",
+        "category": "SwiftLint",
+        "name": "File Header",
+        "description": "Files should have consistent header comments.",
+        "severity": "MINOR"
+    },
+    {
         "key": "file_length",
         "category": "SwiftLint",
         "name": "File Line Length",
         "description": "Files should not span too many lines.",
         "severity": "MAJOR"
+    },
+    {
+        "key": "first_where",
+        "category": "SwiftLint",
+        "name": "First Where",
+        "description": "Prefer using `.first(where:)` over `.filter { }.first` in collections.",
+        "severity": "MINOR"
     },
     {
         "key": "force_cast",
@@ -112,10 +182,24 @@
         "severity": "MINOR"
     },
     {
+        "key": "generic_type_name",
+        "category": "SwiftLint",
+        "name": "Generic Type Name",
+        "description": "Generic type name should only contain alphanumeric characters, start with an uppercase character and span between 1 and 20 characters in length.",
+        "severity": "MINOR"
+    },
+    {
         "key": "implicit_getter",
         "category": "SwiftLint",
         "name": "Implicit Getter",
         "description": "Computed read-only properties should avoid using the get keyword.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "large_tuple",
+        "category": "SwiftLint",
+        "name": "Large Tuple",
+        "description": "Tuples shouldn't have too many members. Create a custom type instead.",
         "severity": "MINOR"
     },
     {
@@ -189,10 +273,31 @@
         "severity": "MINOR"
     },
     {
+        "key": "number_separator",
+        "category": "SwiftLint",
+        "name": "Number Separator",
+        "description": "Underscores should be used as thousand separator in large decimal numbers.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "object_literal",
+        "category": "SwiftLint",
+        "name": "Object Literal",
+        "description": "Prefer object literals over image and color inits.",
+        "severity": "MINOR"
+    },
+    {
         "key": "opening_brace",
         "category": "SwiftLint",
         "name": "Opening Brace Spacing",
         "description": "Opening braces should be preceded by a single space and on the same line as the declaration.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "operator_usage_whitespace",
+        "category": "SwiftLint",
+        "name": "Operator Usage Whitespace",
+        "description": "Operators should be surrounded by a single whitespace when they are being used.",
         "severity": "MINOR"
     },
     {
@@ -224,6 +329,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "prohibited_super_call",
+        "category": "SwiftLint",
+        "name": "Prohibited calls to super",
+        "description": "Some methods should not call super",
+        "severity": "MINOR"
+    },
+    {
         "key": "redundant_nil_coalescing",
         "category": "SwiftLint",
         "name": "Redundant Nil Coalescing",
@@ -231,10 +343,45 @@
         "severity": "MINOR"
     },
     {
+        "key": "redundant_optional_initialization",
+        "category": "SwiftLint",
+        "name": "Redundant Optional Initialization",
+        "description": "Initializing an optional variable with nil is redundant.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "redundant_string_enum_value",
+        "category": "SwiftLint",
+        "name": "Redundant String Enum Value",
+        "description": "String enum values can be omitted when they are equal to the enumcase name.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "redundant_void_return",
+        "category": "SwiftLint",
+        "name": "Redundant Void Return",
+        "description": "Returning Void in a function declaration is redundant.",
+        "severity": "MINOR"
+    },
+    {
         "key": "return_arrow_whitespace",
         "category": "SwiftLint",
         "name": "Returning Whitespace",
         "description": "Return arrow and return type should be separated by a single space or on a separate line.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "shorthand_operator",
+        "category": "SwiftLint",
+        "name": "Shorthand Operator",
+        "description": "Prefer shorthand operators (+=, -=, *=, /=) over doing the operation and assigning.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "sorted_imports",
+        "category": "SwiftLint",
+        "name": "Sorted Imports",
+        "description": "Imports should be sorted.",
         "severity": "MINOR"
     },
     {
@@ -308,6 +455,27 @@
         "severity": "MINOR"
     },
     {
+        "key": "unused_closure_parameter",
+        "category": "SwiftLint",
+        "name": "Unused Closure Parameter",
+        "description": "Unused parameter in a closure should be replaced with _.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "unused_enumerated",
+        "category": "SwiftLint",
+        "name": "Unused Enumerated",
+        "description": "When the index is not used, .enumerated() can be removed.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "unused_optional_binding",
+        "category": "SwiftLint",
+        "name": "Unused Optional Binding",
+        "description": "Prefer `!= nil` over `let _ =`",
+        "severity": "MINOR"
+    },
+    {
         "key": "valid_docs",
         "category": "SwiftLint",
         "name": "Valid Docs",
@@ -329,10 +497,24 @@
         "severity": "CRITICAL"
     },
     {
+        "key": "vertical_parameter_alignment",
+        "category": "SwiftLint",
+        "name": "Vertical Parameter Alignment",
+        "description": "Function parameters should be aligned vertically if they're in multiple lines in a declaration.",
+        "severity": "MINOR"
+    },
+    {
         "key": "vertical_whitespace",
         "category": "SwiftLint",
         "name": "Vertical Whitespace",
         "description": "Limit vertical whitespace to a single empty line.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "void_return",
+        "category": "SwiftLint",
+        "name": "Void Return",
+        "description": "Prefer `-> Void` over `-> ()`.",
         "severity": "MINOR"
     },
     {
