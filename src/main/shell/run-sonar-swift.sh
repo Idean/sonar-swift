@@ -225,7 +225,7 @@ if [ "$vflag" = "on" ]; then
  	echo "Xcode project file is: $projectFile"
 	echo "Xcode workspace file is: $workspaceFile"
  	echo "Xcode application scheme is: $appScheme"
-  if [ -n "$unittests"]; then
+  if [ -n "$unittests" ]; then
  	    echo "Destination simulator is: $destinationSimulator"
  	    echo "Excluded paths from coverage are: $excludedPathsFromCoverage"
   else
