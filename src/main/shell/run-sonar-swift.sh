@@ -129,6 +129,7 @@ unittests="on"
 swiftlint="on"
 tailor="on"
 lizard="on"
+sonarscanner=""
 
 while [ $# -gt 0 ]
 do
@@ -136,13 +137,14 @@ do
     -v)	vflag=on;;
     -n) nflag=on;;
     -nounittests) unittests="";;
-	  -noswiftlint) swiftlint="";;
-	  -notailor) tailor="";;
-	  --)	shift; break;;
-	  -*)
+    -noswiftlint) swiftlint="";;
+    -notailor) tailor="";;
+    -usesonarscanner) sonarscanner="on";;
+	--)	shift; break;;
+	-*)
         echo >&2 "Usage: $0 [-v]"
 		    exit 1;;
-	  *)	break;;		# terminate while loop
+	*)	break;;		# terminate while loop
     esac
     shift
 done
@@ -368,11 +370,20 @@ else
 fi
 
 # SonarQube
-echo -n 'Running SonarQube using SonarQube Runner'
-if hash /dev/stdout sonar-runner 2>/dev/null; then
-	runCommand /dev/stdout sonar-runner 
+if [ "$sonarscanner" = "on" ]; then
+    echo -n 'Running SonarQube using SonarQube Scanner'
+    if hash /dev/stdout sonar-scanner 2>/dev/null; then
+        runCommand /dev/stdout sonar-scanner
+    else
+        echo 'Skipping sonar-scanner (not installed!)'
+    fi
 else
-	runCommand /dev/stdout sonar-scanner
+    echo -n 'Running SonarQube using SonarQube Runner'
+    if hash /dev/stdout sonar-runner 2>/dev/null; then
+	   runCommand /dev/stdout sonar-runner 
+    else
+	   runCommand /dev/stdout sonar-scanner
+    fi
 fi
 
 # Kill progress indicator
