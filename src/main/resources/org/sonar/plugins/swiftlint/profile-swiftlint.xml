@@ -57,6 +57,10 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>discarded_notification_center_observer</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>dynamic_inline</key>
     </rule>
     <rule>
@@ -77,6 +81,14 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>explicit_type_interface</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>fatal_error_message</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>file_header</key>
     </rule>
     <rule>
@@ -86,6 +98,10 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>first_where</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>for_where</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -113,7 +129,15 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>identifier_name</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>implicit_getter</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>implicitly_unwrapped_optional</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -161,6 +185,10 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>notification_center_detachment</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>number_separator</key>
     </rule>
     <rule>
@@ -194,6 +222,10 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>prohibited_super_call</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>redundant_discardable_let</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -282,10 +314,6 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>valid_ibinspectable</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>variable_name</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
