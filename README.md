@@ -47,6 +47,11 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 
 ### Release history
 
+#### 0.3.4
+- SwiftLint 0.18.1 (add 8 more rules)
+- Fix README headers
+- Update README URLs to SonarQube
+
 #### 0.3.3
 - Updated run-sonar-swift.sh to support -usesonarscanner (for sonar-scanner instead of sonar-runner). 
 
