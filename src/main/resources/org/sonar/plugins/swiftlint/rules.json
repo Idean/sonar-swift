@@ -91,6 +91,13 @@
         "severity": "CRITICAL"
     },
     {
+        "key": "discarded_notification_center_observer",
+        "category": "SwiftLint",
+        "name": "Discarded Notification Center Observer",
+        "description": "When registing for a notification using a block, the opaque observer that is returned should be stored so it can be removed later.",
+        "severity": "MINOR"
+    },
+    {
         "key": "dynamic_inline",
         "category": "SwiftLint",
         "name": "Dynamic Inline",
@@ -126,6 +133,20 @@
         "severity": "MINOR"
     },
     {
+        "key": "explicit_type_interface",
+        "category": "SwiftLint",
+        "name": "Explicit Type Interface",
+        "description": "Properties should have a type interface",
+        "severity": "MINOR"
+    },
+    {
+        "key": "fatal_error_message",
+        "category": "SwiftLint",
+        "name": "Fatal Errror Message",
+        "description": "A fatalError call should have a message.",
+        "severity": "MINOR"
+    },
+    {
         "key": "file_header",
         "category": "SwiftLint",
         "name": "File Header",
@@ -144,6 +165,13 @@
         "category": "SwiftLint",
         "name": "First Where",
         "description": "Prefer using `.first(where:)` over `.filter { }.first` in collections.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "for_where",
+        "category": "SwiftLint",
+        "name": "For Where",
+        "description": "`where` clauses are preferred over a single `if` inside a `for`.",
         "severity": "MINOR"
     },
     {
@@ -189,10 +217,24 @@
         "severity": "MINOR"
     },
     {
+        "key": "identifier_name",
+        "category": "SwiftLint",
+        "name": "Identifier Name",
+        "description": "Identifier names should only contain alphanumeric characters and start with a lowercase character or should only contain capital letters. In an exception to the above, variable names may start with a capital letter when they are declared static and immutable. Variable names should not be too long or too short.",
+        "severity": "MINOR"
+    },
+    {
         "key": "implicit_getter",
         "category": "SwiftLint",
         "name": "Implicit Getter",
         "description": "Computed read-only properties should avoid using the get keyword.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "implicitly_unwrapped_optional",
+        "category": "SwiftLint",
+        "name": "Implicitly Unwrapped Optional",
+        "description": "Implicitly unwrapped optionals should be avoided when possible.",
         "severity": "MINOR"
     },
     {
@@ -273,6 +315,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "notification_center_detachment",
+        "category": "SwiftLint",
+        "name": "Notification Center Detachment",
+        "description": "An object should only remove itself as an observer in `deinit`.",
+        "severity": "MINOR"
+    },
+    {
         "key": "number_separator",
         "category": "SwiftLint",
         "name": "Number Separator",
@@ -336,10 +385,17 @@
         "severity": "MINOR"
     },
     {
+        "key": "redundant_discardable_let",
+        "category": "SwiftLint",
+        "name": "Redundant Discardable Let",
+        "description": "Prefer `_ = foo()` over `let _ = foo()` when discarding a result from a function.",
+        "severity": "MINOR"
+    },
+    {
         "key": "redundant_nil_coalescing",
         "category": "SwiftLint",
         "name": "Redundant Nil Coalescing",
-        "description": "nil coalescing operator is only evaluated if the lhs is nil , coalescing operator with nil as rhs is redundant",
+        "description": "nil coalescing operator is only evaluated if the lhs is nil, coalescing operator with nil as rhs is redundant",
         "severity": "MINOR"
     },
     {
@@ -465,7 +521,7 @@
         "key": "unused_enumerated",
         "category": "SwiftLint",
         "name": "Unused Enumerated",
-        "description": "When the index is not used, .enumerated() can be removed.",
+        "description": "When the index or the item is not used, `.enumerated()` can be removed.",
         "severity": "MINOR"
     },
     {
@@ -488,13 +544,6 @@
         "name": "Valid IBInspectable",
         "description": "@IBInspectable should be applied to variables only, have its type explicit and be of a supported type",
         "severity": "MINOR"
-    },
-    {
-        "key": "variable_name",
-        "category": "SwiftLint",
-        "name": "Variable Name",
-        "description": "Variable names should only contain alphanumeric characters and start with a lowercase character or should only contain capital letters. In an exception to the above, variable names may start with a capital letter when they are declared static and immutable. Variable names should not be too long or too short.",
-        "severity": "CRITICAL"
     },
     {
         "key": "vertical_parameter_alignment",
