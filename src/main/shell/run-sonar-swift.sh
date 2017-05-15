@@ -261,9 +261,9 @@ if [ "$unittests" = "on" ]; then
     echo -n 'Running tests'
     buildCmd=(xcodebuild clean build test)
     if [[ ! -z "$workspaceFile" ]]; then
-        buildCmd+=(-workspace $workspaceFile)
+        buildCmd+=(-workspace "$workspaceFile")
     elif [[ ! -z "$projectFile" ]]; then
-	      buildCmd+=(-project $projectFile)
+	      buildCmd+=(-project "$projectFile")
     fi
     buildCmd+=( -scheme "$appScheme" -configuration "$appConfiguration" -enableCodeCoverage YES)
     if [[ ! -z "$destinationSimulator" ]]; then
@@ -290,8 +290,7 @@ if [ "$unittests" = "on" ]; then
 	      echo "Command line exclusion flags for slather is:$excludedCommandLineFlags"
     fi
 
-    projectArray=(${projectFile//,/ })
-    firstProject=${projectArray[0]}
+	firstProject=$(echo $projectFile | sed -n 1'p' | tr ',' '\n' | head -n 1)
 
     slatherCmd=($SLATHER_CMD coverage)
     if [[ ! -z "$binaryName" ]]; then
@@ -301,7 +300,7 @@ if [ "$unittests" = "on" ]; then
     slatherCmd+=( --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
 
     if [[ ! -z "$workspaceFile" ]]; then
-        slatherCmd+=( --workspace $workspaceFile)
+        slatherCmd+=( --workspace "$workspaceFile")
     fi
     slatherCmd+=( --scheme "$appScheme" "$firstProject")
 
@@ -322,7 +321,7 @@ if [ "$swiftlint" = "on" ]; then
 		while read word; do
 
 			# Run SwiftLint command
-		    $SWIFTLINT_CMD lint --path $word > sonar-reports/$(echo $word | sed 's/\//_/g')-swiftlint.txt
+		    $SWIFTLINT_CMD lint --path "$word" > sonar-reports/"$(echo $word | sed 's/\//_/g')"-swiftlint.txt
 
 		done < tmpFileRunSonarSh
 		rm -rf tmpFileRunSonarSh
@@ -345,7 +344,7 @@ if [ "$tailor" = "on" ]; then
 		while read word; do
 
 			  # Run tailor command
-		    $TAILOR_CMD $tailorConfiguration $word > sonar-reports/$(echo $word | sed 's/\//_/g')-tailor.txt
+		    $TAILOR_CMD $tailorConfiguration "$word" > sonar-reports/"$(echo $word | sed 's/\//_/g')"-tailor.txt
 
 		done < tmpFileRunSonarSh
 		rm -rf tmpFileRunSonarSh
