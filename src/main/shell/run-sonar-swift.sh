@@ -183,6 +183,10 @@ appConfiguration=''; readParameter appConfiguration 'sonar.swift.appConfiguratio
 testScheme=''; readParameter testScheme 'sonar.swift.testScheme'
 # The name of your binary file (application)
 binaryName=''; readParameter binaryName 'sonar.swift.appName'
+# Get the path of plist file
+plistFile=`xcodebuild -showBuildSettings -project ${projectFile} | grep -i 'PRODUCT_SETTINGS_PATH' -m 1 | sed 's/[ ]*PRODUCT_SETTINGS_PATH = //'`
+# Number version from plist if no sonar.projectVersion
+numVerionFromPlist=`defaults read ${plistFile} CFBundleShortVersionString`
 
 # Read destination simulator
 destinationSimulator=''; readParameter destinationSimulator 'sonar.swift.simulator'
@@ -227,6 +231,7 @@ if [ "$vflag" = "on" ]; then
  	echo "Xcode project file is: $projectFile"
 	echo "Xcode workspace file is: $workspaceFile"
  	echo "Xcode application scheme is: $appScheme"
+    echo "Number version from plist is: $numVerionFromPlist"
   if [ -n "$unittests" ]; then
  	    echo "Destination simulator is: $destinationSimulator"
  	    echo "Excluded paths from coverage are: $excludedPathsFromCoverage"
@@ -369,20 +374,28 @@ else
  	echo 'Skipping Lizard (test purposes only!)'
 fi
 
+# The project version from properties file
+numVersionSonarRunner=''; readParameter numVersionSonarRunner 'sonar.projectVersion'
+if [ -z "$numVersionSonarRunner" -o "$numVersionSonarRunner" = " " ]; then
+	numVersionSonarRunner=" --define sonar.projectVersion=$numVerionFromPlist"
+else
+	#if we have version number in properties file, we don't overide numVersion for sonar-runner/sonar-scanner command
+	numVersionSonarRunner='';
+fi
 # SonarQube
 if [ "$sonarscanner" = "on" ]; then
     echo -n 'Running SonarQube using SonarQube Scanner'
     if hash /dev/stdout sonar-scanner 2>/dev/null; then
-        runCommand /dev/stdout sonar-scanner
+        runCommand /dev/stdout sonar-scanner $numVersionSonarRunner
     else
         echo 'Skipping sonar-scanner (not installed!)'
     fi
 else
     echo -n 'Running SonarQube using SonarQube Runner'
     if hash /dev/stdout sonar-runner 2>/dev/null; then
-	   runCommand /dev/stdout sonar-runner 
+	   runCommand /dev/stdout sonar-runner $numVersionSonarRunner
     else
-	   runCommand /dev/stdout sonar-scanner
+	   runCommand /dev/stdout sonar-scanner $numVersionSonarRunner
     fi
 fi
 
