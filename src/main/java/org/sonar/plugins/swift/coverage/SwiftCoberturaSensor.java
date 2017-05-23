@@ -38,7 +38,7 @@ public final class SwiftCoberturaSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftCoberturaSensor.class);
 
     public static final String REPORT_PATTERN_KEY = SwiftPlugin.PROPERTY_PREFIX + ".coverage.reportPattern";
-    public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage*.xml";
+    public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage-swift*.xml";
 
     private final ReportFilesFinder reportFilesFinder;
 
