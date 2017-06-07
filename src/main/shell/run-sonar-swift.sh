@@ -261,7 +261,7 @@ if [ "$unittests" = "on" ]; then
 
     # Put default xml files with no tests and no coverage...
     echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='AllTestUnits'></testsuites>" > sonar-reports/TEST-report.xml
-    echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage.xml
+    echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage-swift.xml
 
     echo -n 'Running tests'
     buildCmd=(xcodebuild clean build test)
@@ -312,7 +312,7 @@ if [ "$unittests" = "on" ]; then
     echo "${slatherCmd[@]}"
 
     runCommand /dev/stdout "${slatherCmd[@]}"
-    mv sonar-reports/cobertura.xml sonar-reports/coverage.xml
+    mv sonar-reports/cobertura.xml sonar-reports/coverage-swift.xml
 fi
 
 # SwiftLint
