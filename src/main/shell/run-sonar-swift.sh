@@ -197,6 +197,9 @@ tailorConfiguration=''; readParameter tailorConfiguration 'sonar.swift.tailor.co
 # The file patterns to exclude from coverage report
 excludedPathsFromCoverage=''; readParameter excludedPathsFromCoverage 'sonar.swift.excludedPathsFromCoverage'
 
+# Skipping tests
+skipTests=''; readParameter skipTests 'sonar.swift.skipTests'
+
 # Check for mandatory parameters
 if [ -z "$projectFile" -o "$projectFile" = " " ] && [ -z "$workspaceFile" -o "$workspaceFile" = " " ]; then
 	echo >&2 "ERROR - sonar.swift.project or/and sonar.swift.workspace parameter is missing in sonar-project.properties. You must specify which projects (comma-separated list) are application code or which workspace and project to use."
@@ -265,6 +268,9 @@ if [ "$unittests" = "on" ]; then
 
     echo -n 'Running tests'
     buildCmd=(xcodebuild clean build test)
+    if [[ ! -z "$skipTests" ]]; then
+    	buildCmd+=(-skip-testing:"$skipTests")
+    fi
     if [[ ! -z "$workspaceFile" ]]; then
         buildCmd+=(-workspace "$workspaceFile")
     elif [[ ! -z "$projectFile" ]]; then
