@@ -310,7 +310,6 @@ if [ "$unittests" = "on" ]; then
     slatherCmd+=( --scheme "$appScheme" "$firstProject")
 
     echo "${slatherCmd[@]}"
-    
     runCommand /dev/stdout "${slatherCmd[@]}"
     mv sonar-reports/cobertura.xml sonar-reports/coverage-swift.xml
 fi
