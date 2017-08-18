@@ -47,6 +47,12 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 
 ### Release history
 
+#### 0.3.5
+- Fixes properties with space by [Branlute](https://github.com/Branlute). See [PR 84](https://github.com/Backelite/sonar-swift/pull/84)
+- Finds project version automatically with CFBundleShortVersionString by [Branlute](https://github.com/Branlute). See [PR 87](https://github.com/Backelite/sonar-swift/pull/87)
+- Fixes coverage with mixed objc swift project by [Branlute](https://github.com/Branlute). See [PR 88](https://github.com/Backelite/sonar-swift/pull/88)
+- Quotes support for multi-word project names by [PetrJandak](https://github.com/PetrJandak). See [PR 97](https://github.com/Backelite/sonar-swift/pull/97)
+
 #### 0.3.4
 - SwiftLint 0.18.1 (add 8 more rules)
 - Fix README headers
