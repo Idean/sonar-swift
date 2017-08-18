@@ -254,7 +254,7 @@ if [ "$vflag" = "on" ]; then
  	    echo "Destination simulator is: $destinationSimulator"
  	    echo "Excluded paths from coverage are: $excludedPathsFromCoverage"
   else
-      echo "Unit tests are disabled"
+      echo "Unit surefire are disabled"
   fi
 fi
 
@@ -275,13 +275,13 @@ rm -rf sonar-reports
 mkdir sonar-reports
 
 if [ "$unittests" = "on" ]; then
-    # Unit tests and coverage
+    # Unit surefire and coverage
 
-    # Put default xml files with no tests and no coverage...
+    # Put default xml files with no surefire and no coverage...
     echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='AllTestUnits'></testsuites>" > sonar-reports/TEST-report.xml
     echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage-swift.xml
 
-    echo -n 'Running tests'
+    echo -n 'Running surefire'
     buildCmd=(xcodebuild clean build test)
     if [[ ! -z "$workspaceFile" ]]; then
         buildCmd+=(-workspace "$workspaceFile")

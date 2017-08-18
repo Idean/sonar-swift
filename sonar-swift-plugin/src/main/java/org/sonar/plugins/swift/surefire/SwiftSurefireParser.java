@@ -15,10 +15,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sonar.plugins.swift.tests;
+package org.sonar.plugins.swift.surefire;
 
 import com.google.common.collect.ImmutableList;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,25 +26,18 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.Measure;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Qualifiers;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.test.MutableTestPlan;
 import org.sonar.api.test.TestCase;
 import org.sonar.api.utils.ParsingUtils;
 import org.sonar.api.utils.StaxParser;
-import org.sonar.api.utils.XmlParserException;
-import org.sonar.plugins.swift.tests.surefire.SurefireStaxHandler;
-import org.sonar.plugins.swift.tests.surefire.UnitTestClassReport;
-import org.sonar.plugins.swift.tests.surefire.UnitTestIndex;
-import org.sonar.plugins.swift.tests.surefire.UnitTestResult;
+import org.sonar.plugins.swift.surefire.data.SurefireStaxHandler;
+import org.sonar.plugins.swift.surefire.data.UnitTestClassReport;
+import org.sonar.plugins.swift.surefire.data.UnitTestIndex;
+import org.sonar.plugins.swift.surefire.data.UnitTestResult;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerException;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.List;
@@ -138,7 +130,7 @@ public final class SwiftSurefireParser {
             }
         }
         if (negativeTimeTestNumber > 0) {
-            LOGGER.warn("There is {} test(s) reported with negative time by surefire, total duration may not be accurate.", negativeTimeTestNumber);
+            LOGGER.warn("There is {} test(s) reported with negative time by data, total duration may not be accurate.", negativeTimeTestNumber);
         }
     }
 

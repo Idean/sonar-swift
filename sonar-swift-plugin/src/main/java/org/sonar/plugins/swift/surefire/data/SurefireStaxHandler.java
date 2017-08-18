@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sonar.plugins.swift.tests.surefire;
+package org.sonar.plugins.swift.surefire.data;
 
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.ElementFilter;
@@ -96,7 +96,7 @@ public class SurefireStaxHandler implements XmlStreamHandler {
             String elementName = childNode.getLocalName();
             if ("skipped".equals(elementName)) {
                 status = UnitTestResult.STATUS_SKIPPED;
-                // bug with surefire reporting wrong time for skipped tests
+                // bug with data reporting wrong time for skipped surefire
                 duration = 0L;
 
             } else if ("failure".equals(elementName)) {

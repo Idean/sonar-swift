@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sonar.plugins.swift.tests.surefire;
+package org.sonar.plugins.swift.surefire.data;
 
 public final class UnitTestResult {
     public static final String STATUS_OK = "ok";

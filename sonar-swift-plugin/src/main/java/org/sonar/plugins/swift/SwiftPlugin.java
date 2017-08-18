@@ -22,7 +22,6 @@ import java.util.List;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
-import org.sonar.plugins.swift.colorizer.SwiftCodeColorizerFormat;
 import org.sonar.plugins.swift.complexity.LizardSensor;
 import org.sonar.plugins.swift.coverage.SwiftCoberturaSensor;
 import org.sonar.plugins.swift.cpd.SwiftCpdMapping;
@@ -36,7 +35,7 @@ import org.sonar.plugins.swift.issues.tailor.TailorProfileImporter;
 import org.sonar.plugins.swift.issues.tailor.TailorRulesDefinition;
 import org.sonar.plugins.swift.issues.tailor.TailorSensor;
 import org.sonar.plugins.swift.lang.core.Swift;
-import org.sonar.plugins.swift.tests.SwiftSurefireSensor;
+import org.sonar.plugins.swift.surefire.SwiftSurefireSensor;
 
 import com.google.common.collect.ImmutableList;
 
@@ -112,7 +111,7 @@ public class SwiftPlugin extends SonarPlugin {
                 // code
                 SwiftSquidSensor.class,
 
-                // tests
+                // surefire
                 SwiftSurefireSensor.class,
                 SwiftCoberturaSensor.class,
 

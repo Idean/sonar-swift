@@ -26,10 +26,10 @@ if [ "$?" != 0 ]; then
 	exit $?
 fi
 
-# Run shell tests
+# Run shell surefire
 #shelltest src/test/shell --execdir --diff
 #if [ "$?" != 0 ]; then
-#	echo "ERROR - Shell tests failed!" 1>&2
+#	echo "ERROR - Shell surefire failed!" 1>&2
 #	exit $?
 #fi
 

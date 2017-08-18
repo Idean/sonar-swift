@@ -43,7 +43,7 @@ public class LizardSensorTest {
     }
 
     /**
-     * this method tests that the sensor should be executed when a project is a root project and uses objective c
+     * this method surefire that the sensor should be executed when a project is a root project and uses objective c
      */
     @Test
     public void shouldExecuteOnProjectShouldBeTrueWhenProjectIsObjc() {
