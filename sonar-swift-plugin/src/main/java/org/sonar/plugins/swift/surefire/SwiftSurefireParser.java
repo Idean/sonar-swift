@@ -37,6 +37,7 @@ import org.sonar.plugins.swift.surefire.data.UnitTestClassReport;
 import org.sonar.plugins.swift.surefire.data.UnitTestIndex;
 import org.sonar.plugins.swift.surefire.data.UnitTestResult;
 
+import javax.annotation.Nullable;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -52,14 +53,15 @@ public final class SwiftSurefireParser {
     private final SensorContext context;
     private final ResourcePerspectives perspectives;
 
-    public SwiftSurefireParser(FileSystem fileSystem, ResourcePerspectives perspectives,
-                          SensorContext context) {
+    public SwiftSurefireParser(FileSystem fileSystem, ResourcePerspectives perspectives, SensorContext context) {
         this.fileSystem = fileSystem;
         this.perspectives = perspectives;
         this.context = context;
     }
 
     public void collect(File reportsDir) {
+
+
         File[] xmlFiles = getReports(reportsDir);
 
         if (xmlFiles.length == 0) {
@@ -70,14 +72,15 @@ public final class SwiftSurefireParser {
     }
 
     private File[] getReports(File dir) {
-        if (!dir.isDirectory() || !dir.exists()) {
+
+        if (dir == null || !dir.isDirectory() || !dir.exists()) {
             return new File[0];
         }
 
         return dir.listFiles(new FilenameFilter() {
-            @Override
             public boolean accept(File dir, String name) {
-                return name.startsWith("TEST") && name.endsWith(".xml");
+                // .junit is for Fastlane support
+                return (name.startsWith("TEST") && name.endsWith(".xml")) || (name.endsWith(".junit"));
             }
         });
     }
@@ -89,7 +92,6 @@ public final class SwiftSurefireParser {
     private void parseFiles(File[] reports) {
         UnitTestIndex index = new UnitTestIndex();
         parseFiles(reports, index);
-        sanitize(index);
         save(index);
     }
 
@@ -105,18 +107,9 @@ public final class SwiftSurefireParser {
         }
     }
 
-    private static void sanitize(UnitTestIndex index) {
-        for (String classname : index.getClassnames()) {
-            if (StringUtils.contains(classname, "$")) {
-                // Surefire reports classes whereas sonar supports files
-                String parentClassName = StringUtils.substringBefore(classname, "$");
-                index.merge(classname, parentClassName);
-            }
-        }
-    }
-
     private void save(UnitTestIndex index) {
         long negativeTimeTestNumber = 0;
+
         for (Map.Entry<String, UnitTestClassReport> entry : index.getIndexByClassname().entrySet()) {
             UnitTestClassReport report = entry.getValue();
             if (report.getTests() > 0) {
@@ -163,8 +156,8 @@ public final class SwiftSurefireParser {
         }
     }
 
-    public Resource getUnitTestResource(String classname) {
-        String fileName = classname.replace('.', '/') + ".m";
+    @Nullable  public Resource getUnitTestResource(String classname) {
+        String fileName = classname.replace('.', '/') + ".swift";
 
         InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasPath(fileName));
 

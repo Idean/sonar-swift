@@ -53,13 +53,16 @@ public final class SwiftSurefireSensor implements Sensor {
 
     @Override
     public boolean shouldExecuteOnProject(Project project) {
-        return StringUtils.isNotEmpty(settings.getString(REPORTS_PATH_KEY));
+        return StringUtils.isNotEmpty(this.reportPath());
     }
 
     @Override
     public void analyse(Project project, SensorContext context) {
-        String path = settings.getString(REPORTS_PATH_KEY);
+
+        String path = this.reportPath();
         File reportsDir = pathResolver.relativeFile(fileSystem.baseDir(), path);
+
+        LOGGER.info("Processing test reports in {}", reportsDir);
 
         if (!reportsDir.isDirectory()) {
             LOGGER.warn("JUnit report directory not found at {}", reportsDir);
