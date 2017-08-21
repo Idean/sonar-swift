@@ -47,6 +47,84 @@
             <name>Readability</name>
             <chc>
                 <rule-repo>SwiftLint</rule-repo>
+                <rule-key>unneeded_parentheses_in_closure_argument</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>trailing_closure</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>let_var_whitespace</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>implicit_return</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>extension_access_modifier</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>block_based_kvo</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
                 <rule-key>void_return</rule-key>
                 <prop>
                     <key>remediationFunction</key>
@@ -649,7 +727,72 @@
             <name>Understandability</name>
             <chc>
                 <rule-repo>SwiftLint</rule-repo>
+                <rule-key>strict_fileprivate</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>protocol_property_accessors_order</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>private_over_fileprivate</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>no_extension_access_modifier</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
                 <rule-key>vertical_parameter_alignment</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>empty_enum_arguments</rule-key>
                 <prop>
                     <key>remediationFunction</key>
                     <txt>CONSTANT_ISSUE</txt>
@@ -1018,6 +1161,32 @@
         <chc>
             <key>SECURITY_FEATURES</key>
             <name>Security features</name>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>explicit_top_level_acl</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>discouraged_direct_init</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
             <chc>
                 <rule-repo>SwiftLint</rule-repo>
                 <rule-key>private_outlet</rule-key>

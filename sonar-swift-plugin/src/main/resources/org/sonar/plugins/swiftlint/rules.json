@@ -7,6 +7,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "block_based_kvo",
+        "category": "SwiftLint",
+        "name": "Block Based KVO",
+        "description": "Prefer the new block based KVO API with keypaths when using Swift 3.2 or later.",
+        "severity": "MINOR"
+    },
+    {
         "key": "class_delegate_protocol",
         "category": "SwiftLint",
         "name": "Class Delegate Protocol",
@@ -94,14 +101,21 @@
         "key": "discarded_notification_center_observer",
         "category": "SwiftLint",
         "name": "Discarded Notification Center Observer",
-        "description": "When registing for a notification using a block, the opaque observer that is returned should be stored so it can be removed later.",
+        "description": "When registering for a notification using a block, the opaque observer that is returned should be stored so it can be removed later.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "discouraged_direct_init",
+        "category": "SwiftLint",
+        "name": "Discouraged Direct Initialization",
+        "description": "Discouraged direct initialization of types that can be harmful.",
         "severity": "MINOR"
     },
     {
         "key": "dynamic_inline",
         "category": "SwiftLint",
         "name": "Dynamic Inline",
-        "description": "avoid using 'dynamic' and '@inline(__always)' together.",
+        "description": "Avoid using 'dynamic' and '@inline(__always)' together.",
         "severity": "MINOR"
     },
     {
@@ -109,6 +123,13 @@
         "category": "SwiftLint",
         "name": "Empty Count",
         "description": "Prefer checking `isEmpty` over comparing `count` to zero.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "empty_enum_arguments",
+        "category": "SwiftLint",
+        "name": "Empty Enum Arguments",
+        "description": "Arguments can be omitted when matching enums with associated types if they are not used.",
         "severity": "MINOR"
     },
     {
@@ -133,6 +154,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "explicit_top_level_acl",
+        "category": "SwiftLint",
+        "name": "Explicit Top Level ACL",
+        "description": "Top-level declarations should specify Access Control Level keywords explicitly.",
+        "severity": "MINOR"
+    },
+    {
         "key": "explicit_type_interface",
         "category": "SwiftLint",
         "name": "Explicit Type Interface",
@@ -140,9 +168,16 @@
         "severity": "MINOR"
     },
     {
+        "key": "extension_access_modifier",
+        "category": "SwiftLint",
+        "name": "Extension Access Modifier",
+        "description": "Prefer to use extension access modifiers",
+        "severity": "MINOR"
+    },
+    {
         "key": "fatal_error_message",
         "category": "SwiftLint",
-        "name": "Fatal Errror Message",
+        "name": "Fatal Error Message",
         "description": "A fatalError call should have a message.",
         "severity": "MINOR"
     },
@@ -150,7 +185,7 @@
         "key": "file_header",
         "category": "SwiftLint",
         "name": "File Header",
-        "description": "Files should have consistent header comments.",
+        "description": "Header comments should be consistent with project patterns.",
         "severity": "MINOR"
     },
     {
@@ -231,6 +266,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "implicit_return",
+        "category": "SwiftLint",
+        "name": "Implicit Return",
+        "description": "Prefer implicit returns in closures.",
+        "severity": "MINOR"
+    },
+    {
         "key": "implicitly_unwrapped_optional",
         "category": "SwiftLint",
         "name": "Implicitly Unwrapped Optional",
@@ -280,6 +322,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "let_var_whitespace",
+        "category": "SwiftLint",
+        "name": "Variable Declaration Whitespace",
+        "description": "Let and var should be separated from other statements by a blank line.",
+        "severity": "MINOR"
+    },
+    {
         "key": "line_length",
         "category": "SwiftLint",
         "name": "Line Length",
@@ -290,14 +339,14 @@
         "key": "mark",
         "category": "SwiftLint",
         "name": "Mark",
-        "description": "MARK comment should be in valid format.",
+        "description": "MARK comment should be in valid format. e.g. '// MARK: ...' or '// MARK: - ...'",
         "severity": "MINOR"
     },
     {
-        "key": "missing_docs",
+        "key": "multiline_parameters",
         "category": "SwiftLint",
-        "name": "Missing Docs",
-        "description": "Public declarations should be documented.",
+        "name": "Multiline Parameters",
+        "description": "Functions and methods parameters should be either on the same line, or one per line.",
         "severity": "MINOR"
     },
     {
@@ -312,6 +361,13 @@
         "category": "SwiftLint",
         "name": "Nimble Operator",
         "description": "Prefer Nimble operator overloads over free matcher functions.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "no_extension_access_modifier",
+        "category": "SwiftLint",
+        "name": "No Extension Access Modifier",
+        "description": "Prefer not to use extension access modifiers",
         "severity": "MINOR"
     },
     {
@@ -371,6 +427,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "private_over_fileprivate",
+        "category": "SwiftLint",
+        "name": "Private over fileprivate",
+        "description": "Prefer `private` over `fileprivate` declarations.",
+        "severity": "MINOR"
+    },
+    {
         "key": "private_unit_test",
         "category": "SwiftLint",
         "name": "Private Unit Test",
@@ -382,6 +445,13 @@
         "category": "SwiftLint",
         "name": "Prohibited calls to super",
         "description": "Some methods should not call super",
+        "severity": "MINOR"
+    },
+    {
+        "key": "protocol_property_accessors_order",
+        "category": "SwiftLint",
+        "name": "Protocol Property Accessors Order",
+        "description": "When declaring properties in protocols, the order of accessors should be `get set`.",
         "severity": "MINOR"
     },
     {
@@ -448,6 +518,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "strict_fileprivate",
+        "category": "SwiftLint",
+        "name": "Strict fileprivate",
+        "description": "`fileprivate` should be avoided.",
+        "severity": "MINOR"
+    },
+    {
         "key": "switch_case_on_newline",
         "category": "SwiftLint",
         "name": "Switch Case on Newline",
@@ -466,6 +543,13 @@
         "category": "SwiftLint",
         "name": "Todo",
         "description": "TODOs and FIXMEs should be avoided.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "trailing_closure",
+        "category": "SwiftLint",
+        "name": "Trailing Closure",
+        "description": "Trailing closure syntax should be used whenever possible.",
         "severity": "MINOR"
     },
     {
@@ -511,6 +595,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "unneeded_parentheses_in_closure_argument",
+        "category": "SwiftLint",
+        "name": "Unneeded Parentheses in Closure Argument",
+        "description": "Parentheses are not needed when declaring closure arguments.",
+        "severity": "MINOR"
+    },
+    {
         "key": "unused_closure_parameter",
         "category": "SwiftLint",
         "name": "Unused Closure Parameter",
@@ -532,13 +623,6 @@
         "severity": "MINOR"
     },
     {
-        "key": "valid_docs",
-        "category": "SwiftLint",
-        "name": "Valid Docs",
-        "description": "Documented declarations should be valid.",
-        "severity": "MINOR"
-    },
-    {
         "key": "valid_ibinspectable",
         "category": "SwiftLint",
         "name": "Valid IBInspectable",
@@ -550,6 +634,13 @@
         "category": "SwiftLint",
         "name": "Vertical Parameter Alignment",
         "description": "Function parameters should be aligned vertically if they're in multiple lines in a declaration.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "vertical_parameter_alignment_on_call",
+        "category": "SwiftLint",
+        "name": "Vertical Parameter Alignment On Call",
+        "description": "Function parameters should be aligned vertically if they're in multiple lines in a method call.",
         "severity": "MINOR"
     },
     {
