@@ -19,16 +19,21 @@
     </pluginRepositories>
 
     <parent>
-        <groupId>org.codehaus.sonar-plugins</groupId>
+        <groupId>org.sonarsource.sonar-plugins</groupId>
         <artifactId>parent</artifactId>
-        <version>18</version>
+        <version>21</version>
     </parent>
+
+    <!--<parent>-->
+        <!--<groupId>org.sonarsource.parent</groupId>-->
+        <!--<artifactId>parent</artifactId>-->
+        <!--<version>40</version>-->
+    <!--</parent>-->
 
     <groupId>com.backelite.sonarqube</groupId>
     <artifactId>backelite-sonar-swift-plugin</artifactId>
-    <version>0.3.4</version>
-
     <packaging>sonar-plugin</packaging>
+    <version>0.3.5</version>
 
     <name>Swift SonarQube Plugin</name>
     <description>Enables analysis of Swift projects into SonarQube.</description>
@@ -41,8 +46,8 @@
     </organization>
     <licenses>
         <license>
-            <name>GNU LGPL 3</name>
-            <url>http://www.gnu.org/licenses/lgpl.txt</url>
+            <name>${license.name}</name>
+            <url>${license.url}</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -51,6 +56,11 @@
         <developer>
             <id>zippy1978</id>
             <name>Gilles Grousset</name>
+            <organization>Backelite</organization>
+        </developer>
+        <developer>
+            <id>pbernery</id>
+            <name>Philippe Bernery</name>
             <organization>Backelite</organization>
         </developer>
     </developers>
@@ -64,104 +74,196 @@
     <properties>
         <license.owner>Backelite</license.owner>
         <license.title>SonarQube Swift Plugin</license.title>
+        <license.name>GNU LGPL 3</license.name>
+        <license.type>lgpl_v3</license.type>
+        <license.url>http://www.gnu.org/licenses/lgpl.txt</license.url>
 
         <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
 
-        <sonar.version>5.0</sonar.version>
-        <sslr.version>1.20</sslr.version>
+        <sonar.version>5.6</sonar.version>
+        <sslr.version>1.22</sslr.version>
+        <jdk.min.version>1.8</jdk.min.version>
 
         <!-- Configuration for sonar-packaging-maven-plugin -->
         <sonar.pluginClass>org.sonar.plugins.swift.SwiftPlugin</sonar.pluginClass>
         <sonar.pluginName>Swift (Backelite)</sonar.pluginName>
-
     </properties>
 
     <dependencies>
+        <!--<dependency>-->
+            <!--<groupId>org.sonarsource.sonar-plugins</groupId>-->
+            <!--<artifactId>parent</artifactId>-->
+            <!--<version>21</version>-->
+            <!--<type>pom</type>-->
+        <!--</dependency>-->
+
         <dependency>
-            <groupId>org.codehaus.sonar</groupId>
+            <groupId>org.sonarsource.sonarqube</groupId>
             <artifactId>sonar-plugin-api</artifactId>
+            <!-- minimal version of SonarQube to support. Note that the groupId was "org.codehaus.sonar" before version 5.2 -->
             <version>${sonar.version}</version>
+            <!-- mandatory scope -->
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.sonar</groupId>
-            <artifactId>sonar-testing-harness</artifactId>
-            <version>${sonar.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.sonar.sslr</groupId>
+            <groupId>org.sonarsource.sonarqube</groupId>
+            <artifactId>sonar-core</artifactId>
+            <!-- minimal version of SonarQube to support. Note that the groupId was "org.codehaus.sonar" before version 5.2 -->
+            <version>${sonar.version}</version>
+            <!-- mandatory scope -->
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Language parsing -->
+        <dependency>
+            <groupId>org.sonarsource.sslr</groupId>
             <artifactId>sslr-core</artifactId>
             <version>${sslr.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.sonar.sslr</groupId>
+            <groupId>org.sonarsource.sslr</groupId>
             <artifactId>sslr-xpath</artifactId>
             <version>${sslr.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.sonar.sslr</groupId>
+            <groupId>org.sonarsource.sslr</groupId>
             <artifactId>sslr-toolkit</artifactId>
             <version>${sslr.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.sonar.sslr</groupId>
+            <groupId>org.sonarsource.sslr</groupId>
             <artifactId>sslr-testing-harness</artifactId>
             <version>${sslr.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.sonar.sslr-squid-bridge</groupId>
+            <groupId>org.sonarsource.sslr-squid-bridge</groupId>
             <artifactId>sslr-squid-bridge</artifactId>
-            <version>2.5.3</version>
+            <version>2.6.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.codehaus.sonar.sslr</groupId>
+                    <artifactId>sslr-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.sonar</groupId>
+                    <artifactId>sonar-plugin-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.sonar.sslr</groupId>
+                    <artifactId>sslr-xpath</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jcl-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+        <!-- Sensors Dependencies -->
         <dependency>
             <groupId>ant</groupId>
             <artifactId>ant</artifactId>
             <version>1.6</version>
         </dependency>
 
+        <!-- Tailor Dependencies -->
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-assert</artifactId>
-            <version>1.4</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>0.9.30</version>
-        </dependency>
+        <!-- Parse test reports -->
         <dependency>
             <groupId>org.codehaus.sonar.plugins</groupId>
             <artifactId>sonar-surefire-plugin</artifactId>
             <version>2.7</version>
         </dependency>
 
+        <!-- Basic dependencies -->
+        <dependency>
+            <!-- packaged with the plugin -->
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.collections</groupId>
+            <artifactId>google-collections</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!-- Deprecated dependencies -->
+        <!--<dependency>-->
+            <!--<groupId>org.sonarsource</groupId>-->
+            <!--<artifactId>sonar-squid</artifactId>-->
+            <!--<version>3.6.1</version>-->
+        <!--</dependency>-->
+
+        <!-- unit tests -->
+
+        <dependency>
+            <groupId>org.sonarsource.sonarqube</groupId>
+            <artifactId>sonar-testing-harness</artifactId>
+            <version>${sonar.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>junit</groupId>-->
+            <!--<artifactId>junit</artifactId>-->
+            <!--<version>4.10</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.mockito</groupId>-->
+            <!--<artifactId>mockito-all</artifactId>-->
+            <!--<version>1.9.0</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.hamcrest</groupId>-->
+            <!--<artifactId>hamcrest-all</artifactId>-->
+            <!--<version>1.1</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.easytesting</groupId>-->
+            <!--<artifactId>fest-assert</artifactId>-->
+            <!--<version>1.4</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>ch.qos.logback</groupId>-->
+            <!--<artifactId>logback-classic</artifactId>-->
+            <!--<version>0.9.30</version>-->
+        <!--</dependency>-->
     </dependencies>
 
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
+                <artifactId>sonar-packaging-maven-plugin</artifactId>
+                <version>1.17</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <!-- the entry-point class that extends org.sonar.api.SonarPlugin -->
+                    <pluginClass>${sonar.pluginClass}</pluginClass>
+                    <pluginName>${sonar.pluginName}</pluginName>
+                    <!-- advanced properties can be set here. See paragraph "Advanced Build Properties". -->
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>${jdk.min.version}</source>
+                    <target>${jdk.min.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

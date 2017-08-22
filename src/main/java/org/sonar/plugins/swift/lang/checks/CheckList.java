@@ -1,7 +1,7 @@
 /*
  * SonarQube Swift Plugin
  * Copyright (C) 2015 Backelite
- * dev@sonar.codehaus.org
+ * sonarqube@googlegroups.com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,7 +35,7 @@ public final class CheckList {
     private CheckList() {
     }
 
-    public static List<Class> getChecks() {
+    public static Iterable<Class> getChecks() {
         return ImmutableList.of(
 
         );

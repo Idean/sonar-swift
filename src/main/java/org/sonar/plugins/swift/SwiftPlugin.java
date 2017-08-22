@@ -1,7 +1,7 @@
 /*
  * SonarQube Swift Plugin
  * Copyright (C) 2015 Backelite
- * dev@sonar.codehaus.org
+ * sonarqube@googlegroups.com
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,11 +19,9 @@
  */
 package org.sonar.plugins.swift;
 
-import java.util.List;
-
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
-import org.sonar.api.SonarPlugin;
+import org.sonar.api.Plugin;
 import org.sonar.plugins.swift.colorizer.SwiftCodeColorizerFormat;
 import org.sonar.plugins.swift.complexity.LizardSensor;
 import org.sonar.plugins.swift.coverage.SwiftCoberturaSensor;
@@ -39,8 +37,6 @@ import org.sonar.plugins.swift.issues.tailor.TailorRulesDefinition;
 import org.sonar.plugins.swift.issues.tailor.TailorSensor;
 import org.sonar.plugins.swift.lang.core.Swift;
 import org.sonar.plugins.swift.tests.SwiftSurefireSensor;
-
-import com.google.common.collect.ImmutableList;
 
 @Properties({
         @Property(
@@ -72,7 +68,7 @@ import com.google.common.collect.ImmutableList;
                 global = false,
                 project = true)
 })
-public class SwiftPlugin extends SonarPlugin {
+public class SwiftPlugin implements Plugin {
 
     // Global Swift constants
     public static final String FALSE = "false";
@@ -85,44 +81,43 @@ public class SwiftPlugin extends SonarPlugin {
     public static final String TEST_FRAMEWORK_KEY = PROPERTY_PREFIX + ".testframework";
     public static final String TEST_FRAMEWORK_DEFAULT = "ghunit";
 
-    @Override
-    public List getExtensions() {
-        return ImmutableList.of(
+    public void define(Context context) {
+        context.addExtensions(
                 // language support
                 Swift.class,
-                SwiftProfile.class,
-
-                // SwiftLint rules
-                SwiftLintSensor.class,
-                SwiftLintRulesDefinition.class,
-
-                // SwiftLint guality profile
-                SwiftLintProfile.class,
-                SwiftLintProfileImporter.class,
-                
-                // Tailor rules
-                TailorSensor.class,
-                TailorRulesDefinition.class,
-                
-                // Tailor quality profile
-                TailorProfile.class,
-                TailorProfileImporter.class,
-
-                // duplications search
-                SwiftCpdMapping.class,
-
-                // code
-                SwiftSquidSensor.class,
-
-                // tests
-                SwiftSurefireSensor.class,
-                SwiftCoberturaSensor.class,
-
-                // complexity
-                LizardSensor.class,
-
-                // code highlight
-                SwiftCodeColorizerFormat.class
-                );
+////                SwiftProfile.class,
+//
+////                // SwiftLint rules
+////                SwiftLintSensor.class,
+////                SwiftLintRulesDefinition.class,
+//
+////                // SwiftLint guality profile
+////                SwiftLintProfile.class,
+////                SwiftLintProfileImporter.class,
+//
+////                // Tailor rules
+////                TailorSensor.class,
+////                TailorRulesDefinition.class,
+//
+////                // Tailor quality profile
+////                TailorProfile.class,
+////                TailorProfileImporter.class,
+//
+////                // duplications search
+////                SwiftCpdMapping.class,
+//
+//                // code
+                SwiftSquidSensor.class
+//
+////                // tests
+////                SwiftSurefireSensor.class,
+////                SwiftCoberturaSensor.class,
+//
+////                // complexity
+////                LizardSensor.class,
+//
+////                // code highlight
+////                SwiftCodeColorizerFormat.class
+        );
     }
 }
