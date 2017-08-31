@@ -47,6 +47,14 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 
 ### Release history
 
+#### 0.3.5
+- SwiftLint 0.21.0 (95 rules now)
+- SonarQube 6.5 support
+- Fixes properties with space by [Branlute](https://github.com/Branlute). See [PR 84](https://github.com/Backelite/sonar-swift/pull/84)
+- Finds project version automatically with CFBundleShortVersionString by [Branlute](https://github.com/Branlute). See [PR 87](https://github.com/Backelite/sonar-swift/pull/87)
+- Fixes coverage with mixed objc swift project by [Branlute](https://github.com/Branlute). See [PR 88](https://github.com/Backelite/sonar-swift/pull/88)
+- Quotes support for multi-word project names by [PetrJandak](https://github.com/PetrJandak). See [PR 97](https://github.com/Backelite/sonar-swift/pull/97)
+
 #### 0.3.4
 - SwiftLint 0.18.1 (add 8 more rules)
 - Fix README headers
@@ -112,7 +120,7 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 - [xcpretty](https://github.com/supermarin/xcpretty) (see instructions below)
 - [SwiftLint](https://github.com/realm/SwiftLint) ([HomeBrew](http://brew.sh) installed and ```brew install swiftlint```). Version 0.3.0 or above.
 - [Tailor](https://github.com/sleekbyte/tailor) ([HomeBrew](http://brew.sh) installed and ```brew install tailor```). Version 0.11.1 or above.
-- [slather](https://github.com/SlatherOrg/slather) (```gem install slather```). Version 2.1.0 or above.
+- [slather](https://github.com/SlatherOrg/slather) (```gem install slather```). Version 2.1.0 or above (2.4 since Xcode 8.3).
 - [lizard](https://github.com/terryyin/lizard) ([PIP](https://pip.pypa.io/en/stable/installing/) installed and ```sudo pip install lizard```)
 
 ### Installation of xcpretty with JUnit reports fix

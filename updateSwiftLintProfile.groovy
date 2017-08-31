@@ -1,3 +1,20 @@
+/**
+ * Swift SonarQube Plugin - Enables analysis of Swift projects into SonarQube.
+ * Copyright © 2015 Backelite (${email})
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 // Update profile-swiftlint.xml from local rules.txt
 // Severity is determined from ...
 
@@ -91,8 +108,8 @@ def writeRules(rls, file) {
 }
 
 // Files
-File rulesJson = new File('src/main/resources/org/sonar/plugins/swiftlint/rules.json')
-File profileXml = new File('src/main/resources/org/sonar/plugins/swiftlint/profile-swiftlint.xml')
+File rulesJson = new File('sonar-swift-plugin/src/main/resources/org/sonar/plugins/swiftlint/rules.json')
+File profileXml = new File('sonar-swift-plugin/src/main/resources/org/sonar/plugins/swiftlint/profile-swiftlint.xml')
 
 // Read rules from swiftlint_rules.txt
 def rules = readSwiftLintRules()
