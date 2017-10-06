@@ -27,6 +27,7 @@ import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
+import org.sonar.plugins.swift.SwiftPlugin;
 
 import java.io.File;
 
@@ -34,7 +35,7 @@ public final class SwiftSurefireSensor implements Sensor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftSurefireSensor.class);
 
-    public static final String REPORTS_PATH_KEY = "sonar.junit.reportsPath";
+    public static final String REPORTS_PATH_KEY = SwiftPlugin.PROPERTY_PREFIX + "swiftsurefire.junit.reportsPath";
     public static final String DEFAULT_REPORTS_PATH = "sonar-reports/";
 
 
