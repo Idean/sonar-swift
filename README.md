@@ -42,7 +42,7 @@ In SonarQube under Quality Profiles the used Linter can be specified by selectin
 Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 
 ### Launching an analysis
-If you use [Fastlane](https://fastlane.tools), please read [our Fastlane integration doc](docs/sonarqube-fastlane.md).
+If you use [fastlane](https://fastlane.tools), please read [our fastlane integration doc](docs/sonarqube-fastlane.md).
 Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root folder
 
 ### Release history
@@ -66,7 +66,7 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 #### 0.3.2
 - SwiftLint 0.16.1 (75 rules now).
 - Fixed [Metric 'test_data' should not be computed by a Sensor](https://github.com/Backelite/sonar-swift/issues/61) with SonarQube 6.2
-- Fastlane documentation update by [mammuth](https://github.com/mammuth). See [PR 62](https://github.com/Backelite/sonar-swift/pull/62)
+- fastlane documentation update by [mammuth](https://github.com/mammuth). See [PR 62](https://github.com/Backelite/sonar-swift/pull/62)
 - run-sonar-swift.sh fix by [TheSkwiggs](https://github.com/mammuth). See [PR 64](https://github.com/Backelite/sonar-swift/pull/64)
 
 #### 0.3.1
@@ -82,8 +82,8 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 
 #### 0.2.4
 - Analysis does not fail anymore when an unkwown issue is reported by SwiftLint. See [issue 35](https://github.com/Backelite/sonar-swift/issues/35)
-- Fastlane documentation (thanks to [viteinfinite](https://github.com/viteinfinite)). See [PR 33](https://github.com/Backelite/sonar-swift/pull/33)
-- Fixed Fastlane JUnit report support
+- fastlane documentation (thanks to [viteinfinite](https://github.com/viteinfinite)). See [PR 33](https://github.com/Backelite/sonar-swift/pull/33)
+- Fixed fastlane JUnit report support
 - SwiftLint 0.11.1 support
 - Better return code suppot for run-sonar-swift.sh
 
