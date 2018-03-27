@@ -79,7 +79,7 @@ public final class SwiftSurefireParser {
 
         return dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
-                // .junit is for Fastlane support
+                // .junit is for fastlane support
                 return (name.startsWith("TEST") && name.endsWith(".xml")) || (name.endsWith(".junit"));
             }
         });
