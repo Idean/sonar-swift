@@ -47,6 +47,12 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 
 ### Release history
 
+#### 0.3.6
+- SonarQube 7 support by [Hugal31](https://github.com/Hugal31).  See [PR 135](https://github.com/Backelite/sonar-swift/pull/125)
+- Lower case fastlane by [milch](https://github.com/milch). See [PR 113](https://github.com/Backelite/sonar-swift/pull/113)
+- Ability to locate test files in sub-directories by [Hugal31](https://github.com/Hugal31). See [PR 123](https://github.com/Backelite/sonar-swift/pull/123)
+
+
 #### 0.3.5
 - SwiftLint 0.21.0 (95 rules now)
 - SonarQube 6.5 support
