@@ -162,11 +162,10 @@ If you still have *run-sonar-swift.sh* file in each of your project (not recomme
 
 Thank you for your interest in the project! Contributions are welcome and appreciated.
 
-Make sure to read this guide before getting started:
+Make sure to read these guides before getting started:
 
 - [Code of Conduct](./CODE_OF_CONDUCT.md)
-
-When creating a pull request: always create it for the *develop* branch. 
+- [Contribution Guidelines](./CONTRIBUTING.md)
 
 ### License
 
