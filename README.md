@@ -88,9 +88,12 @@ If you still have *run-sonar-swift.sh* file in each of your project (not recomme
 
 ### Contributing
 
-Feel free to contribute to this plugin by issuing pull requests to this repository.
+Thank you for your interest in the project! Contributions are welcome and appreciated.
 
-When creating a pull request: always create it for the *develop* branch. 
+Make sure to read these guides before getting started:
+
+- [Code of Conduct](./CODE_OF_CONDUCT.md)
+- [Contribution Guidelines](./CONTRIBUTING.md)
 
 ### License
 
