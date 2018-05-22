@@ -94,4 +94,4 @@ When creating a pull request: always create it for the *develop* branch.
 
 ### License
 
-SonarQube Plugin for Swift is released under the [GNU LGPL 3 license](http://www.gnu.org/licenses/lgpl.txt).
+SonarQube Plugin for Swift is released under the GNU LGPL v3 license. See the [LICENSE](./LICENSE.md) file for more info.
