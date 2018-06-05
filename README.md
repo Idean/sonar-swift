@@ -71,7 +71,7 @@ To install the fixed version, follow those steps :
 
 ### Installation (once for all your Swift projects)
 - Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
-- Copy [run-sonar-swift.sh](https://rawgithub.com/Backelite/sonar-swift/master/src/main/shell/run-sonar-swift.sh) somewhere in your PATH
+- Copy [run-sonar-swift.sh](https://raw.githubusercontent.com/Backelite/sonar-swift/master/sonar-swift-plugin/src/main/shell/run-sonar-swift.sh) somewhere in your PATH
 - Restart the SonarQube server.
 
 ### Configuration (once per project)
