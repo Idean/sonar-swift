@@ -17,14 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-## INSTALLATION: script to copy in your Xcode project in the same directory as the .xcodeproj file
+## INSTALLATION: Copy this script somewhere in your PATH
 ## USAGE: ./run-sonar-swift.sh
 ## DEBUG: ./run-sonar-swift.sh -v
 ## WARNING: edit your project parameters in sonar-project.properties rather than modifying this script
 #
 
 # Global parameters
-XCTOOL_CMD=xctool
 SLATHER_CMD=slather
 SWIFTLINT_CMD=swiftlint
 TAILOR_CMD=tailor
