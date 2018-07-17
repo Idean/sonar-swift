@@ -37,38 +37,48 @@ public final class SwiftCoberturaSensor implements Sensor {
 
     public static final String REPORT_PATTERN_KEY = SwiftPlugin.PROPERTY_PREFIX + ".coverage.reportPattern";
     public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage-swift*.xml";
+    public static final String REPORT_DIRECTORY_KEY = SwiftPlugin.PROPERTY_PREFIX + ".coverage.reportDirectory";
 
     private final ReportFilesFinder reportFilesFinder;
 
     private final Settings settings;
     private final FileSystem fileSystem;
     private final PathResolver pathResolver;
-    private Project project;
 
     public SwiftCoberturaSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings) {
-
+        
         this.settings = settings;
         this.fileSystem = fileSystem;
-        this.pathResolver = pathResolver;
+        this.pathResolver = pathResolver;   
 
-        reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN);
-    }
+        reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN, REPORT_DIRECTORY_KEY);
+    }   
 
     public boolean shouldExecuteOnProject(final Project project) {
-
-        this.project = project;
-
-        return project.isRoot() && fileSystem.languages().contains(Swift.KEY);
+        return fileSystem.languages().contains(Swift.KEY);
     }
 
     public void analyse(final Project project, final SensorContext context) {
 
-
         final String projectBaseDir = fileSystem.baseDir().getPath();
+        LOGGER.info("Analyzing directory: " + projectBaseDir);
 
-        for (final File report : reportFilesFinder.reportsIn(projectBaseDir)) {
+        final String module = project.getName();
+        final String rootDir = getRootDirectory(project);
+
+        for (final File report : reportFilesFinder.reportsIn(module, rootDir, projectBaseDir)) {
             LOGGER.info("Processing coverage report {}", report);
             CoberturaReportParser.parseReport(report, fileSystem, project, context);
+        }
+    }
+
+    private String getRootDirectory(Project project) {
+        final String projectBaseDir = fileSystem.baseDir().getPath();
+        if (project.isRoot()) {
+            return projectBaseDir;
+        } else {
+            final String modulePath = project.path();
+            return projectBaseDir.substring(0, projectBaseDir.length() - modulePath.length());
         }
     }
 }
