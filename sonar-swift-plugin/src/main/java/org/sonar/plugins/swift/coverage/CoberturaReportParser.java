@@ -84,12 +84,9 @@ final class CoberturaReportParser {
             collectFileMeasures(pack.descendantElementCursor("class"), builderByFilename);
             for (Map.Entry<String, CoverageMeasuresBuilder> entry : builderByFilename.entrySet()) {
                 String filePath = entry.getKey();
-                if (project.isModule()) {
-                    if (!filePath.startsWith(project.path())) {
-                        continue;
-                    }
-                    // fileSystem.baseDir() will include the module path, so we need to get rid of it here
-                    filePath = filePath.substring(project.path().length());
+                filePath = getAdjustedPathIfProjectIsModule(filePath);
+                if (filePath == null) {
+                    continue;
                 }
                 File file = new File(fileSystem.baseDir(), filePath);
                 InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
@@ -105,13 +102,25 @@ final class CoberturaReportParser {
                         context.saveMeasure(resource, measure);
                     }
                 }
-                LOGGER.info("Successfully collected measures for file " + file.getPath());
+                LOGGER.info("Successfully collected measures for file {}", file.getPath());
             }
         }
     }
 
     private boolean resourceExists(Resource file) {
         return context.getResource(file) != null;
+    }
+
+    private String getAdjustedPathIfProjectIsModule(String filePath) {
+        if (project.isModule()) {
+            // the file doesn't belong to the module we're analyzing
+            if (!filePath.startsWith(project.path())) {
+                return null;
+            }
+            // fileSystem.baseDir() will include the module path, so we need to get rid of it here
+            return filePath.substring(project.path().length());
+        }
+        return filePath;
     }
 
     private static void collectFileMeasures(SMInputCursor clazz,

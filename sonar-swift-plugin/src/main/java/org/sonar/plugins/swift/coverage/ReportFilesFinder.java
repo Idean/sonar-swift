@@ -44,11 +44,23 @@ final class ReportFilesFinder {
         this.settingsDirectoryKey = settingsDirectoryKey;
     }
 
+    public List<File> reportsIn(final String baseDirectory) {
+
+        final String reportDirectory = getReportDirectory(baseDirectory, baseDirectory); // the root directory in this case is the base directory
+        final String reportPattern = getReportPattern();
+        return reportsInHelper(reportDirectory, reportPattern);
+    }
+
     public List<File> reportsIn(final String module, final String rootDirectory, final String baseDirectory) {
 
         final String reportDirectory = getReportDirectory(module, rootDirectory, baseDirectory);
         final String reportPattern = getReportPattern(module);
-        final String[] relPaths = filesMatchingPattern(reportDirectory, reportPattern);
+        return reportsInHelper(reportDirectory, reportPattern);
+    }
+
+    private List<File> reportsInHelper(final String reportDirectory, final String reportPattern) {
+
+        final String[] relPaths = filesMathingPattern(reportDirectory, reportPattern);
 
         final List<File> reports = new ArrayList<File>();
 
@@ -59,49 +71,53 @@ final class ReportFilesFinder {
         return reports;
     }
 
-    private String[] filesMatchingPattern(final String reportDirectory, final String reportPath) {
+    private String[] filesMathingPattern(final String reportDirectory, final String reportPath) {
 
         final DirectoryScanner scanner = new DirectoryScanner();
         scanner.setIncludes(new String[] { reportPath });
         scanner.setBasedir(new File(reportDirectory));
         scanner.scan();
-        
-        LOGGER.info("Files found in directory '" + reportDirectory + "' including '" + reportPath + "': " + Arrays.toString(scanner.getIncludedFiles()));
+
+        LOGGER.info("Files found in directory '{}' including '{}': {}", reportDirectory, reportPath, Arrays.toString(scanner.getIncludedFiles()));
 
         return scanner.getIncludedFiles();
+    }
+
+    private String getReportPattern() {
+
+        String reportPath = conf.getString(settingsReportKey);
+        if (reportPath == null) {
+            reportPath = settingsReportDefault;
+        }
+        return reportPath;
     }
 
     private String getReportPattern(final String module) {
 
         String reportPath = conf.getString(module + "." + settingsReportKey);
-
         if (reportPath == null) {
-            reportPath = conf.getString(settingsReportKey);
+            return getReportPattern();
         }
-
-        if (reportPath == null) {
-            reportPath = settingsReportDefault;
-        }
-
         return reportPath;
     }
 
-    private String getReportDirectory(final String module, final String rootDirectory, final String defaultDirectory) {
+    private String getReportDirectory(final String rootDirectory, final String baseDirectory) {
+
+        String reportDirectory = conf.getString(settingsDirectoryKey);
+        if (reportDirectory == null) {
+            return baseDirectory;
+        }
+        return rootDirectory + "/" + reportDirectory;
+    }
+
+
+    private String getReportDirectory(final String module, final String rootDirectory, final String baseDirectory) {
 
         String reportDirectory = conf.getString(module + "." + settingsDirectoryKey);
-
         if (reportDirectory == null) {
-            reportDirectory = conf.getString(settingsDirectoryKey);
+            return getReportDirectory(rootDirectory, baseDirectory);
         }
-
-        if (reportDirectory != null) {
-            reportDirectory = rootDirectory + reportDirectory;
-        }
-        else {
-            reportDirectory = defaultDirectory;
-        }
-
-        return reportDirectory;
+        return rootDirectory + "/" + reportDirectory;
     }
 
 }

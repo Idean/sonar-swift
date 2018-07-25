@@ -29,6 +29,7 @@ import org.sonar.plugins.swift.SwiftPlugin;
 import org.sonar.plugins.swift.lang.core.Swift;
 
 import java.io.File;
+import java.util.List;
 
 
 public final class SwiftCoberturaSensor implements Sensor {
@@ -44,29 +45,40 @@ public final class SwiftCoberturaSensor implements Sensor {
     private final Settings settings;
     private final FileSystem fileSystem;
     private final PathResolver pathResolver;
+    private Project project;
 
     public SwiftCoberturaSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings) {
-        
+
         this.settings = settings;
         this.fileSystem = fileSystem;
-        this.pathResolver = pathResolver;   
+        this.pathResolver = pathResolver;
 
         reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN, REPORT_DIRECTORY_KEY);
-    }   
+    }
 
     public boolean shouldExecuteOnProject(final Project project) {
+
+        this.project = project;
+
         return fileSystem.languages().contains(Swift.KEY);
     }
 
     public void analyse(final Project project, final SensorContext context) {
 
         final String projectBaseDir = fileSystem.baseDir().getPath();
-        LOGGER.info("Analyzing directory: " + projectBaseDir);
+        LOGGER.info("Analyzing directory: {}", projectBaseDir);
 
-        final String module = project.getName();
-        final String rootDir = getRootDirectory(project);
+        List<File> reports;
+        if (project.isRoot()) {
+            reports = reportFilesFinder.reportsIn(projectBaseDir);
+        }
+        else {
+            final String module = project.getName();
+            final String rootDir = getRootDirectory(project);
+            reports = reportFilesFinder.reportsIn(module, rootDir, projectBaseDir);
+        }
 
-        for (final File report : reportFilesFinder.reportsIn(module, rootDir, projectBaseDir)) {
+        for (final File report : reports) {
             LOGGER.info("Processing coverage report {}", report);
             CoberturaReportParser.parseReport(report, fileSystem, project, context);
         }
