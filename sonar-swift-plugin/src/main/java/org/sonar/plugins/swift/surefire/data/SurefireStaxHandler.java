@@ -121,6 +121,9 @@ public class SurefireStaxHandler implements XmlStreamHandler {
 
     private static long getTimeAttributeInMS(String value) throws XMLStreamException {
         // hardcoded to Locale.ENGLISH see http://jira.codehaus.org/browse/SONAR-602
+        if (value == null) {
+            value = "0";
+        }
         try {
             Double time = ParsingUtils.parseNumber(value, Locale.ENGLISH);
             return !Double.isNaN(time) ? (long) ParsingUtils.scaleValue(time * 1000, 3) : 0L;
