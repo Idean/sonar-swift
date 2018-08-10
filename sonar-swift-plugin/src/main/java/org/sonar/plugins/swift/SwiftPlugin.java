@@ -47,10 +47,24 @@ import java.util.List;
                 global = false,
                 project = true),
         @Property(
+                key = SwiftCoberturaSensor.REPORTS_IN_ROOT_KEY,
+                defaultValue = "false",
+                name = "Whether reports are located in the root directory",
+                description = "Determines where to find reports in modular analysis",
+                global = false,
+                project = true),
+        @Property(
                 key = SwiftLintSensor.REPORT_PATH_KEY,
                 defaultValue = SwiftLintSensor.DEFAULT_REPORT_PATH,
                 name = "Path to SwiftLint report",
                 description = "Relative to projects' root.",
+                global = false,
+                project = true),
+         @Property(
+                key = SwiftLintSensor.REPORTS_IN_ROOT_KEY,
+                defaultValue = "false",
+                name = "Whether the report is located in the root directory",
+                description = "Determines where to find the report in modular analysis",
                 global = false,
                 project = true),
         @Property(

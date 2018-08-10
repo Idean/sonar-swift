@@ -20,13 +20,11 @@ package org.sonar.plugins.swift.issues.swiftlint;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
-import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
 
 import java.io.*;
@@ -37,22 +35,22 @@ public class SwiftLintReportParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftLintReportParser.class);
 
-    private final Project project;
-    private final SensorContext context;
-    private final ResourcePerspectives resourcePerspectives;
     private final FileSystem fileSystem;
+    private final ResourcePerspectives resourcePerspectives;
 
-    public SwiftLintReportParser(final Project project, final SensorContext context, final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
-        this.project = project;
-        this.context = context;
-        this.resourcePerspectives = resourcePerspectives;
+    private SwiftLintReportParser(final FileSystem fileSystem, final ResourcePerspectives resourcePerspectives) {
         this.fileSystem = fileSystem;
+        this.resourcePerspectives = resourcePerspectives;
     }
 
-    public void parseReport(File reportFile) {
+    public static void parseReport(File report, FileSystem fileSystem, ResourcePerspectives resourcePerspectives) {
+        new SwiftLintReportParser(fileSystem, resourcePerspectives).parse(report);
+    }
+
+    private void parse(File report) {
         try {
             // Read and parse report
-            FileReader fr = new FileReader(reportFile);
+            FileReader fr = new FileReader(report);
 
             BufferedReader br = new BufferedReader(fr);
             String line;
@@ -106,4 +104,5 @@ public class SwiftLintReportParser {
             }
         }
     }
+
 }

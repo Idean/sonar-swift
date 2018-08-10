@@ -19,78 +19,28 @@ package org.sonar.plugins.swift.coverage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.plugins.swift.SwiftPlugin;
-import org.sonar.plugins.swift.lang.core.Swift;
+import org.sonar.plugins.swift.generic.SwiftSensor;
 
 import java.io.File;
-import java.util.List;
 
-
-public final class SwiftCoberturaSensor implements Sensor {
+public class SwiftCoberturaSensor extends SwiftSensor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftCoberturaSensor.class);
 
     public static final String REPORT_PATTERN_KEY = SwiftPlugin.PROPERTY_PREFIX + ".coverage.reportPattern";
     public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage-swift*.xml";
-    public static final String REPORT_DIRECTORY_KEY = SwiftPlugin.PROPERTY_PREFIX + ".coverage.reportDirectory";
+    public static final String REPORTS_IN_ROOT_KEY = SwiftPlugin.PROPERTY_PREFIX + ".coverage.reportsInRoot";
 
-    private final ReportFilesFinder reportFilesFinder;
-
-    private final Settings settings;
-    private final FileSystem fileSystem;
-    private final PathResolver pathResolver;
-    private Project project;
-
-    public SwiftCoberturaSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings) {
-
-        this.settings = settings;
-        this.fileSystem = fileSystem;
-        this.pathResolver = pathResolver;
-
-        reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN, REPORT_DIRECTORY_KEY);
+    public SwiftCoberturaSensor(FileSystem fileSystem, Settings settings) {
+        super(fileSystem, settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN, REPORTS_IN_ROOT_KEY, true);
     }
 
-    public boolean shouldExecuteOnProject(final Project project) {
-
-        this.project = project;
-
-        return fileSystem.languages().contains(Swift.KEY);
-    }
-
-    public void analyse(final Project project, final SensorContext context) {
-
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-        LOGGER.info("Analyzing directory: {}", projectBaseDir);
-
-        List<File> reports;
-        if (project.isRoot()) {
-            reports = reportFilesFinder.reportsIn(projectBaseDir);
-        }
-        else {
-            final String module = project.getName();
-            final String rootDir = getRootDirectory(project);
-            reports = reportFilesFinder.reportsIn(module, rootDir, projectBaseDir);
-        }
-
-        for (final File report : reports) {
-            LOGGER.info("Processing coverage report {}", report);
-            CoberturaReportParser.parseReport(report, fileSystem, project, context);
-        }
-    }
-
-    private String getRootDirectory(Project project) {
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-        if (project.isRoot()) {
-            return projectBaseDir;
-        } else {
-            final String modulePath = project.path();
-            return projectBaseDir.substring(0, projectBaseDir.length() - modulePath.length());
-        }
+    public void parseReport(File report, Project project, SensorContext context) {
+    	CoberturaReportParser.parseReport(report, fileSystem, context, getRootDirectory(project));
     }
 }
