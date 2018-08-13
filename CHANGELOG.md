@@ -1,8 +1,14 @@
 # _SonarQube Plugin for Swift_ Changelog
 
+## 🔖 v0.3.7
+
+- Add SwiftLint 0.25.0 support by [gaelfoppolo](https://github.com/gaelfoppolo) . See [PR 135](https://github.com/Backelite/sonar-swift/pull/135)
+
+
+
 ## 🔖 v0.3.6
 
-- SonarQube 7 support by [Hugal31](https://github.com/Hugal31).  See [PR 135](https://github.com/Backelite/sonar-swift/pull/125)
+- SonarQube 7 support by [Hugal31](https://github.com/Hugal31).  See [PR 125](https://github.com/Backelite/sonar-swift/pull/125)
 - Lower case fastlane by [milch](https://github.com/milch). See [PR 113](https://github.com/Backelite/sonar-swift/pull/113)
 - Ability to locate test files in sub-directories by [Hugal31](https://github.com/Hugal31). See [PR 123](https://github.com/Backelite/sonar-swift/pull/123)
 
