@@ -63,7 +63,8 @@ public abstract class SwiftSensor implements Sensor {
             reports = Util.findReports(reportDirectory, reportPattern);
         }
         else {
-            reports = Arrays.asList(new File(reportDirectory + "/" + reportPattern));
+            StringBuilder filePathBuilder = new StringBuilder(reportDirectory).append("/").append(reportPattern);
+            reports = Arrays.asList(new File(filePathBuilder.toString()));
         }
         for (final File report : reports) {
             LOGGER.info("Processing report {}", report);
