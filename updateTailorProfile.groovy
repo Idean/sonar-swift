@@ -129,8 +129,8 @@ def writeRules(rls, file) {
 }
 
 // Files
-File rulesJson = new File('sonar-swift-plugin/src/main/resources/org/sonar/plugins/tailor/rules.json')
-File profileXml = new File('sonar-swift-plugin/src/main/resources/org/sonar/plugins/tailor/profile-tailor.xml')
+File rulesJson = new File('swiftlang/src/main/resources/org/sonar/plugins/tailor/rules.json')
+File profileXml = new File('swiftlang/src/main/resources/org/sonar/plugins/tailor/profile-tailor.xml')
 
 // Read rules from swiftlint_rules.txt
 def rules = readTailorRules()

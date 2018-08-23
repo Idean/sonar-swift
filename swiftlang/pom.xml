@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    backelite-sonar-swift-plugin - Enables analysis of Swift projects into SonarQube.
+    Swift Language - Enables analysis of Swift projects into SonarQube.
     Copyright © 2015 Backelite (${email})
 
     This program is free software: you can redistribute it and/or modify
@@ -21,32 +21,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <groupId>com.backelite.sonarqube</groupId>
         <artifactId>backelite-swift</artifactId>
+        <groupId>com.backelite.sonarqube</groupId>
         <version>0.3.8</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.backelite.sonarqube</groupId>
-    <artifactId>backelite-sonar-swift-plugin</artifactId>
-    <version>0.3.8</version>
-
-    <packaging>sonar-plugin</packaging>
+    <artifactId>swift-lang</artifactId>
+    <name>Swift Language</name>
 
     <dependencies>
-
-        <dependency>
-            <groupId>com.backelite.sonarqube</groupId>
-            <artifactId>swift-lang</artifactId>
-            <version>0.3.8</version>
-        </dependency>
-        <dependency>
-            <groupId>com.backelite.sonarqube</groupId>
-            <artifactId>objc-lang</artifactId>
-            <version>0.3.8</version>
-        </dependency>
 
         <dependency>
             <groupId>org.sonarsource.sslr</groupId>
@@ -80,10 +65,13 @@
             <groupId>ant</groupId>
             <artifactId>ant</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
         </dependency>
+
+        <!-- Test dependencies -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -125,23 +113,6 @@
         </dependency>
 
     </dependencies>
-
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
-                <artifactId>sonar-packaging-maven-plugin</artifactId>
-                <version>1.16</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <pluginClass>org.sonar.plugins.swift.SwiftPlugin</pluginClass>
-                    <pluginName>Swift (Backelite)</pluginName>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
 
 
 </project>

@@ -21,20 +21,20 @@ import com.google.common.collect.ImmutableList;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
-import org.sonar.plugins.swift.complexity.LizardSensor;
-import org.sonar.plugins.swift.coverage.SwiftCoberturaSensor;
 import org.sonar.plugins.swift.cpd.SwiftCpdMapping;
 import org.sonar.plugins.swift.issues.SwiftProfile;
-import org.sonar.plugins.swift.issues.swiftlint.SwiftLintProfile;
 import org.sonar.plugins.swift.issues.swiftlint.SwiftLintProfileImporter;
-import org.sonar.plugins.swift.issues.swiftlint.SwiftLintRulesDefinition;
 import org.sonar.plugins.swift.issues.swiftlint.SwiftLintSensor;
-import org.sonar.plugins.swift.issues.tailor.TailorProfile;
 import org.sonar.plugins.swift.issues.tailor.TailorProfileImporter;
 import org.sonar.plugins.swift.issues.tailor.TailorRulesDefinition;
 import org.sonar.plugins.swift.issues.tailor.TailorSensor;
-import org.sonar.plugins.swift.lang.core.Swift;
 import org.sonar.plugins.swift.surefire.SwiftSurefireSensor;
+import org.sonar.plugins.swift.complexity.LizardSensor;
+import org.sonar.plugins.swift.coverage.SwiftCoberturaSensor;
+import org.sonar.plugins.swift.issues.swiftlint.SwiftLintProfile;
+import org.sonar.plugins.swift.issues.swiftlint.SwiftLintRulesDefinition;
+import org.sonar.plugins.swift.issues.tailor.TailorProfile;
+import org.sonar.plugins.swift.lang.core.Swift;
 
 import java.util.List;
 
@@ -76,17 +76,6 @@ import java.util.List;
                 project = true)
 })
 public class SwiftPlugin extends SonarPlugin {
-
-    // Global Swift constants
-    public static final String FALSE = "false";
-
-    public static final String FILE_SUFFIXES_KEY = "sonar.swift.file.suffixes";
-    public static final String FILE_SUFFIXES_DEFVALUE = "swift";
-
-    public static final String PROPERTY_PREFIX = "sonar.swift";
-
-    public static final String TEST_FRAMEWORK_KEY = PROPERTY_PREFIX + ".testframework";
-    public static final String TEST_FRAMEWORK_DEFAULT = "ghunit";
 
     @Override
     public List getExtensions() {

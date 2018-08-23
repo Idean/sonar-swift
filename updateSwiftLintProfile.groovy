@@ -108,8 +108,8 @@ def writeRules(rls, file) {
 }
 
 // Files
-File rulesJson = new File('sonar-swift-plugin/src/main/resources/org/sonar/plugins/swiftlint/rules.json')
-File profileXml = new File('sonar-swift-plugin/src/main/resources/org/sonar/plugins/swiftlint/profile-swiftlint.xml')
+File rulesJson = new File('swiftlang/src/main/resources/org/sonar/plugins/swiftlint/rules.json')
+File profileXml = new File('swiftlang/src/main/resources/org/sonar/plugins/swiftlint/profile-swiftlint.xml')
 
 // Read rules from swiftlint_rules.txt
 def rules = readSwiftLintRules()
