@@ -3,7 +3,7 @@
         "key": "array_init",
         "category": "SwiftLint",
         "name": "Array Init",
-        "description": "Prefer using Array(seq) than seq.map { $0 } to convert a sequence into an Array.",
+        "description": "Prefer using `Array(seq)` over `seq.map { $0 }` to convert a sequence into an Array.",
         "severity": "MINOR"
     },
     {
@@ -98,6 +98,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "convenience_type",
+        "category": "SwiftLint",
+        "name": "Convenience Type",
+        "description": "Types used for hosting only static members should be implemented as a caseless enum to avoid instantiation.",
+        "severity": "MINOR"
+    },
+    {
         "key": "custom_rules",
         "category": "SwiftLint",
         "name": "Customs",
@@ -140,6 +147,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "discouraged_optional_collection",
+        "category": "SwiftLint",
+        "name": "Discouraged Optional Collection",
+        "description": "Prefer empty collection over optional collection.",
+        "severity": "MINOR"
+    },
+    {
         "key": "dynamic_inline",
         "category": "SwiftLint",
         "name": "Dynamic Inline",
@@ -172,6 +186,20 @@
         "category": "SwiftLint",
         "name": "Empty Parentheses with Trailing Closure",
         "description": "When using trailing closures, empty parentheses should be avoided after the method call.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "empty_string",
+        "category": "SwiftLint",
+        "name": "Empty String",
+        "description": "Prefer checking `isEmpty` over comparing `string` to an empty string literal.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "empty_xctest_method",
+        "category": "SwiftLint",
+        "name": "Empty XCTest Method",
+        "description": "Empty XCTest method should be avoided.",
         "severity": "MINOR"
     },
     {
@@ -234,7 +262,7 @@
         "key": "file_header",
         "category": "SwiftLint",
         "name": "File Header",
-        "description": "Header comments should be consistent with project patterns.",
+        "description": "Header comments should be consistent with project patterns. The SWIFTLINT_CURRENT_FILENAME placeholder can optionally be used in the required and forbidden patterns. It will be replaced by the real file name.",
         "severity": "MINOR"
     },
     {
@@ -243,6 +271,13 @@
         "name": "File Line Length",
         "description": "Files should not span too many lines.",
         "severity": "MAJOR"
+    },
+    {
+        "key": "file_name",
+        "category": "SwiftLint",
+        "name": "File Name",
+        "description": "File name should match a type or extension declared in the file (if any).",
+        "severity": "MINOR"
     },
     {
         "key": "first_where",
@@ -287,6 +322,13 @@
         "severity": "MAJOR"
     },
     {
+        "key": "function_default_parameter_at_end",
+        "category": "SwiftLint",
+        "name": "Function Default Parameter at End",
+        "description": "Prefer to locate parameters with defaults toward the end of the parameter list.",
+        "severity": "MINOR"
+    },
+    {
         "key": "function_parameter_count",
         "category": "SwiftLint",
         "name": "Function Parameter Count",
@@ -311,7 +353,7 @@
         "key": "implicit_getter",
         "category": "SwiftLint",
         "name": "Implicit Getter",
-        "description": "Computed read-only properties should avoid using the get keyword.",
+        "description": "Computed read-only properties and subscripts should avoid using the get keyword.",
         "severity": "MINOR"
     },
     {
@@ -406,6 +448,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "lower_acl_than_parent",
+        "category": "SwiftLint",
+        "name": "Lower ACL than parent",
+        "description": "Ensure definitions have a lower access control level than their enclosing parent",
+        "severity": "MINOR"
+    },
+    {
         "key": "mark",
         "category": "SwiftLint",
         "name": "Mark",
@@ -413,10 +462,24 @@
         "severity": "MINOR"
     },
     {
+        "key": "modifier_order",
+        "category": "SwiftLint",
+        "name": "Modifier Order",
+        "description": "Modifier order should be consistent.",
+        "severity": "MINOR"
+    },
+    {
         "key": "multiline_arguments",
         "category": "SwiftLint",
         "name": "Multiline Arguments",
         "description": "Arguments should be either on the same line, or one per line.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "multiline_function_chains",
+        "category": "SwiftLint",
+        "name": "Multiline Function Chains",
+        "description": "Chained function calls should be either on the same line, or one per line.",
         "severity": "MINOR"
     },
     {
@@ -452,6 +515,13 @@
         "category": "SwiftLint",
         "name": "No Extension Access Modifier",
         "description": "Prefer not to use extension access modifiers",
+        "severity": "MINOR"
+    },
+    {
+        "key": "no_fallthrough_only",
+        "category": "SwiftLint",
+        "name": "No Fallthrough Only",
+        "description": "Fallthroughs can only be used if the `case` contains at least one other statement.",
         "severity": "MINOR"
     },
     {
@@ -616,6 +686,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "redundant_set_access_control",
+        "category": "SwiftLint",
+        "name": "Redundant Set Access Control",
+        "description": "Property setter access level shouldn't be explicit if it's the same as the variable access level.",
+        "severity": "MINOR"
+    },
+    {
         "key": "redundant_string_enum_value",
         "category": "SwiftLint",
         "name": "Redundant String Enum Value",
@@ -696,7 +773,7 @@
         "key": "switch_case_alignment",
         "category": "SwiftLint",
         "name": "Switch and Case Statement Alignment",
-        "description": "Case statements should vertically align with the enclosing switch statement.",
+        "description": "Case statements should vertically align with their enclosing switch statement, or indented if configured otherwise.",
         "severity": "MINOR"
     },
     {
@@ -717,7 +794,7 @@
         "key": "todo",
         "category": "SwiftLint",
         "name": "Todo",
-        "description": "TODOs and FIXMEs should be avoided.",
+        "description": "TODOs and FIXMEs should be resolved.",
         "severity": "MINOR"
     },
     {
@@ -770,6 +847,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "unavailable_function",
+        "category": "SwiftLint",
+        "name": "Unavailable Function",
+        "description": "Unimplemented functions should be marked as unavailable.",
+        "severity": "MINOR"
+    },
+    {
         "key": "unneeded_break_in_switch",
         "category": "SwiftLint",
         "name": "Unneeded Break in Switch",
@@ -781,6 +865,13 @@
         "category": "SwiftLint",
         "name": "Unneeded Parentheses in Closure Argument",
         "description": "Parentheses are not needed when declaring closure arguments.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "untyped_error_in_catch",
+        "category": "SwiftLint",
+        "name": "Untyped Error in Catch",
+        "description": "Catch statements should not declare error variables without type casting.",
         "severity": "MINOR"
     },
     {

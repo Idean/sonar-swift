@@ -825,6 +825,58 @@
                     <txt>min</txt>
                 </prop>
             </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>file_name</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>function_default_parameter_at_end</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>redundant_set_access_control</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>untyped_error_in_catch</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
         </chc>
         <chc>
             <key>UNDERSTANDABILITY</key>
@@ -1336,6 +1388,97 @@
                     <txt>min</txt>
                 </prop>
             </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>convenience_type</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>discouraged_optional_collection</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>empty_string</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>empty_xctest_method</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>modifier_order</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>multiline_function_chains</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>no_fallthrough_only</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
         </chc>
     </chc>
     <chc>
@@ -1344,6 +1487,19 @@
         <chc>
             <key>API_ABUSE</key>
             <name>API abuse</name>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>unavailable_function</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
         </chc>
         <chc>
             <key>ERRORS</key>
@@ -1411,6 +1567,19 @@
             <chc>
                 <rule-repo>SwiftLint</rule-repo>
                 <rule-key>private_action</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>lower_acl_than_parent</rule-key>
                 <prop>
                     <key>remediationFunction</key>
                     <txt>CONSTANT_ISSUE</txt>
