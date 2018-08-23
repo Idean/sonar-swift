@@ -27,6 +27,7 @@ import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
+import org.sonar.plugins.swift.lang.core.Swift;
 import org.sonar.plugins.swift.SwiftPlugin;
 
 import java.io.File;
@@ -54,7 +55,7 @@ public final class SwiftSurefireSensor implements Sensor {
 
     @Override
     public boolean shouldExecuteOnProject(Project project) {
-        return StringUtils.isNotEmpty(this.reportPath());
+        return StringUtils.isNotEmpty(this.reportPath()) && fileSystem.languages().contains(Swift.KEY);
     }
 
     @Override
