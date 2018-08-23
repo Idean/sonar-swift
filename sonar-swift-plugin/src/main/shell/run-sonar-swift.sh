@@ -29,6 +29,7 @@ SWIFTLINT_CMD=swiftlint
 TAILOR_CMD=tailor
 XCPRETTY_CMD=xcpretty
 LIZARD_CMD=lizard
+XCODEBUILD_CMD=xcodebuild
 
 
 trap "echo 'Script interrupted by Ctrl+C'; stopProgress; exit 1" SIGHUP SIGINT SIGTERM
@@ -146,6 +147,8 @@ unittests="on"
 swiftlint="on"
 tailor="on"
 lizard="on"
+oclint="on"
+fauxpas="on"
 sonarscanner=""
 
 while [ $# -gt 0 ]
@@ -273,15 +276,40 @@ fi
 rm -rf sonar-reports
 mkdir sonar-reports
 
+# Extracting project information needed later
+echo -n 'Extracting Xcode project information'
+if [[ "$workspaceFile" != "" ]] ; then
+    buildCmdPrefix="-workspace $workspaceFile"
+else
+    buildCmdPrefix="-project $projectFile"
+fi
+buildCmd=($XCODEBUILD_CMD clean build $buildCmdPrefix -scheme $appScheme)
+if [[ ! -z "$destinationSimulator" ]]; then
+    buildCmd+=(-destination "$destinationSimulator" -destination-timeout 360 COMPILER_INDEX_STORE_ENABLE=NO)
+fi
+runCommand  xcodebuild.log "${buildCmd[@]}"
+#oclint-xcodebuild # Transform the xcodebuild.log file into a compile_command.json file
+cat xcodebuild.log | $XCPRETTY_CMD -r json-compilation-database -o compile_commands.json
+
+# Objective-C code detection
+hasObjC="no"
+compileCmdFile=compile_commands.json
+minimumSize=3
+actualSize=$(stat -f%z "$compileCmdFile")
+echo "actual = $actualSize, min = $minimumSize"
+if [ $actualSize -ge $minimumSize ]; then
+    hasObjC="yes"
+fi
+
+# Unit surefire and coverage
 if [ "$unittests" = "on" ]; then
-    # Unit surefire and coverage
 
     # Put default xml files with no surefire and no coverage...
     echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='AllTestUnits'></testsuites>" > sonar-reports/TEST-report.xml
     echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage-swift.xml
 
     echo -n 'Running surefire'
-    buildCmd=(xcodebuild clean build test)
+    buildCmd=($XCODEBUILD_CMD clean build test)
     if [[ ! -z "$workspaceFile" ]]; then
         buildCmd+=(-workspace "$workspaceFile")
     elif [[ ! -z "$projectFile" ]]; then
@@ -376,6 +404,85 @@ if [ "$tailor" = "on" ]; then
 
 else
 	echo 'Skipping Tailor!'
+fi
+
+if [ "$oclint" = "on" ] && [ "$hasObjC" = "yes" ]; then
+
+	echo -n 'Running OCLint...'
+
+	# Options
+	maxPriority=10000
+    longLineThreshold=250
+
+	# Build the --include flags
+	currentDirectory=${PWD##*/}
+	echo "$srcDirs" | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
+	while read word; do
+
+		includedCommandLineFlags=" --include .*/${currentDirectory}/${word}"
+		if [ "$vflag" = "on" ]; then
+            echo
+            echo -n "Path included in oclint analysis is:$includedCommandLineFlags"
+        fi
+		# Run OCLint with the right set of compiler options
+	    runCommand no oclint-json-compilation-database -v $includedCommandLineFlags -- -rc LONG_LINE=$longLineThreshold -max-priority-1 $maxPriority -max-priority-2 $maxPriority -max-priority-3 $maxPriority -report-type pmd -o sonar-reports/$(echo $word | sed 's/\//_/g')-oclint.xml
+
+	done < tmpFileRunSonarSh
+	rm -rf tmpFileRunSonarSh
+
+
+else
+	echo 'Skipping OCLint (test purposes only!)'
+fi
+
+#FauxPas
+if [ "$fauxpas" = "on" ] && [ "$hasObjC" = "yes" ]; then
+    hash fauxpas 2>/dev/null
+    if [ $? -eq 0 ]; then
+
+        echo -n 'Running FauxPas...'
+
+        if [ "$projectCount" = "1" ]
+        then
+
+            fauxpas -o json check $projectFile --workspace $workspaceFile --scheme $appScheme > sonar-reports/fauxpas.json
+
+
+        else
+
+            echo $projectFile | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
+            while read projectName; do
+
+                $XCODEBUILD_CMD -list -project $projectName | sed -n '/Schemes/,$p' | while read scheme
+                do
+
+                if [ "$scheme" = "" ]
+                then
+                exit
+                fi
+
+                if [ "$scheme" == "${scheme/Schemes/}" ]
+                then
+                    if [ "$scheme" != "$testScheme" ]
+                    then
+                        projectBaseDir=$(dirname $projectName)
+                        workspaceRelativePath=$(python -c "import os.path; print os.path.relpath('$workspaceFile', '$projectBaseDir')")
+                        fauxpas -o json check $projectName --workspace $workspaceRelativePath --scheme $scheme > sonar-reports/$(basename $projectName .xcodeproj)-$scheme-fauxpas.json
+                    fi
+                fi
+
+                done
+
+            done < tmpFileRunSonarSh
+            rm -rf tmpFileRunSonarSh
+
+	    fi
+
+    else
+        echo 'Skipping FauxPas (not installed)'
+    fi
+else
+    echo 'Skipping FauxPas'
 fi
 
 # Lizard Complexity
