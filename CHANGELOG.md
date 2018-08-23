@@ -1,5 +1,16 @@
 # _SonarQube Plugin for Swift_ Changelog
 
+
+## 🔖 v0.3.8
+
+- Ability to add a separate path for surefire junit test reports by [vexdev](https://github.com/vexdev). See [PR 105](https://github.com/Backelite/sonar-swift/pull/105)
+- Added check for Swift language to surefire sensor To avoid ["Can not add the same measure twice" issue](https://github.com/Backelite/sonar-swift/issues/103) by [felazuris](https://github.com/felazuris). See [PR 103](https://github.com/Backelite/sonar-swift/issues/103)
+- Documentation update on the use of new fastlane gem lizard by [liaogz82](https://github.com/liaogz82). See [PR 119](https://github.com/Backelite/sonar-swift/pull/119)
+- Added `--no-color` to sonar.swift.tailor.config to restore proper log parsing by [benjohnde](https://github.com/benjohnde). See [PR 122](https://github.com/Backelite/sonar-swift/pull/122)
+- Fixed NPE when parsing JUnit reports by [jxw1102](https://github.com/jxw1102). See [PR 145](https://github.com/Backelite/sonar-swift/pull/145)
+- SwiftLint 0.26.0 support by [gaelfoppolo](https://github.com/gaelfoppolo). See [PR 148](https://github.com/Backelite/sonar-swift/pull/148)
+- Added support for modular code coverage and ability to specify a reports directory by [isaacwang4076](https://github.com/isaacwang4076). See [PR 151](https://github.com/Backelite/sonar-swift/pull/151)
+
 ## 🔖 v0.3.7
 
 - Add SwiftLint 0.25.0 support by [gaelfoppolo](https://github.com/gaelfoppolo) . See [PR 135](https://github.com/Backelite/sonar-swift/pull/135)
