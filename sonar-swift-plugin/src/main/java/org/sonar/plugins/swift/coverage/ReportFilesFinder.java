@@ -18,57 +18,106 @@
 package org.sonar.plugins.swift.coverage;
 
 import org.apache.tools.ant.DirectoryScanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.config.Settings;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
 final class ReportFilesFinder {
 
-    private final Settings conf;
-    private final String settingsKey;
-    private final String settingsDefault;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReportFilesFinder.class);
 
-    public ReportFilesFinder(final Settings settings, final String key, final String defaultValue) {
+    private final Settings conf;
+    private final String settingsReportKey;
+    private final String settingsReportDefault;
+    private final String settingsDirectoryKey;
+
+    public ReportFilesFinder(final Settings settings, final String settingsReportKey, final String settingsReportDefault, final String settingsDirectoryKey) {
 
         conf = settings;
-        settingsKey = key;
-        settingsDefault = defaultValue;
+        this.settingsReportKey = settingsReportKey;
+        this.settingsReportDefault = settingsReportDefault;
+        this.settingsDirectoryKey = settingsDirectoryKey;
     }
 
-    public List<File> reportsIn(final String baseDirPath) {
+    public List<File> reportsIn(final String baseDirectory) {
 
-        final String[] relPaths = filesMathingPattern(baseDirPath, reportPattern());
+        final String reportDirectory = getReportDirectory(baseDirectory, baseDirectory); // the root directory in this case is the base directory
+        final String reportPattern = getReportPattern();
+        return reportsInHelper(reportDirectory, reportPattern);
+    }
+
+    public List<File> reportsIn(final String module, final String rootDirectory, final String baseDirectory) {
+
+        final String reportDirectory = getReportDirectory(module, rootDirectory, baseDirectory);
+        final String reportPattern = getReportPattern(module);
+        return reportsInHelper(reportDirectory, reportPattern);
+    }
+
+    private List<File> reportsInHelper(final String reportDirectory, final String reportPattern) {
+
+        final String[] relPaths = filesMathingPattern(reportDirectory, reportPattern);
 
         final List<File> reports = new ArrayList<File>();
 
         for (final String relPath : relPaths) {
-            reports.add(new File(baseDirPath, relPath));
+            reports.add(new File(reportDirectory, relPath));
         }
 
         return reports;
     }
 
-    private String[] filesMathingPattern(final String baseDirPath, final String reportPath) {
+    private String[] filesMathingPattern(final String reportDirectory, final String reportPath) {
 
         final DirectoryScanner scanner = new DirectoryScanner();
         scanner.setIncludes(new String[] { reportPath });
-        scanner.setBasedir(new File(baseDirPath));
+        scanner.setBasedir(new File(reportDirectory));
         scanner.scan();
+
+        LOGGER.info("Files found in directory '{}' including '{}': {}", reportDirectory, reportPath, Arrays.toString(scanner.getIncludedFiles()));
 
         return scanner.getIncludedFiles();
     }
 
-    private String reportPattern() {
+    private String getReportPattern() {
 
-        String reportPath = conf.getString(settingsKey);
-
+        String reportPath = conf.getString(settingsReportKey);
         if (reportPath == null) {
-            reportPath = settingsDefault;
+            reportPath = settingsReportDefault;
         }
-
         return reportPath;
+    }
+
+    private String getReportPattern(final String module) {
+
+        String reportPath = conf.getString(module + "." + settingsReportKey);
+        if (reportPath == null) {
+            return getReportPattern();
+        }
+        return reportPath;
+    }
+
+    private String getReportDirectory(final String rootDirectory, final String baseDirectory) {
+
+        String reportDirectory = conf.getString(settingsDirectoryKey);
+        if (reportDirectory == null) {
+            return baseDirectory;
+        }
+        return rootDirectory + "/" + reportDirectory;
+    }
+
+
+    private String getReportDirectory(final String module, final String rootDirectory, final String baseDirectory) {
+
+        String reportDirectory = conf.getString(module + "." + settingsDirectoryKey);
+        if (reportDirectory == null) {
+            return getReportDirectory(rootDirectory, baseDirectory);
+        }
+        return rootDirectory + "/" + reportDirectory;
     }
 
 }

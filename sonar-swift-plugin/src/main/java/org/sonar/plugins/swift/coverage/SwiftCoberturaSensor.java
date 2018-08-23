@@ -29,6 +29,7 @@ import org.sonar.plugins.swift.SwiftPlugin;
 import org.sonar.plugins.swift.lang.core.Swift;
 
 import java.io.File;
+import java.util.List;
 
 
 public final class SwiftCoberturaSensor implements Sensor {
@@ -37,6 +38,7 @@ public final class SwiftCoberturaSensor implements Sensor {
 
     public static final String REPORT_PATTERN_KEY = SwiftPlugin.PROPERTY_PREFIX + ".coverage.reportPattern";
     public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage-swift*.xml";
+    public static final String REPORT_DIRECTORY_KEY = SwiftPlugin.PROPERTY_PREFIX + ".coverage.reportDirectory";
 
     private final ReportFilesFinder reportFilesFinder;
 
@@ -51,24 +53,44 @@ public final class SwiftCoberturaSensor implements Sensor {
         this.fileSystem = fileSystem;
         this.pathResolver = pathResolver;
 
-        reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN);
+        reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN, REPORT_DIRECTORY_KEY);
     }
 
     public boolean shouldExecuteOnProject(final Project project) {
 
         this.project = project;
 
-        return project.isRoot() && fileSystem.languages().contains(Swift.KEY);
+        return fileSystem.languages().contains(Swift.KEY);
     }
 
     public void analyse(final Project project, final SensorContext context) {
 
-
         final String projectBaseDir = fileSystem.baseDir().getPath();
+        LOGGER.info("Analyzing directory: {}", projectBaseDir);
 
-        for (final File report : reportFilesFinder.reportsIn(projectBaseDir)) {
+        List<File> reports;
+        if (project.isRoot()) {
+            reports = reportFilesFinder.reportsIn(projectBaseDir);
+        }
+        else {
+            final String module = project.getName();
+            final String rootDir = getRootDirectory(project);
+            reports = reportFilesFinder.reportsIn(module, rootDir, projectBaseDir);
+        }
+
+        for (final File report : reports) {
             LOGGER.info("Processing coverage report {}", report);
             CoberturaReportParser.parseReport(report, fileSystem, project, context);
+        }
+    }
+
+    private String getRootDirectory(Project project) {
+        final String projectBaseDir = fileSystem.baseDir().getPath();
+        if (project.isRoot()) {
+            return projectBaseDir;
+        } else {
+            final String modulePath = project.path();
+            return projectBaseDir.substring(0, projectBaseDir.length() - modulePath.length());
         }
     }
 }
