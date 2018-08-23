@@ -20,7 +20,6 @@ package org.sonar.plugins.swift.complexity;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Measure;
-import org.sonar.api.measures.PersistenceMode;
 import org.sonar.api.measures.RangeDistributionBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -125,7 +124,6 @@ public class LizardReportParser {
         list.add(new Measure(CoreMetrics.FILE_COMPLEXITY, fileComplexity));
         RangeDistributionBuilder complexityDistribution = new RangeDistributionBuilder(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, FILES_DISTRIB_BOTTOM_LIMITS);
         complexityDistribution.add(fileComplexity);
-        list.add(complexityDistribution.build().setPersistenceMode(PersistenceMode.MEMORY));
         return list;
     }
 
@@ -175,7 +173,6 @@ public class LizardReportParser {
         List<Measure> list = new ArrayList<Measure>();
         list.add(new Measure(CoreMetrics.FUNCTION_COMPLEXITY, complexMean));
         list.add(new Measure(CoreMetrics.COMPLEXITY_IN_FUNCTIONS).setIntValue(complexityInFunctions));
-        list.add(builder.build().setPersistenceMode(PersistenceMode.MEMORY));
         return list;
     }
 

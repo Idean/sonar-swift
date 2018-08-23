@@ -1,5 +1,12 @@
 [
     {
+        "key": "array_init",
+        "category": "SwiftLint",
+        "name": "Array Init",
+        "description": "Prefer using Array(seq) than seq.map { $0 } to convert a sequence into an Array.",
+        "severity": "MINOR"
+    },
+    {
         "key": "attributes",
         "category": "SwiftLint",
         "name": "Attributes",
@@ -77,10 +84,17 @@
         "severity": "MINOR"
     },
     {
+        "key": "contains_over_first_not_nil",
+        "category": "SwiftLint",
+        "name": "Contains over first not nil",
+        "description": "Prefer `contains` over `first(where:) != nil`",
+        "severity": "MINOR"
+    },
+    {
         "key": "control_statement",
         "category": "SwiftLint",
         "name": "Control Statement",
-        "description": "if,for,while,do statements shouldn't wrap their conditionals in parentheses.",
+        "description": "if,for,while,do,catch statements shouldn't wrap their conditionals or arguments in parentheses.",
         "severity": "MINOR"
     },
     {
@@ -109,6 +123,20 @@
         "category": "SwiftLint",
         "name": "Discouraged Direct Initialization",
         "description": "Discouraged direct initialization of types that can be harmful.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "discouraged_object_literal",
+        "category": "SwiftLint",
+        "name": "Discouraged Object Literal",
+        "description": "Prefer initializers over object literals.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "discouraged_optional_boolean",
+        "category": "SwiftLint",
+        "name": "Discouraged Optional Boolean",
+        "description": "Prefer non-optional booleans over optional booleans.",
         "severity": "MINOR"
     },
     {
@@ -147,6 +175,20 @@
         "severity": "MINOR"
     },
     {
+        "key": "explicit_acl",
+        "category": "SwiftLint",
+        "name": "Explicit ACL",
+        "description": "All declarations should specify Access Control Level keywords explicitly.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "explicit_enum_raw_value",
+        "category": "SwiftLint",
+        "name": "Explicit Enum Raw Value",
+        "description": "Enums should be explicitly assigned their raw values.",
+        "severity": "MINOR"
+    },
+    {
         "key": "explicit_init",
         "category": "SwiftLint",
         "name": "Explicit Init",
@@ -172,6 +214,13 @@
         "category": "SwiftLint",
         "name": "Extension Access Modifier",
         "description": "Prefer to use extension access modifiers",
+        "severity": "MINOR"
+    },
+    {
+        "key": "fallthrough",
+        "category": "SwiftLint",
+        "name": "Fallthrough",
+        "description": "Fallthrough should be avoided.",
         "severity": "MINOR"
     },
     {
@@ -280,6 +329,20 @@
         "severity": "MINOR"
     },
     {
+        "key": "is_disjoint",
+        "category": "SwiftLint",
+        "name": "Is Disjoint",
+        "description": "Prefer using `Set.isDisjoint(with:)` over `Set.intersection(_:).isEmpty`.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "joined_default_parameter",
+        "category": "SwiftLint",
+        "name": "Joined Default Parameter",
+        "description": "Discouraged explicit usage of the default separator.",
+        "severity": "MINOR"
+    },
+    {
         "key": "large_tuple",
         "category": "SwiftLint",
         "name": "Large Tuple",
@@ -336,6 +399,13 @@
         "severity": "MAJOR"
     },
     {
+        "key": "literal_expression_end_indentation",
+        "category": "SwiftLint",
+        "name": "Literal Expression End Indentation",
+        "description": "Array and dictionary literal end should have the same indentation as the line that started it.",
+        "severity": "MINOR"
+    },
+    {
         "key": "mark",
         "category": "SwiftLint",
         "name": "Mark",
@@ -343,10 +413,24 @@
         "severity": "MINOR"
     },
     {
+        "key": "multiline_arguments",
+        "category": "SwiftLint",
+        "name": "Multiline Arguments",
+        "description": "Arguments should be either on the same line, or one per line.",
+        "severity": "MINOR"
+    },
+    {
         "key": "multiline_parameters",
         "category": "SwiftLint",
         "name": "Multiline Parameters",
         "description": "Functions and methods parameters should be either on the same line, or one per line.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "multiple_closures_with_trailing_closure",
+        "category": "SwiftLint",
+        "name": "Multiple Closures with Trailing Closure",
+        "description": "Trailing closure syntax should not be used when passing more than one closure argument.",
         "severity": "MINOR"
     },
     {
@@ -368,6 +452,13 @@
         "category": "SwiftLint",
         "name": "No Extension Access Modifier",
         "description": "Prefer not to use extension access modifiers",
+        "severity": "MINOR"
+    },
+    {
+        "key": "no_grouping_extension",
+        "category": "SwiftLint",
+        "name": "No Grouping Extension",
+        "description": "Extensions shouldn't be used to group code within the same source file.",
         "severity": "MINOR"
     },
     {
@@ -420,6 +511,34 @@
         "severity": "MINOR"
     },
     {
+        "key": "override_in_extension",
+        "category": "SwiftLint",
+        "name": "Override in Extension",
+        "description": "Extensions shouldn't override declarations.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "pattern_matching_keywords",
+        "category": "SwiftLint",
+        "name": "Pattern Matching Keywords",
+        "description": "Combine multiple pattern matching bindings by moving keywords out of tuples.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "prefixed_toplevel_constant",
+        "category": "SwiftLint",
+        "name": "Prefixed Top-Level Constant",
+        "description": "Top-level constants should be prefixed by `k`.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "private_action",
+        "category": "SwiftLint",
+        "name": "Private Actions",
+        "description": "IBActions should be private.",
+        "severity": "MINOR"
+    },
+    {
         "key": "private_outlet",
         "category": "SwiftLint",
         "name": "Private Outlets",
@@ -452,6 +571,27 @@
         "category": "SwiftLint",
         "name": "Protocol Property Accessors Order",
         "description": "When declaring properties in protocols, the order of accessors should be `get set`.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "quick_discouraged_call",
+        "category": "SwiftLint",
+        "name": "Quick Discouraged Call",
+        "description": "Discouraged call inside 'describe' and/or 'context' block.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "quick_discouraged_focused_test",
+        "category": "SwiftLint",
+        "name": "Quick Discouraged Focused Test",
+        "description": "Discouraged focused test. Other tests won't run while this one is focused.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "quick_discouraged_pending_test",
+        "category": "SwiftLint",
+        "name": "Quick Discouraged Pending Test",
+        "description": "Discouraged pending test. This test won't run while it's marked as pending.",
         "severity": "MINOR"
     },
     {
@@ -490,6 +630,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "required_enum_case",
+        "category": "SwiftLint",
+        "name": "Required Enum Case",
+        "description": "Enums conforming to a specified protocol must implement a specific case(s).",
+        "severity": "MINOR"
+    },
+    {
         "key": "return_arrow_whitespace",
         "category": "SwiftLint",
         "name": "Returning Whitespace",
@@ -501,6 +648,20 @@
         "category": "SwiftLint",
         "name": "Shorthand Operator",
         "description": "Prefer shorthand operators (+=, -=, *=, /=) over doing the operation and assigning.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "single_test_class",
+        "category": "SwiftLint",
+        "name": "Single Test Class",
+        "description": "Test files should contain a single QuickSpec or XCTestCase class.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "sorted_first_last",
+        "category": "SwiftLint",
+        "name": "Min or Max over Sorted First or Last",
+        "description": "Prefer using `min()` or `max()` over `sorted().first` or `sorted().last`",
         "severity": "MINOR"
     },
     {
@@ -525,6 +686,20 @@
         "severity": "MINOR"
     },
     {
+        "key": "superfluous_disable_command",
+        "category": "SwiftLint",
+        "name": "Superfluous Disable Command",
+        "description": "SwiftLint 'disable' commands are superfluous when the disabled rule would not have triggered a violation in the disabled region.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "switch_case_alignment",
+        "category": "SwiftLint",
+        "name": "Switch and Case Statement Alignment",
+        "description": "Case statements should vertically align with the enclosing switch statement.",
+        "severity": "MINOR"
+    },
+    {
         "key": "switch_case_on_newline",
         "category": "SwiftLint",
         "name": "Switch Case on Newline",
@@ -535,7 +710,7 @@
         "key": "syntactic_sugar",
         "category": "SwiftLint",
         "name": "Syntactic Sugar",
-        "description": "Shorthand syntactic sugar should be used, i.e. [Int] instead of Array<Int>",
+        "description": "Shorthand syntactic sugar should be used, i.e. [Int] instead of Array<Int>.",
         "severity": "MINOR"
     },
     {
@@ -592,6 +767,13 @@
         "category": "SwiftLint",
         "name": "Type Name",
         "description": "Type name should only contain alphanumeric characters, start with an uppercase character and span between 3 and 40 characters in length.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "unneeded_break_in_switch",
+        "category": "SwiftLint",
+        "name": "Unneeded Break in Switch",
+        "description": "Avoid using unneeded break statements.",
         "severity": "MINOR"
     },
     {
@@ -662,6 +844,20 @@
         "category": "SwiftLint",
         "name": "Weak Delegate",
         "description": "Delegates should be weak to avoid reference cycles.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "xctfail_message",
+        "category": "SwiftLint",
+        "name": "XCTFail Message",
+        "description": "An XCTFail call should include a description of the assertion.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "yoda_condition",
+        "category": "SwiftLint",
+        "name": "Yoda condition rule",
+        "description": "The variable should be placed on the left, the constant on the right of a comparison operator.",
         "severity": "MINOR"
     }
 ]

@@ -5,6 +5,10 @@
   <rules>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>array_init</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>attributes</key>
     </rule>
     <rule>
@@ -49,6 +53,10 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>contains_over_first_not_nil</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>control_statement</key>
     </rule>
     <rule>
@@ -66,6 +74,14 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>discouraged_direct_init</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>discouraged_object_literal</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>discouraged_optional_boolean</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -89,6 +105,14 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>explicit_acl</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>explicit_enum_raw_value</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>explicit_init</key>
     </rule>
     <rule>
@@ -102,6 +126,10 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>extension_access_modifier</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>fallthrough</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -165,6 +193,14 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>is_disjoint</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>joined_default_parameter</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>large_tuple</key>
     </rule>
     <rule>
@@ -197,11 +233,23 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>literal_expression_end_indentation</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>mark</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>multiline_arguments</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>multiline_parameters</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>multiple_closures_with_trailing_closure</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -214,6 +262,10 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>no_extension_access_modifier</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>no_grouping_extension</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -245,6 +297,22 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>override_in_extension</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>pattern_matching_keywords</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>prefixed_toplevel_constant</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>private_action</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>private_outlet</key>
     </rule>
     <rule>
@@ -262,6 +330,18 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>protocol_property_accessors_order</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>quick_discouraged_call</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>quick_discouraged_focused_test</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>quick_discouraged_pending_test</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -285,11 +365,23 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>required_enum_case</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>return_arrow_whitespace</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>shorthand_operator</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>single_test_class</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>sorted_first_last</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -302,6 +394,14 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>strict_fileprivate</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>superfluous_disable_command</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>switch_case_alignment</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -345,6 +445,10 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>unneeded_break_in_switch</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>unneeded_parentheses_in_closure_argument</key>
     </rule>
     <rule>
@@ -382,6 +486,14 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>weak_delegate</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>xctfail_message</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>yoda_condition</key>
     </rule>
   </rules>
 </profile>

@@ -17,8 +17,7 @@
  */
 package org.sonar.plugins.swift;
 
-import java.util.List;
-
+import com.google.common.collect.ImmutableList;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
@@ -37,7 +36,7 @@ import org.sonar.plugins.swift.issues.tailor.TailorSensor;
 import org.sonar.plugins.swift.lang.core.Swift;
 import org.sonar.plugins.swift.surefire.SwiftSurefireSensor;
 
-import com.google.common.collect.ImmutableList;
+import java.util.List;
 
 @Properties({
         @Property(
@@ -65,6 +64,13 @@ import com.google.common.collect.ImmutableList;
                 key = LizardSensor.REPORT_PATH_KEY,
                 defaultValue = LizardSensor.DEFAULT_REPORT_PATH,
                 name = "Path to lizard report",
+                description = "Relative to projects' root.",
+                global = false,
+                project = true),
+        @Property(
+                key = SwiftSurefireSensor.REPORTS_PATH_KEY,
+                defaultValue = SwiftSurefireSensor.DEFAULT_REPORTS_PATH,
+                name = "Path to surefire junit report",
                 description = "Relative to projects' root.",
                 global = false,
                 project = true)

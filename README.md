@@ -41,77 +41,11 @@ In SonarQube under Quality Profiles the used Linter can be specified by selectin
 
 Checkout the [Releases](https://github.com/Backelite/sonar-swift/releases) page.
 
+The full release history is also available in [CHANGELOG.md](./CHANGELOG.md).
+
 ### Launching an analysis
-If you use [Fastlane](https://fastlane.tools), please read [our Fastlane integration doc](docs/sonarqube-fastlane.md).
+If you use [fastlane](https://fastlane.tools), please read [our fastlane integration doc](docs/sonarqube-fastlane.md).
 Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root folder
-
-### Release history
-
-#### 0.3.5
-- SwiftLint 0.21.0 (95 rules now)
-- SonarQube 6.5 support
-- Fixes properties with space by [Branlute](https://github.com/Branlute). See [PR 84](https://github.com/Backelite/sonar-swift/pull/84)
-- Finds project version automatically with CFBundleShortVersionString by [Branlute](https://github.com/Branlute). See [PR 87](https://github.com/Backelite/sonar-swift/pull/87)
-- Fixes coverage with mixed objc swift project by [Branlute](https://github.com/Branlute). See [PR 88](https://github.com/Backelite/sonar-swift/pull/88)
-- Quotes support for multi-word project names by [PetrJandak](https://github.com/PetrJandak). See [PR 97](https://github.com/Backelite/sonar-swift/pull/97)
-
-#### 0.3.4
-- SwiftLint 0.18.1 (add 8 more rules)
-- Fix README headers
-- Update README URLs to SonarQube
-
-#### 0.3.3
-- Updated run-sonar-swift.sh to support -usesonarscanner (for sonar-scanner instead of sonar-runner). 
-
-#### 0.3.2
-- SwiftLint 0.16.1 (75 rules now).
-- Fixed [Metric 'test_data' should not be computed by a Sensor](https://github.com/Backelite/sonar-swift/issues/61) with SonarQube 6.2
-- Fastlane documentation update by [mammuth](https://github.com/mammuth). See [PR 62](https://github.com/Backelite/sonar-swift/pull/62)
-- run-sonar-swift.sh fix by [TheSkwiggs](https://github.com/mammuth). See [PR 64](https://github.com/Backelite/sonar-swift/pull/64)
-
-#### 0.3.1
-- Now falls back to sonar-scanner if sonar-runner is not installed (thanks to [MaikoHermans](https://github.com/MaikoHermans). See [PR 59](https://github.com/Backelite/sonar-swift/pull/59))
-- Ability to set *sonar.swift.appName*. Useful when basename is different from targeted scheme, or when slather fails with 'No product binary found' (thanks to [MaikoHermans](https://github.com/MaikoHermans). See [PR 58](https://github.com/Backelite/sonar-swift/pull/58))
-- Added a second linter: Tailor. Enables analysis of Swift code on linux. (thanks to [tzwickl](https://github.com/tzwickl) for the hard work. See [PR 51](https://github.com/Backelite/sonar-swift/pull/51))
-
-
-#### 0.3.0
-- SonarQube 6 support. Important : will work with SonarQube 5.x and above only. Will not work anymore with SonarQube 4.5.x anymore.
-- SwiftLint 0.13.1 support (49 rules now).
-- Desactivation of unit tests and coverage is now allowed. Use **run-sonar-swift.sh -nounittests** to do it.
-
-#### 0.2.4
-- Analysis does not fail anymore when an unkwown issue is reported by SwiftLint. See [issue 35](https://github.com/Backelite/sonar-swift/issues/35)
-- Fastlane documentation (thanks to [viteinfinite](https://github.com/viteinfinite)). See [PR 33](https://github.com/Backelite/sonar-swift/pull/33)
-- Fixed Fastlane JUnit report support
-- SwiftLint 0.11.1 support
-- Better return code suppot for run-sonar-swift.sh
-
-#### 0.2.3
-- Fixed Lizard Sensor wrong file path
-
-#### 0.2.2
-- Added support for .xcodeproj only projects (thanks to [delannoyk](https://github.com/delannoyk))
-- Fix for Lizard Sensor to find indexed files (thanks to [gretzki](https://github.com/gretzki))
-- Got rid of confusion with commercial plugin in the update center
-
-#### 0.2.1
-- SwiftLint 0.8 support (new rules added).
-
-#### 0.2.0
-- Lizard complexity report support (thanks to [akshaysyaduvanshi](https://github.com/akshaysyaduvanshi))
-
-#### 0.1.2
-- SwiftLint 0.5.1 support (new rules added).
-- Added *sonar.swift.simulator* key in *sonar-project.properties* to select destination simulator for running tests
-- SwiftLint scans source directories only
-
-#### 0.1.1
-- SwiftLint 0.4.0 support (new rules added).
-
-#### 0.1.0
-- Initial release.
-
 
 ### Prerequisites
 
@@ -137,7 +71,7 @@ To install the fixed version, follow those steps :
 
 ### Installation (once for all your Swift projects)
 - Download the plugin binary into the $SONARQUBE_HOME/extensions/plugins directory
-- Copy [run-sonar-swift.sh](https://rawgithub.com/Backelite/sonar-swift/master/src/main/shell/run-sonar-swift.sh) somewhere in your PATH
+- Copy [run-sonar-swift.sh](https://raw.githubusercontent.com/Backelite/sonar-swift/master/sonar-swift-plugin/src/main/shell/run-sonar-swift.sh) somewhere in your PATH
 - Restart the SonarQube server.
 
 ### Configuration (once per project)
@@ -154,10 +88,13 @@ If you still have *run-sonar-swift.sh* file in each of your project (not recomme
 
 ### Contributing
 
-Feel free to contribute to this plugin by issuing pull requests to this repository.
+Thank you for your interest in the project! Contributions are welcome and appreciated.
 
-When creating a pull request: always create it for the *develop* branch. 
+Make sure to read these guides before getting started:
+
+- [Code of Conduct](./CODE_OF_CONDUCT.md)
+- [Contribution Guidelines](./CONTRIBUTING.md)
 
 ### License
 
-SonarQube Plugin for Swift is released under the [GNU LGPL 3 license](http://www.gnu.org/licenses/lgpl.txt).
+SonarQube Plugin for Swift is released under the GNU LGPL v3 license. See the [LICENSE](./LICENSE.md) file for more info.

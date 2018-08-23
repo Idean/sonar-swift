@@ -1,6 +1,6 @@
-# Using with Fastlane 🚀
+# Using with fastlane 🚀
 
-If you already use Fastlane, you can simply setup a new lane performing the analysis as follows:
+If you already use fastlane, you can simply setup a new lane performing the analysis as follows:
 
 ```ruby
 lane :metrics do
@@ -15,7 +15,7 @@ end
 
 ## Options
 
-Fastlane's `sonar` action allows you to define or override a number of SonarQube properties, such as `sonar.project-version`.
+fastlane's `sonar` action allows you to define or override a number of SonarQube properties, such as `sonar.project-version`.
 
 For instance:
 
@@ -23,7 +23,7 @@ For instance:
   sonar(project_version: "1.0b")
 ```
 
-You can read the complete documentation of Fastlane's `sonar` action on your terminal via:
+You can read the complete documentation of fastlane's `sonar` action on your terminal via:
 
 ```bash
   fastlane action sonar
