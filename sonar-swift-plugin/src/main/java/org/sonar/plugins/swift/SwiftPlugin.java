@@ -21,6 +21,20 @@ import com.google.common.collect.ImmutableList;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
 import org.sonar.api.SonarPlugin;
+import org.sonar.plugins.objectivec.ObjectiveCSquidSensor;
+import org.sonar.plugins.objectivec.core.ObjectiveC;
+import org.sonar.plugins.objectivec.coverage.CoberturaSensor;
+import org.sonar.plugins.objectivec.cpd.ObjectiveCCpdMapping;
+import org.sonar.plugins.objectivec.surefire.SurefireSensor;
+import org.sonar.plugins.objectivec.violations.ObjectiveCProfile;
+import org.sonar.plugins.objectivec.violations.fauxpas.FauxPasProfile;
+import org.sonar.plugins.objectivec.violations.fauxpas.FauxPasProfileImporter;
+import org.sonar.plugins.objectivec.violations.fauxpas.FauxPasRulesDefinition;
+import org.sonar.plugins.objectivec.violations.fauxpas.FauxPasSensor;
+import org.sonar.plugins.objectivec.violations.oclint.OCLintProfile;
+import org.sonar.plugins.objectivec.violations.oclint.OCLintProfileImporter;
+import org.sonar.plugins.objectivec.violations.oclint.OCLintRulesDefinition;
+import org.sonar.plugins.objectivec.violations.oclint.OCLintSensor;
 import org.sonar.plugins.swift.cpd.SwiftCpdMapping;
 import org.sonar.plugins.swift.issues.SwiftProfile;
 import org.sonar.plugins.swift.issues.swiftlint.SwiftLintProfileImporter;
@@ -36,6 +50,7 @@ import org.sonar.plugins.swift.issues.swiftlint.SwiftLintRulesDefinition;
 import org.sonar.plugins.swift.issues.tailor.TailorProfile;
 import org.sonar.plugins.swift.lang.core.Swift;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Properties({
@@ -73,16 +88,51 @@ import java.util.List;
                 name = "Path to surefire junit report",
                 description = "Relative to projects' root.",
                 global = false,
+                project = true),
+
+
+        @Property(
+                key = CoberturaSensor.REPORT_PATTERN_KEY,
+                defaultValue = CoberturaSensor.DEFAULT_REPORT_PATTERN,
+                name = "Path to unit test coverage report(s)",
+                description = "Relative to projects' root. Ant patterns are accepted",
+                global = false,
+                project = true),
+        @Property(
+                key = OCLintSensor.REPORT_PATH_KEY,
+                defaultValue = OCLintSensor.DEFAULT_REPORT_PATH,
+                name = "Path to oclint pmd formatted report",
+                description = "Relative to projects' root.",
+                global = false,
+                project = true),
+        @Property(
+                key = FauxPasSensor.REPORT_PATH_KEY,
+                defaultValue = FauxPasSensor.DEFAULT_REPORT_PATH,
+                name = "Path to fauxpas json formatted report",
+                description = "Relative to projects' root.",
+                global = false,
+                project = true),
+        @Property(
+                key = org.sonar.plugins.objectivec.complexity.LizardSensor.REPORT_PATH_KEY,
+                defaultValue = org.sonar.plugins.objectivec.complexity.LizardSensor.DEFAULT_REPORT_PATH,
+                name = "Path to lizard report",
+                description = "Relative to projects' root.",
+                global = false,
                 project = true)
+
 })
 public class SwiftPlugin extends SonarPlugin {
 
     @Override
     public List getExtensions() {
+
+
         return ImmutableList.of(
-                // language support
+                // Language support
                 Swift.class,
                 SwiftProfile.class,
+                ObjectiveC.class,
+                ObjectiveCProfile.class,
 
                 // SwiftLint rules
                 SwiftLintSensor.class,
@@ -91,26 +141,53 @@ public class SwiftPlugin extends SonarPlugin {
                 // SwiftLint guality profile
                 SwiftLintProfile.class,
                 SwiftLintProfileImporter.class,
-                
+
                 // Tailor rules
                 TailorSensor.class,
                 TailorRulesDefinition.class,
-                
+
                 // Tailor quality profile
                 TailorProfile.class,
                 TailorProfileImporter.class,
 
-                // duplications search
+                // OCLint rules
+                OCLintSensor.class,
+                OCLintRulesDefinition.class,
+
+                // OCLint quality profile
+                OCLintProfile.class,
+                OCLintProfileImporter.class,
+
+                // FauxPas rules
+                FauxPasSensor.class,
+                FauxPasRulesDefinition.class,
+
+                // FauxPas quality profile
+                FauxPasProfile.class,
+                FauxPasProfileImporter.class,
+
+                // Duplications search
                 SwiftCpdMapping.class,
+                ObjectiveCCpdMapping.class,
 
-                // code
+                // Code
                 SwiftSquidSensor.class,
+                ObjectiveCSquidSensor.class,
 
-                // surefire
+                // Surefire
                 SwiftSurefireSensor.class,
                 SwiftCoberturaSensor.class,
+                SurefireSensor.class,
+                CoberturaSensor.class,
 
-                // complexity
-                LizardSensor.class);
+                // Complexity
+                LizardSensor.class,
+                org.sonar.plugins.objectivec.complexity.LizardSensor.class
+
+        );
+
+
+
+
     }
 }

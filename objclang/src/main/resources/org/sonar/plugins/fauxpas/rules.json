@@ -1,0 +1,779 @@
+[
+    {
+        "category": "BestPractice",
+        "key": "UndetachedDelegate",
+        "name": "Undetached delegate or data source",
+        "description": "When an object sets itself as the delegate or data source of one of its members, it must detach that reference in its -[NSObject dealloc] method.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "MallocWithoutSizeof",
+        "name": "Memory allocation without using sizeof",
+        "description": "The sizeof operator should be used to obtain the correct size for any allocated structure or variable \u2014 the sizes of some data types vary between the 32-bit and 64-bit runtimes.This rule is na\u00efve and may produce false positives in many cases.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "AssertionSideEffects",
+        "name": "Potential assertion side effects",
+        "description": "Warns if assertion macro bodies contain invocations of non-getter methods or functions.Assertions should not have side effects because they are normally disabled in release builds \u2014 the program\u2019s behavior should not be dependent on whether assertions are enabled or not.This rule considers only Foundation assertion macros.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "LoadMethodWithoutAutoreleasePool",
+        "name": "+[NSObject load] method without an @autoreleasepool",
+        "description": "When the +[NSObject load] method is executed, there may not be an autorelease pool in place, so you must set one up yourself.This only applies to iOS 5 (and earlier) and OS X 10.7 (and earlier).",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "InitializeSuperInvocation",
+        "name": "Invocation of superclass implementation of +[NSObject initialize]",
+        "description": "Implementations of +[NSObject initialize] should not invoke the superclass implementation: this method is special in that the runtime invokes it separately for every subclass.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "HardcodedSelfClass",
+        "name": "Hardcoded self class reference",
+        "description": "Warns if an Objective-C class (or an instance of a class) sends a message to its own class object using a hardcoded reference to the class, e.g. [FOOThing alloc].It is recommended to use self instead (e.g. [self alloc] or [[self class] alloc]) so that the concrete class would receive the message, and subclassing behavior would not be impeded.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "MacroBasedIncludeGuard",
+        "name": "Macro-based include guard",
+        "description": "Simplify the header by replacing the macro definition check -based include guard with the \u2018once\u2019 pragma.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "RetainingImmutableProperty",
+        "name": "Non-copying property of immutable NSCopying type",
+        "description": "Warns if \u201cretaining\u201d semantics are specified in a @property declaration for a common immutable NSCopying class type that also has a mutable subclass variant (for example NSString).This rule helps avoid situations where the value of a property could change without the setter being invoked (i.e. the object gets mutated).",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "CompleteNotificationCenterDetachment",
+        "name": "Complete NSNotificationCenter detachment",
+        "description": "Warns when an object removes itself as an observer to all notifications (by invoking -[NSNotificationCenter removeObserver:] with self).This can be a problem if a superclass or a subclass wants to keep observing some notifications. The recommended way to handle this is to remove self as an observer only for the specific notifications that you have previously begun observing.This rule does not warn about such removals occuring in -dealloc.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "OldVerboseObjCSyntax",
+        "name": "Old, verbose Objective-C syntax",
+        "description": "Warns if Objective-C literals, boxed expressions and subscript notation are not used whenever possible.Note that Xcode can automatically fix your code to do this (see the Edit \u2192 Refactor \u2192 Convert To Modern Objective-C Syntax\u2026 menu item).",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "StrongDelegate",
+        "name": "Retaining or copying delegate",
+        "description": "To avoid retain cycles, delegate setter methods should not retain or copy the delegate object.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "ConstructorReturnType",
+        "name": "Constructor return type",
+        "description": "Warns if an init or factory method return type is anything other than instancetype.Properly specifying the return type for factory methods (e.g. +[NSArray arrayWithObject:]) allows the compiler to perform more type checking, which helps catch bugs. Even though the compiler automatically determines the return types of init methods (even if they are declared as id) it is still good to be explicit and use instancetype.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "SetterInvocationInInitOrDealloc",
+        "name": "Setter invocation in init or dealloc method",
+        "description": "It is recommended to avoid invoking setter methods on self in init methods, or in -[NSObject dealloc]. Doing so might trigger KVC notifications, which others might observe, and expect the object to be in a valid, consistent state.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "ArgumentModification",
+        "name": "Modifying the value of an argument variable",
+        "description": "Argument variable values should not be modified directly \u2014 code is easier to follow if you can always trust that argument variable values do not change.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "FastEnumElementOutside",
+        "name": "Element variable of fast enumeration loop declared outside the loop",
+        "description": "The element variable of a fast enumeration loop should not be used for anything other than holding the loop iteration element, so it follows that there is no reason for the variable to be visible outside the loop.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "UnusedErrorValue",
+        "name": "Unused error value",
+        "description": "Warns when NSError or CFErrorRef variable values are never used.If you are not interested in the error return value of a method or function, pass NULL for the error argument.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "CopyingMutableProperty",
+        "name": "Copying property of mutable NSCopying type",
+        "description": "Warns if \u201ccopying\u201d semantics are specified in a @property declaration for a common mutable NSCopying class type that has an immutable superclass (for example NSMutableArray).Invoking -[NSCopying copy] for such objects will in many cases return an immutable copy. This means that after assigning a mutable object value to such a property, it may in fact get an immutable copy of the assigned value (which will lead to crashes as soon as any attempt is made to mutate this immutable object).",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "InstanceMethodWritesToStaticVariable",
+        "name": "Instance method writes to static variable",
+        "description": "Writing to static variables (which is essentially global state) in instance methods is generally considered bad practice, because it easily leads to undesireable behavior when multiple instances are being manipulated.Warnings are suppressed for assignments occurring inside dispatch_once() blocks.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "AssociatedObjectOnValueType",
+        "name": "Associated object on value-like type",
+        "description": "Warns when associated objects are attached to value-like types such as NSNumber or UIFont.Instances of these classes may be shared and/or immortal due to de-duplication and tagged pointers.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "PrefixHeaderIncludeSuggestion",
+        "name": "Moving common inclusions into prefix header",
+        "description": "Moving commonly used header inclusion directives into a precompiled prefix header improves compilation time.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "TerminatingApp",
+        "name": "Terminating the app in a release build",
+        "description": "The iOS Human Interface Guidelines say that you should never quit an iOS app programmatically.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "PrivateCategory",
+        "name": "Category used for \u201cprivate\u201d declarations",
+        "description": "A class extension should be used instead, because they enable compiler warnings for detecting unimplemented methods.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "IBOutletsInPublicInterface",
+        "name": "IBOutlets in public interface",
+        "description": "IBOutlets are often private implementation details, and should thus be in a private class extension.This rule warns only about cases where the class is the \u201cFile\u2019s Owner\u201d of a XIB whose basename is the same as the class name, and that contains a connection to the outlet.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "InitializeMethodCategoryOverride",
+        "name": "Overridden +[NSObject initialize] method in a category",
+        "description": "The +[NSObject initialize] method should not be overridden in categories, because this will prevent the original implementation from being executed. In many cases, +[NSObject load] may be used instead \u2014 it will be executed separately for classes and categories.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "ImplicitAtomicProperty",
+        "name": "Implicitly atomic property",
+        "description": "Warns for implicitly atomic properties.If neither the atomic keyword nor the nonatomic keyword is specified, a property is synthesized as atomic by default.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "AssigningDelegate",
+        "name": "Assigning delegate property",
+        "description": "Delegate properties should be declared weak instead of assign. Weak references are safer because they become nil when the referenced object is deallocated.This rule only applies to code compiled with Automatic Reference Counting (ARC).",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "Swizzling",
+        "name": "Method swizzling",
+        "description": "Warns whenever there are calls to Objective-C runtime API functions that are used to change method implementations.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "DiscardedOpaqueNotificationObserver",
+        "name": "Discarded opaque NSNotificationCenter observer",
+        "description": "Warns if the return value of -[NSNotificationCenter addObserverForName:object:queue:usingBlock:] is not stored anywhere. This method returns an opaque observer object that is needed in order to stop observing.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "ErrorConditionCheck",
+        "name": "Fragile error condition check",
+        "description": "Methods that pass back NSError objects by reference return NO or nil to indicate an error condition. This rule warns if the NSError pointer is checked against nil without checking the return value.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "RedundantInclude",
+        "name": "Redundant inclusion directive",
+        "description": "If a header is included in the project\u2019s prefix header, it needn\u2019t be included anywhere else.This rule does not check header files that are themselves included in the precompiled prefix header.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "NSLogUsed",
+        "name": "NSLog() used in release build",
+        "description": "Logging should be disabled in release builds (except perhaps for fatal errors).",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "UnprefixedCategoryMethod",
+        "name": "Unprefixed category method",
+        "description": "Category methods on system classes must be prefixed in order to avoid name collisions.By default, this rule considers a method name prefixed if it begins with at least three lowercase characters (or the lowercase version of the \u2018Class Prefix\u2019 configured for the project), followed by an underscore.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "UnidiomaticAccessorNaming",
+        "name": "Unidiomatic accessor naming",
+        "description": "Warns if getter methods are named in the form getSomething instead of something.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "BestPractice",
+        "key": "ViewControllerInitWithNibName",
+        "name": "Using -[UIViewController initWithNibName:bundle:] outside the UIViewController implementation",
+        "description": "It is not advisable to use -[UIViewController initWithNibName:bundle:] to instantiate UIViewController subclasses outside of the subclass implementation itself. This breaks encapsulation (the subclass should be the one to decide which NIB to use) and makes it more likely that a typo in the NIB name string will crash the app during runtime.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "RetinaImagesResolution",
+        "name": "Unexpected retina image resolution",
+        "description": "The retina (\u2018@2x\u2019 or \u2018@3x\u2019) version of an image resource must be exactly double or triple the size of the corresponding low-resolution image (assuming the point size of the presentation context remains the same regardless of screen resolution). Otherwise the effective resolution of the image will not match the effective resolution of its presentation context, which will lead to a blurry image, empty space at the edges, or overflow.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "SuspiciousResources",
+        "name": "Suspicious bundle resources",
+        "description": "Some files that are part of the project but only needed at build/development time (e.g. Xcode build configuration (.xcconfig) files) may be added as bundle resources by mistake.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "UnknownResourceCodeReference",
+        "name": "Code refers to unknown resource",
+        "description": "Resources loaded from disk at runtime should be included in the bundle resources under the correct path. Remember that unlike most Macs (and thus iOS simulators run on those Macs), iOS devices have a case sensitive filesystem.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "UnusedResource",
+        "name": "Possibly unused resource",
+        "description": "Warns about resource files that do not seem to be referred to in code or XIBs.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "XIBUnknownClassReference",
+        "name": "XIB Reference to unknown class",
+        "description": "Warns if an Interface Builder file refers to an unknown Objective-C class.This rule will warn about all references to classes that are not declared in the source code files that Faux Pas checks, or exported in linked libraries.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "XIBRuntimeAttributeMismatch",
+        "name": "XIB User-defined runtime attribute mismatch",
+        "description": "Warns when a XIB specifies user-defined runtime attributes that don\u2019t match the source code of the associated class.A key path that doesn\u2019t match any of the class properties or setter methods yields a diagnostic, as does a mismatch in the type of the assigned value and the value type declared for the property or setter.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "MissingDeviceTypeResource",
+        "name": "Missing device type resource",
+        "description": "Warns if a device type is not covered by the variants of a resource file. E.g. if image~iphone.png exists but image~ipad.png does not.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "MissingImageResolutionVariant",
+        "name": "Missing image resolution variant",
+        "description": "Warns when either the high-resolution (@2x or @3x) or the low-resolution variant of an image resource is missing.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "WeakReferenceToTopLevelXIBObject",
+        "name": "Weak reference to top-level XIB object",
+        "description": "IBOutlet references to top-level objects in XIBs should be strong, so as to ensure that the object is not deallocated prematurely.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "UnknownResourceXIBReference",
+        "name": "XIB refers to unknown resource",
+        "description": "Resources loaded from disk at runtime should be included in the bundle resources under the correct path. Remember that unlike most Macs (and thus iOS simulators run on those Macs), iOS devices have a case sensitive filesystem.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "GlobalAndLocalizedResource",
+        "name": "Global and localized resource",
+        "description": "There should never be both a global and localized version of a given resource, because global resources take precedence over language-specific resources. If a global version of a resource exists, language-specific versions of the same resource are never returned by the platform APIs.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "UnknownResourceModifier",
+        "name": "Unknown resource file name modifier",
+        "description": "Device type modifiers for device-specific resource files (like ~iphone or ~ipad), as well as the resolution modifier @2x, must be spelled correctly (and case sensitively, due to the case-sensitive filesystem on iOS devices).",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "SuspiciousMissingResources",
+        "name": "Suspicious missing bundle resources",
+        "description": "Warns when the project contains certain types of files that are not included into any target as resources, but probably should be.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Resources",
+        "key": "DuplicateResource",
+        "name": "Duplicate resource",
+        "description": "Warns if two resource files are equal.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Config",
+        "key": "BuildSettingsSetInGUI",
+        "name": "Build settings set in Xcode GUI",
+        "description": "Enable this rule if you want to set all of your build configuration values in .xcconfig files, and get warnings whenever something gets accidentally set in the GUI.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "CompilerWarnings",
+        "name": "Recommended compiler warning options",
+        "description": "Some compiler warnings and warning groups are so useful that they should be enabled at all times.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "MissingAPIUsageDescription",
+        "name": "Missing API usage description",
+        "description": "Some APIs (that access e.g. contacts or calendars) require a usage description (\u201cpurpose string\u201d) in the application metadata. This will be shown to the user when the system asks them to allow the application access to the related user data or system resource. This rule warns when some such APIs are used, but the associated usage description is missing.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "ViewLayoutInXIB",
+        "name": "Erroneous view layout in XIB",
+        "description": "Warns about views that are marked as \u2018misplaced\u2019 or \u2018ambiguous\u2019 in XIBs or storyboards that use autolayout.This rule relies on XIB annotations added by Xcode, which means that no diagnostics will be emitted for misplaced or ambiguous views that have not (yet) been annotated by Xcode.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "BasicProjectSettings",
+        "name": "Recommended project settings",
+        "description": "The \u2018Organization\u2019 and \u2018Class Prefix\u2019 settings should always be set. The expected values for other settings are configurable.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "ImplicitBundleId",
+        "name": "Implicit bundle identifier",
+        "description": "It is recommended to choose an explicit value for the bundle identifier: an explicit, matching value must be chosen in iTunes Connect before publishing in the App Store (Xcode by default makes the bundle ID dependent on the PRODUCT_NAME variable).",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "ReleaseBuildCompilerArgs",
+        "name": "Problematic release build compiler arguments",
+        "description": "For release builds, warns when some expected arguments are missing, or some unexpected arguments are present.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "XcconfigOverwrites",
+        "name": "Xcode build configuration file overwrites previously set value",
+        "description": "Overwriting a previously set value in a build configuration file is often a sign of a mistake somewhere.It is recommended to set custom intermediary settings in \u201cparent\u201d configuration files and then compose final values for actual build settings in leaf configuration files.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "BuildSettingSelfReference",
+        "name": "Xcode build setting refers to itself",
+        "description": "Build settings should not refer to themselves. The $(inherited) keyword should be used to append something to an inherited value, and custom intermediary build setting keys should be used to compose values from multiple definitions in an .xcconfig file.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "BuildSettingPlacement",
+        "name": "Incorrect placement of build setting value",
+        "description": "Warns if preprocessor definitions are defined explicitly using the -D argument instead of defining them in the GCC_PREPROCESSOR_DEFINITIONS (\u201cPreprocessor macros\u201d) build setting.Also warns if non-warning flags are defined in WARNING_CFLAGS (instead of OTHER_CFLAGS).",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "AbsPathInBuildSetting",
+        "name": "Absolute path in build setting value",
+        "description": "The project build configurations should not contain absolute path references. This will become a problem as soon as the project is moved to another developer\u2019s computer.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "FileRefWithAbsPath",
+        "name": "Project reference to file using absolute path",
+        "description": "The project should not contain references to files using absolute paths. This will become a problem as soon as the project is moved to another developer\u2019s computer.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "ReleaseBuildConfig",
+        "name": "Problematic release build settings",
+        "description": "Warns when certain problematic build setting values are used for release builds.For example, if program flow instrumentation is enabled, the compiler optimization level is too low, or if the static analyzer is not run.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Config",
+        "key": "DylibInstallName",
+        "name": "Dynamic library install name",
+        "description": "Warns if the install names of dynamic libraries are absolute (@loader_path, @executable_path, or @rpath should be used instead.)You can use install_name_tool to change dynamic library install names.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Localization",
+        "key": "InvalidStringsFile",
+        "name": "Invalid string resource file",
+        "description": "String resource files should be valid dictionary-format property lists.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Localization",
+        "key": "UnusedTranslation",
+        "name": "Unused translation",
+        "description": "Warns about entries in string resource files that are not directly loaded in code (using NSLocalizedString and its variants).",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Localization",
+        "key": "StringsdictWithoutStrings",
+        "name": "Stringsdict file without matching string resource file",
+        "description": "If a .stringsdict file is included as a resource, a .strings file with the same name also needs to be included, even if empty \u2014 otherwise translations will not be read from the .stringsdict file.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Localization",
+        "key": "HardcodedUIString",
+        "name": "UI String not localized",
+        "description": "All strings that are given to APIs that display them in the user interface should be routed through NSLocalizedString() and friends.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Localization",
+        "key": "MissingTranslation",
+        "name": "Missing translation",
+        "description": "Warns if a translation is missing for a key that is used as argument to NSLocalizedString or its variants.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Localization",
+        "key": "DuplicateTranslation",
+        "name": "Duplicate translation",
+        "description": "Warns if a string resource file contains multiple entries with the same key.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Localization",
+        "key": "TranslationPunctuation",
+        "name": "Translation border punctuation mismatch",
+        "description": "Warns if the punctuation at the start or end of translation strings differs between languages.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Localization",
+        "key": "TranslationFormatMismatch",
+        "name": "Translation format mismatch",
+        "description": "Warns when different language translations for the same key contain mismatched format specifiers.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Localization",
+        "key": "UncommentedLocalizedString",
+        "name": "Uncommented localized string",
+        "description": "Warns if NSLocalizedString() or one of its variants is used without a non-empty comment argument.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "APIUsage",
+        "key": "UIKitKVO",
+        "name": "Observing UIKit object using KVO",
+        "description": "The classes of the UIKit framework generally do not support Key-Value Observing (KVO). If KVO does happen to work for some properties, it is undefined behavior and thus not guaranteed to work in future versions.",
+        "severity": "CRITICAL"
+    },
+    {
+        "category": "APIUsage",
+        "key": "APIAvailability",
+        "name": "Use of API not available in the minimum deployment target",
+        "description": "Warns about usages of system APIs that are not available in the minimum deployment target that your project target is configured to support.",
+        "severity": "CRITICAL"
+    },
+    {
+        "category": "APIUsage",
+        "key": "RestrictedDirectMethodCall",
+        "name": "Restricted direct method call",
+        "description": "Some methods of system classes should not be called directly.This rule will not warn about overriding methods that call the superclass implementation.",
+        "severity": "CRITICAL"
+    },
+    {
+        "category": "APIUsage",
+        "key": "RestrictedMethodOverride",
+        "name": "Restricted method override",
+        "description": "Some methods of system classes should not be overridden.",
+        "severity": "CRITICAL"
+    },
+    {
+        "category": "APIUsage",
+        "key": "IsEqualAndHash",
+        "name": "Class implements -isEqual: but not -hash",
+        "description": "If -isEqual: determines that two objects are equal, they must have the same hash value.",
+        "severity": "CRITICAL"
+    },
+    {
+        "category": "APIUsage",
+        "key": "LiteralStringKeyPath",
+        "name": "Literal string for key path",
+        "description": "Warns when literal strings are used to specify key paths.Something like NSStringFromSelector(@selector(foo)) is safer because it makes the compiler aware of the selector being specified \u2014 this helps find typos at compile time and allows automatic refactoring tools to make appropriate changes.",
+        "severity": "CRITICAL"
+    },
+    {
+        "category": "APIUsage",
+        "key": "FixedFormatDateFormatter",
+        "name": "Fixed-format NSDateFormatter not using invariant (POSIX) locale",
+        "description": "Warns when an NSDateFormatter is used with fixed-format dates without using the invariant en_US_POSIX locale. If any other locale is used, the date format string may be overwritten, depending on system date and time settings.When working with user-visible dates, date and time styles should be used instead of setting a date format.",
+        "severity": "CRITICAL"
+    },
+    {
+        "category": "APIUsage",
+        "key": "SuspiciousDateTimeFormat",
+        "name": "Suspicious date-time format",
+        "description": "Warns about date-time formats that are likely to have unintentional behavior, e.g. \u201cweek-year\u201d specifiers (uppercase Y) instead of normal calendar year specifiers (lowercase y).",
+        "severity": "CRITICAL"
+    },
+    {
+        "category": "APIUsage",
+        "key": "BlockAPIRetainCycle",
+        "name": "Retain cycle in block API usage",
+        "description": "Warns if self is referenced in a block that is used in a context where it is known to cause a retain cycle.The Clang compiler\u2019s -Warc-retain-cycles warning implements generic retain cycle detection \u2014 this rule only considers specific known system framework APIs that the compiler warning does not warn about.",
+        "severity": "CRITICAL"
+    },
+    {
+        "category": "APIUsage",
+        "key": "MissingNotificationCenterDetachment",
+        "name": "Missing NSNotificationCenter observer detachment",
+        "description": "You must invoke -[NSNotificationCenter removeObserver:] or -[NSNotificationCenter removeObserver:name:object:] before the observer object is deallocated.This rule only considers cases where the observer reference is self, or an instance variable or an Objective-C property in self.This only applies to iOS 8 (and earlier) and OS X 10.10 (and earlier).",
+        "severity": "CRITICAL"
+    },
+    {
+        "category": "VCS",
+        "key": "StringsFileEncoding",
+        "name": "String resource file is not UTF-8",
+        "description": "Git prefers UTF-8 encoding, and doesn\u2019t handle some other encodings (e.g. UTF-16) very well. It thinks UTF-16 -encoded files are binary, and will thus not display line diffs for them.",
+        "severity": "INFO"
+    },
+    {
+        "category": "VCS",
+        "key": "RecommendedVCSIgnores",
+        "name": "Recommended VCS ignores",
+        "description": "Warns whenever some files that are recommended to be ignored by the version control system are not ignored, or vice versa.",
+        "severity": "INFO"
+    },
+    {
+        "category": "VCS",
+        "key": "FileRefOutsideVCS",
+        "name": "Project reference to file outside version control root",
+        "description": "The project should not contain references to files that are outside the version control working copy root.",
+        "severity": "INFO"
+    },
+    {
+        "category": "VCS",
+        "key": "FileRefIgnoredInVCS",
+        "name": "Project reference to file ignored in the VCS",
+        "description": "The project should not contain references to files that are ignored by the version control system.",
+        "severity": "INFO"
+    },
+    {
+        "category": "Style",
+        "key": "StrongInsteadOfRetain",
+        "name": "Usage of retain in ARC code",
+        "description": "In files compiled with ARC, warns if the retain property attribute is used. The strong and retain attributes are functionally equivalent, but the former could be considered more idiomatic with ARC.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Style",
+        "key": "NullCoalescingOp",
+        "name": "Null coalescing operator usage",
+        "description": "Expressions of the form (obj ? obj : other) should be written as obj ?: other.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Style",
+        "key": "OrderedComparisonOpDirection",
+        "name": "Direction of ordered comparison operators",
+        "description": "Warns if the > or >= operators are used (the < or <= operators should be used instead). This is based on the idea that it is easier to read comparisons where the smaller values are on the left.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Style",
+        "key": "ThrowingObjCException",
+        "name": "Throwing an Objective-C exception",
+        "description": "Throwing exceptions in Objective-C is not very idiomatic, and should only be reserved for truly exceptional cases (if that,) and never for flow control.This rule can help you enforce a policy to never throw exceptions.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Style",
+        "key": "NewInitializer",
+        "name": "Shortcut initializer",
+        "description": "Some people prefer [[NSObject alloc] init] instead of [NSObject new], or vice versa.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Style",
+        "key": "NonTypedefBlockDeclaration",
+        "name": "Block-typed declaration without typedef",
+        "description": "It is recommended that typedef be used for all block-typed declarations, for readability.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Style",
+        "key": "Spelling",
+        "name": "error Spelling",
+        "description": "Warns if some words in code symbol names are spelled incorrectly.This rule expects code symbol names to be in English (US and/or GB).",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Style",
+        "key": "SourceFileHeaderComment",
+        "name": "Source file header comment format",
+        "description": "Warns about errors in source file header comments (that are formatted using the default Xcode template), for example if the file name in the comment does not match the actual file name, or if the placeholder __MyCompanyName__ is present.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Style",
+        "key": "UnprefixedClass",
+        "name": "Unprefixed Objective-C class",
+        "description": "Warns when an Objective-C class name has no prefix (e.g. Thing instead of FPXThing).",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Style",
+        "key": "DotSyntax",
+        "name": "Dot syntax usage",
+        "description": "Warns about [obj foo] or [obj setFoo:x] instead of obj.foo or obj.foo = x.Can also be configured to enforce dot syntax only for accessors declared with the @property syntax.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Style",
+        "key": "IdentifierNaming",
+        "name": "Identifier naming",
+        "description": "This rule allows enforcing custom naming guidelines for different kinds of identifiers via regular expressions.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Style",
+        "key": "MacroLiteral",
+        "name": "Macro definition for literal value",
+        "description": "Instead of using a macro definition for a literal value that is used as a constant, define it as an actual constant.This makes the scope of the constant more explicit (it\u2019s not available in all imported files until undefined) and it cannot be redefined or undefined in some later part of the code. Macro definitions are also not available in the debugger.",
+        "severity": "MAJOR"
+    },
+    {
+        "category": "Pedantic",
+        "key": "UnnecessaryNullCheck",
+        "name": "Unnecessary NULL check before free()",
+        "description": "Passing NULL to free() is a no-op.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Pedantic",
+        "key": "UnusedMethod",
+        "name": "Possibly unused Objective-C method",
+        "description": "Warns about Objective-C methods to which no references are found.This rule will not warn about IBAction methods, initializer methods, or public methods (methods with a declaration in a header file, excluding header files named in the form *+Private.h). It also won\u2019t warn about unused getter methods whose setter is used, and vice versa.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Pedantic",
+        "key": "ReservedIdentifierNaming",
+        "name": "Reserved identifier name",
+        "description": "Warns when identifiers are named using conventions reserved by the C standard or POSIX.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Pedantic",
+        "key": "CyclomaticComplexity",
+        "name": "Cyclomatic complexity",
+        "description": "Warns if a routine has high cyclomatic complexity (that is, the number of linearly independent paths through the routine\u2019s source code).",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Pedantic",
+        "key": "DefaultInExhaustiveSwitch",
+        "name": "Unnecessary default case in exhaustive switch statement",
+        "description": "If a switch statement explicitly handles all possible values, then the default case is unnecessary dead code, and might even be misleading to people reading the code.If the intended purpose of the default case is to safeguard against enum fields that are added in the future but accidentally left unhandled in the switch, the compiler warning -Wswitch-enum is recommended for that purpose instead.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Pedantic",
+        "key": "MallocCast",
+        "name": "Casting the return value of malloc()",
+        "description": "In C, it is not recommended to explicitly cast the return value of malloc() (and other related memory allocation functions.)This rule does not warn about casts that occur in compilation units compiled in C++ (or Objective-C++) mode.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Pedantic",
+        "key": "ReservedPrefix",
+        "name": "Reserved symbol prefix",
+        "description": "Two-character prefixes (such as NS) are reserved for Apple\u2019s system frameworks. Your own code should use prefixes that are three characters long.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Pedantic",
+        "key": "UsedVariableMarkedUnused",
+        "name": "Using a variable marked unused",
+        "description": "Warns when a variable is annotated with the \u201cunused\u201d attribute, but is actually used. This rule does not warn about cases where a variable is marked unused via a pragma directive.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Miscellaneous",
+        "key": "UnsupportedWeakReference",
+        "name": "Assignment of weak-unavailable object to a weak property",
+        "description": "In OS X, you cannot create weak references to instances of some classes (see the full list from Apple\u2019s documentation.)The Clang compiler should warn about assignments of such objects to weak variables.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Miscellaneous",
+        "key": "ThreadUnsafeInstanceCaching",
+        "name": "Globally caching a thread-unsafe class instance",
+        "description": "Warns about variables with global storage whose type is an object pointer to a known thread-unsafe class.-[NSThread threadDictionary] can be used to cache instances of thread-unsafe classes \u2014 one instance for each thread.This rule does not warn about code occuring in subclasses of (or categories on) UIKit or AppKit classes, because it can be assumed that these are always accessed solely from the main thread.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Miscellaneous",
+        "key": "UnnecessaryNibMethod",
+        "name": "Unnecessary Nib method",
+        "description": "Warns if -[NSObject awakeFromNib] is implemented in a class that is not archived in any known XIB.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Miscellaneous",
+        "key": "OrderedPointerToZeroComparison",
+        "name": "Ordered comparison of pointer and zero",
+        "description": "Warns whenever a pointer value is compared to zero using an ordered comparison operator.The Clang compiler should warn about similar comparisons to values other than zero.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Miscellaneous",
+        "key": "ZeroAssignmentToPointer",
+        "name": "Assignment of literal zero to pointer",
+        "description": "Assigning the literal zero to a pointer value might be an indication of a mistake where the programmer actually wanted to assign to an integer-typed member of the pointer type value. Assigning NULL, nil, or Nil instead suppresses warnings from this rule.",
+        "severity": "MINOR"
+    },
+    {
+        "category": "Miscellaneous",
+        "key": "CategoryMethodConflict",
+        "name": "Conflicting category methods",
+        "description": "If the name of a method declared in a category is the same as a method in the original class, or a method in another category on the same class (or even a superclass), the behavior is undefined as to which method implementation is used at runtime.",
+        "severity": "MINOR"
+    }
+]
