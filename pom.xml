@@ -44,7 +44,7 @@
     <packaging>pom</packaging>
 
     <name>Swift SonarQube Plugin</name>
-    <description>Enables analysis of Swift projects into SonarQube.</description>
+    <description>Enables analysis of Swift and Objective-C projects into SonarQube.</description>
     <url>https://github.com/Backelite/sonar-swift</url>
 
     <modules>
