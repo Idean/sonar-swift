@@ -136,7 +136,7 @@
                 <version>1.16</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <pluginClass>org.sonar.plugins.swift.SwiftPlugin</pluginClass>
+                    <pluginClass>com.backelite.sonarqube.swift.SwiftPlugin</pluginClass>
                     <pluginName>Swift (Backelite)</pluginName>
                 </configuration>
             </plugin>

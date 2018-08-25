@@ -22,8 +22,8 @@ import org.junit.Test;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import org.sonar.plugins.swift.complexity.LizardSensor;
-import org.sonar.plugins.swift.lang.core.Swift;
+import com.backelite.sonarqube.swift.complexity.LizardSensor;
+import com.backelite.sonarqube.swift.lang.core.Swift;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
