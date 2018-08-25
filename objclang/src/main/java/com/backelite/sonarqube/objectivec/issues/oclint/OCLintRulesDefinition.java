@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.objectivec.violations.oclint;
+package com.backelite.sonarqube.objectivec.issues.oclint;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharEncoding;
@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.server.rule.RulesDefinition;
-import com.backelite.sonarqube.objectivec.core.ObjectiveC;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
 import java.io.BufferedReader;

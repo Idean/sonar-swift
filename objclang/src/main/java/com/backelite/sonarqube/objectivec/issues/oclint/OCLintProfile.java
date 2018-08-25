@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.objectivec.violations.oclint;
+package com.backelite.sonarqube.objectivec.issues.oclint;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.utils.ValidationMessages;
-import com.backelite.sonarqube.objectivec.core.ObjectiveC;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 
 import com.google.common.io.Closeables;
 

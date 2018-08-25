@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.objectivec.violations.oclint;
+package com.backelite.sonarqube.objectivec.issues.oclint;
 
 import java.io.File;
 
@@ -59,7 +59,7 @@ final class OCLintXMLStreamHandler implements XmlStreamHandler {
     private void collectIssuesFor(final SMInputCursor file) throws XMLStreamException {
 
         final String filePath = file.getAttrValue("name");
-        LoggerFactory.getLogger(getClass()).debug("Collection violations for {}", filePath);
+        LoggerFactory.getLogger(getClass()).debug("Collection issues for {}", filePath);
         final InputFile inputFile = findResource(filePath);
         if (fileExists(inputFile)) {
             LoggerFactory.getLogger(getClass()).debug("File {} was found in the project.", filePath);

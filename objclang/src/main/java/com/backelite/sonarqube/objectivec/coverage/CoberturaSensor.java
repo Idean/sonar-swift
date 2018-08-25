@@ -19,7 +19,7 @@ package com.backelite.sonarqube.objectivec.coverage;
 
 import java.io.File;
 
-import com.backelite.sonarqube.objectivec.core.ObjectiveC;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;

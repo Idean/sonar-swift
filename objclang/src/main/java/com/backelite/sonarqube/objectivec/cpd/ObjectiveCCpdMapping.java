@@ -19,7 +19,7 @@ package com.backelite.sonarqube.objectivec.cpd;
 
 import java.nio.charset.Charset;
 
-import com.backelite.sonarqube.objectivec.core.ObjectiveC;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import net.sourceforge.pmd.cpd.Tokenizer;
 
 import org.sonar.api.batch.AbstractCpdMapping;

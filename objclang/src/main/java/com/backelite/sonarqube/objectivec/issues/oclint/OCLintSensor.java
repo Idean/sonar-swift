@@ -15,12 +15,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.objectivec.violations.oclint;
+package com.backelite.sonarqube.objectivec.issues.oclint;
 
 import java.io.File;
 
 import com.backelite.sonarqube.objectivec.ObjectiveCConstants;
-import com.backelite.sonarqube.objectivec.core.ObjectiveC;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;

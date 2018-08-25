@@ -15,11 +15,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.objectivec.violations.oclint;
+package com.backelite.sonarqube.objectivec.issues.fauxpas;
 
-import java.io.Reader;
-
-import com.backelite.sonarqube.objectivec.core.ObjectiveC;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.profiles.ProfileImporter;
@@ -27,22 +25,24 @@ import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.profiles.XMLProfileParser;
 import org.sonar.api.utils.ValidationMessages;
 
-public final class OCLintProfileImporter extends ProfileImporter {
+import java.io.Reader;
 
-    private static final String UNABLE_TO_LOAD_DEFAULT_PROFILE = "Unable to load default OCLint profile";
-    private static final Logger LOGGER = LoggerFactory.getLogger(OCLintProfileImporter.class);
+public class FauxPasProfileImporter extends ProfileImporter {
+
+    private static final String UNABLE_TO_LOAD_DEFAULT_PROFILE = "Unable to load default FauxPas profile";
+    private static final Logger LOGGER = LoggerFactory.getLogger(FauxPasProfileImporter.class);
 
     private final XMLProfileParser profileParser;
 
-    public OCLintProfileImporter(final XMLProfileParser xmlProfileParser) {
-        super(OCLintRulesDefinition.REPOSITORY_KEY, OCLintRulesDefinition.REPOSITORY_KEY);
+    public FauxPasProfileImporter(final XMLProfileParser xmlProfileParser) {
+        super(FauxPasRulesDefinition.REPOSITORY_KEY, FauxPasRulesDefinition.REPOSITORY_KEY);
         setSupportedLanguages(ObjectiveC.KEY);
         profileParser = xmlProfileParser;
     }
 
     @Override
-    public RulesProfile importProfile(final Reader reader,
-            final ValidationMessages messages) {
+    public RulesProfile importProfile(Reader reader, ValidationMessages messages) {
+
         final RulesProfile profile = profileParser.parse(reader, messages);
 
         if (null == profile) {

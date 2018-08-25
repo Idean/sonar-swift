@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.objectivec.violations.fauxpas;
+package com.backelite.sonarqube.objectivec.issues.fauxpas;
 
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
@@ -60,7 +60,7 @@ public class FauxPasReportParser {
             Object reportObj = JSONValue.parse(fr);
             IOUtils.closeQuietly(fr);
 
-            // Record violations
+            // Record issues
             if (reportObj != null) {
 
                 JSONObject reportJson = (JSONObject)reportObj;

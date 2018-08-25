@@ -15,12 +15,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.objectivec.violations;
+package com.backelite.sonarqube.objectivec.issues;
 
-import com.backelite.sonarqube.objectivec.core.ObjectiveC;
-import com.backelite.sonarqube.objectivec.violations.fauxpas.FauxPasProfile;
-import com.backelite.sonarqube.objectivec.violations.fauxpas.FauxPasProfileImporter;
-import com.backelite.sonarqube.objectivec.violations.oclint.OCLintProfile;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
+import com.backelite.sonarqube.objectivec.issues.fauxpas.FauxPasProfile;
+import com.backelite.sonarqube.objectivec.issues.fauxpas.FauxPasProfileImporter;
+import com.backelite.sonarqube.objectivec.issues.oclint.OCLintProfile;
 import com.google.common.io.Closeables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.utils.ValidationMessages;
-import com.backelite.sonarqube.objectivec.violations.oclint.OCLintProfileImporter;
+import com.backelite.sonarqube.objectivec.issues.oclint.OCLintProfileImporter;
 
 import java.io.InputStreamReader;
 import java.io.Reader;

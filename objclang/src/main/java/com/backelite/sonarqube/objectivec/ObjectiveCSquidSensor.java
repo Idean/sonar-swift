@@ -17,7 +17,7 @@
  */
 package com.backelite.sonarqube.objectivec;
 
-import com.backelite.sonarqube.objectivec.core.ObjectiveC;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.sonar.api.batch.Sensor;
