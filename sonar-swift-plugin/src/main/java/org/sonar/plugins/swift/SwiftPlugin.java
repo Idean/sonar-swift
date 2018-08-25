@@ -1,5 +1,5 @@
 /**
- * backelite-sonar-swift-plugin - Enables analysis of Swift projects into SonarQube.
+ * backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -111,13 +111,6 @@ import java.util.List;
                 name = "Path to fauxpas json formatted report",
                 description = "Relative to projects' root.",
                 global = false,
-                project = true),
-        @Property(
-                key = org.sonar.plugins.objectivec.complexity.LizardSensor.REPORT_PATH_KEY,
-                defaultValue = org.sonar.plugins.objectivec.complexity.LizardSensor.DEFAULT_REPORT_PATH,
-                name = "Path to lizard report",
-                description = "Relative to projects' root.",
-                global = false,
                 project = true)
 
 })
@@ -181,8 +174,7 @@ public class SwiftPlugin extends SonarPlugin {
                 CoberturaSensor.class,
 
                 // Complexity
-                LizardSensor.class,
-                org.sonar.plugins.objectivec.complexity.LizardSensor.class
+                LizardSensor.class
 
         );
 

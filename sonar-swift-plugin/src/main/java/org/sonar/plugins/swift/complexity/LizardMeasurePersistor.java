@@ -1,5 +1,5 @@
 /**
- * Swift Language - Enables analysis of Swift projects into SonarQube.
+ * backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify

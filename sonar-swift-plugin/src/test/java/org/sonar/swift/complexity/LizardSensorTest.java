@@ -1,5 +1,5 @@
 /**
- * Swift Language - Enables analysis of Swift projects into SonarQube.
+ * backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,13 +15,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sonar.plugins.swift.complexity;
+package org.sonar.swift.complexity;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
+import org.sonar.plugins.swift.complexity.LizardSensor;
 import org.sonar.plugins.swift.lang.core.Swift;
 
 import java.util.SortedSet;
