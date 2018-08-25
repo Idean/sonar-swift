@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Swift Language - Enables analysis of Swift and Objective-C projects into SonarQube.
+    Swift SonarQube Plugin - Swift module - Enables analysis of Swift and Objective-C projects into SonarQube.
     Copyright © 2015 Backelite (${email})
 
     This program is free software: you can redistribute it and/or modify
@@ -29,7 +29,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>swift-lang</artifactId>
-    <name>Swift Language</name>
+    <name>Swift SonarQube Plugin - Swift module</name>
 
     <dependencies>
 
