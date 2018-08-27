@@ -18,8 +18,11 @@
 // Update profile-swiftlint.xml from local rules.txt
 // Severity is determined from ...
 
+@Grab(group='org.yaml', module='snakeyaml', version='1.5')
+
 import groovy.xml.MarkupBuilder
 import groovy.json.JsonBuilder
+import org.yaml.snakeyaml.*
 
 def magicSerevityAttribution(rule) {
 
@@ -72,6 +75,20 @@ def readSwiftLintRules() {
         rule.description = matcher[0][3]
         rule.severity = magicSerevityAttribution(rule)
 
+    }
+
+    // Extract custom rule identifiers and get details
+    Yaml parser = new Yaml()
+    FileReader swiftlintDotfile =  new FileReader('.swiftlint.yml')
+    HashMap swiftlintDotfileContent = parser.load(swiftlintDotfile)
+    swiftlintDotfileContent.custom_rules.each {ruleKey, ruleContent ->
+
+        def rule = [:]
+        rule.key = ruleKey
+        rule.name = ruleContent.name
+        rule.description  = ruleContent.message
+
+        result.add rule
     }
 
     result
