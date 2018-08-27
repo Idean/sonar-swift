@@ -1,5 +1,5 @@
 /**
- * Swift SonarQube Plugin - Objective-C module - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * commons - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.objectivec.surefire.data;
+package com.backelite.sonarqube.commons.surefire;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;

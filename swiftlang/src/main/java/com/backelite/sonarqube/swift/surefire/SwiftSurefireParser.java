@@ -17,10 +17,10 @@
  */
 package com.backelite.sonarqube.swift.surefire;
 
-import com.backelite.sonarqube.swift.surefire.data.SurefireStaxHandler;
-import com.backelite.sonarqube.swift.surefire.data.UnitTestClassReport;
-import com.backelite.sonarqube.swift.surefire.data.UnitTestIndex;
-import com.backelite.sonarqube.swift.surefire.data.UnitTestResult;
+import com.backelite.sonarqube.commons.surefire.SurefireStaxHandler;
+import com.backelite.sonarqube.commons.surefire.UnitTestClassReport;
+import com.backelite.sonarqube.commons.surefire.UnitTestIndex;
+import com.backelite.sonarqube.commons.surefire.UnitTestResult;
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

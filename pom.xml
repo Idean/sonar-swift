@@ -51,6 +51,7 @@
         <module>sonar-swift-plugin</module>
         <module>swiftlang</module>
         <module>objclang</module>
+        <module>commons</module>
     </modules>
 
 

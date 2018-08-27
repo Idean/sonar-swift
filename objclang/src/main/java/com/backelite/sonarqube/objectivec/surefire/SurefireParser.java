@@ -17,6 +17,10 @@
  */
 package com.backelite.sonarqube.objectivec.surefire;
 
+import com.backelite.sonarqube.commons.surefire.SurefireStaxHandler;
+import com.backelite.sonarqube.commons.surefire.UnitTestClassReport;
+import com.backelite.sonarqube.commons.surefire.UnitTestIndex;
+import com.backelite.sonarqube.commons.surefire.UnitTestResult;
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +36,6 @@ import org.sonar.api.test.MutableTestPlan;
 import org.sonar.api.test.TestCase;
 import org.sonar.api.utils.ParsingUtils;
 import org.sonar.api.utils.StaxParser;
-import com.backelite.sonarqube.objectivec.surefire.data.SurefireStaxHandler;
-import com.backelite.sonarqube.objectivec.surefire.data.UnitTestClassReport;
-import com.backelite.sonarqube.objectivec.surefire.data.UnitTestIndex;
-import com.backelite.sonarqube.objectivec.surefire.data.UnitTestResult;
-
 import javax.annotation.Nullable;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
