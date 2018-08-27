@@ -29,7 +29,6 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.measures.CoverageMeasuresBuilder;
 import org.sonar.api.measures.Measure;
-import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.utils.ParsingUtils;
 import org.sonar.api.utils.StaxParser;
@@ -46,20 +45,20 @@ final class CoberturaReportParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaReportParser.class);
 
     private final FileSystem fileSystem;
-    private final Project project;
     private final SensorContext context;
+    private final String rootDirectory;
 
-    private CoberturaReportParser(FileSystem fileSystem, Project project, SensorContext context) {
+    private CoberturaReportParser(FileSystem fileSystem, SensorContext context, String rootDirectory) {
         this.fileSystem = fileSystem;
-        this.project = project;
         this.context = context;
+        this.rootDirectory = rootDirectory;
     }
 
     /**
      * Parse a Cobertura xml report and create measures accordingly
      */
-    public static void parseReport(File xmlFile, FileSystem fileSystem, Project project, SensorContext context) {
-        new CoberturaReportParser(fileSystem, project, context).parse(xmlFile);
+    public static void parseReport(File xmlFile, FileSystem fileSystem, SensorContext sensorContext, String rootDirectory) {
+        new CoberturaReportParser(fileSystem, sensorContext, rootDirectory).parse(xmlFile);
     }
 
     private void parse(File xmlFile) {
@@ -84,11 +83,7 @@ final class CoberturaReportParser {
             collectFileMeasures(pack.descendantElementCursor("class"), builderByFilename);
             for (Map.Entry<String, CoverageMeasuresBuilder> entry : builderByFilename.entrySet()) {
                 String filePath = entry.getKey();
-                filePath = getAdjustedPathIfProjectIsModule(filePath);
-                if (filePath == null) {
-                    continue;
-                }
-                File file = new File(fileSystem.baseDir(), filePath);
+                File file = new File(rootDirectory, filePath);
                 InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
 
                 if (inputFile == null) {
@@ -109,18 +104,6 @@ final class CoberturaReportParser {
 
     private boolean resourceExists(Resource file) {
         return context.getResource(file) != null;
-    }
-
-    private String getAdjustedPathIfProjectIsModule(String filePath) {
-        if (project.isModule()) {
-            // the file doesn't belong to the module we're analyzing
-            if (!filePath.startsWith(project.path())) {
-                return null;
-            }
-            // fileSystem.baseDir() will include the module path, so we need to get rid of it here
-            return filePath.substring(project.path().length());
-        }
-        return filePath;
     }
 
     private static void collectFileMeasures(SMInputCursor clazz,
