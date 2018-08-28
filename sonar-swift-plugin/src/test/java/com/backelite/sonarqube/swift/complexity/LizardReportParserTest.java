@@ -23,7 +23,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Measure;
-import com.backelite.sonarqube.swift.complexity.LizardReportParser;
 
 import java.io.BufferedWriter;
 import java.io.File;

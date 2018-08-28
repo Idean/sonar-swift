@@ -38,12 +38,11 @@ import java.io.FileReader;
 
 public class FauxPasReportParser {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FauxPasReportParser.class);
     private final Project project;
     private final SensorContext context;
     private final ResourcePerspectives resourcePerspectives;
     private final FileSystem fileSystem;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(FauxPasReportParser.class);
 
     public FauxPasReportParser(final Project p, final SensorContext c, final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
         project = p;
@@ -63,8 +62,8 @@ public class FauxPasReportParser {
             // Record issues
             if (reportObj != null) {
 
-                JSONObject reportJson = (JSONObject)reportObj;
-                JSONArray diagnosticsJson = (JSONArray)reportJson.get("diagnostics");
+                JSONObject reportJson = (JSONObject) reportObj;
+                JSONArray diagnosticsJson = (JSONArray) reportJson.get("diagnostics");
 
                 for (Object obj : diagnosticsJson) {
                     recordIssue((JSONObject) obj);
@@ -79,7 +78,7 @@ public class FauxPasReportParser {
 
     private void recordIssue(final JSONObject diagnosticJson) {
 
-        String filePath = (String)diagnosticJson.get("file");
+        String filePath = (String) diagnosticJson.get("file");
 
         if (filePath != null) {
 
@@ -89,12 +88,12 @@ public class FauxPasReportParser {
 
             if (issuable != null && inputFile != null) {
 
-                JSONObject extent = (JSONObject)diagnosticJson.get("extent");
-                JSONObject start = (JSONObject)extent.get("start");
+                JSONObject extent = (JSONObject) diagnosticJson.get("extent");
+                JSONObject start = (JSONObject) extent.get("start");
 
-                String info = (String)diagnosticJson.get("info");
+                String info = (String) diagnosticJson.get("info");
                 if (info == null) {
-                    info = (String)diagnosticJson.get("ruleName");
+                    info = (String) diagnosticJson.get("ruleName");
                 }
 
                 // Prevent line num 0 case

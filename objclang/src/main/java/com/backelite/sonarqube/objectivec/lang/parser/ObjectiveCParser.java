@@ -20,7 +20,6 @@ package com.backelite.sonarqube.objectivec.lang.parser;
 import com.backelite.sonarqube.objectivec.lang.ObjectiveCConfiguration;
 import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCGrammar;
 import com.backelite.sonarqube.objectivec.lang.lexer.ObjectiveCLexer;
-
 import com.sonar.sslr.impl.Parser;
 
 public class ObjectiveCParser {

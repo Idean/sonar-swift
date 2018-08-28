@@ -17,8 +17,6 @@
  */
 package com.backelite.sonarqube.objectivec.issues.oclint;
 
-import java.io.Reader;
-
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +24,8 @@ import org.sonar.api.profiles.ProfileImporter;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.profiles.XMLProfileParser;
 import org.sonar.api.utils.ValidationMessages;
+
+import java.io.Reader;
 
 public final class OCLintProfileImporter extends ProfileImporter {
 
@@ -42,7 +42,7 @@ public final class OCLintProfileImporter extends ProfileImporter {
 
     @Override
     public RulesProfile importProfile(final Reader reader,
-            final ValidationMessages messages) {
+                                      final ValidationMessages messages) {
         final RulesProfile profile = profileParser.parse(reader, messages);
 
         if (null == profile) {

@@ -18,7 +18,6 @@
 package com.backelite.sonarqube.commons.surefire;
 
 import com.backelite.sonarqube.commons.Constants;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
@@ -36,12 +35,9 @@ import java.io.File;
  */
 public abstract class BaseSurefireSensor implements Sensor {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(BaseSurefireSensor.class);
-
     public static final String REPORTS_PATH_KEY = Constants.PROPERTY_PREFIX + ".surefire.junit.reportsPath";
     public static final String DEFAULT_REPORTS_PATH = "sonar-reports/";
-
-
+    protected static final Logger LOGGER = LoggerFactory.getLogger(BaseSurefireSensor.class);
     protected final FileSystem fileSystem;
     protected final PathResolver pathResolver;
     protected final ResourcePerspectives resourcePerspectives;

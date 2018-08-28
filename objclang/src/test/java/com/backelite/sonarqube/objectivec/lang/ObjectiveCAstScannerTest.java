@@ -35,17 +35,13 @@ package com.backelite.sonarqube.objectivec.lang;/*
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02
  */
 
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.io.File;
-
 import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCMetric;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.sonar.squidbridge.api.SourceFile;
+
+import java.io.File;
 
 public class ObjectiveCAstScannerTest {
 

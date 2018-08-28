@@ -28,7 +28,6 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import com.backelite.sonarqube.objectivec.ObjectiveCConstants;
 
 import java.io.File;
 
@@ -55,6 +54,7 @@ public class FauxPasSensor implements Sensor {
 
         return project.isRoot() && fileSystem.languages().contains(ObjectiveC.KEY);
     }
+
     @Override
     public void analyse(Project module, SensorContext context) {
 
@@ -74,7 +74,7 @@ public class FauxPasSensor implements Sensor {
         scanner.scan();
         String[] files = scanner.getIncludedFiles();
 
-        for(String filename : files) {
+        for (String filename : files) {
             LOGGER.info("Processing FauxPas report {}", filename);
             parser.parseReport(new File(filename));
         }

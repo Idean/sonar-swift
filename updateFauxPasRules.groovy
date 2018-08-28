@@ -18,12 +18,16 @@
 // Update profile-fauxpas.xml from Faux Pas online rules documentation
 // Severity is determined from the category
 
-@Grab(group='org.codehaus.groovy.modules.http-builder',
-        module='http-builder', version='0.7')
+import groovy.json.JsonBuilder
+import groovy.xml.MarkupBuilder
+@Grab(group = 'org.codehaus.groovy.modules.http-builder',
+        module = 'http-builder', version = '0.7')
 
 import groovyx.net.http.*
-import groovy.xml.MarkupBuilder
-import groovy.json.JsonBuilder
+@Grab(group = 'org.codehaus.groovy.modules.http-builder',
+        module = 'http-builder', version = '0.7')
+
+import groovyx.net.http.*
 
 def parseRules(url, catMapping) {
 
@@ -31,22 +35,24 @@ def parseRules(url, catMapping) {
 
     def http = new HTTPBuilder(url)
     http.contentEncoding = ContentEncoding.Type.GZIP
-    def html = http.get(contentType : 'text/html;charset=UTF-8')
+    def html = http.get(contentType: 'text/html;charset=UTF-8')
 
-    def categories = html."**".findAll {it.@class.toString().contains('tag-section')}
-    categories.each {cat ->
+    def categories = html."**".findAll { it.@class.toString().contains('tag-section') }
+    categories.each { cat ->
 
-        def rules = cat."**".findAll {it.@class.toString().contains('rule')}
-        rules.each {r ->
+        def rules = cat."**".findAll { it.@class.toString().contains('rule') }
+        rules.each { r ->
 
-            def k = r."**".find {it.@class.toString().contains("short-name")}.text()
+            def k = r."**".find { it.@class.toString().contains("short-name") }.text()
 
             def rule = [
-                    category: cat.H2.text(),
-                    key: k,
-                    name: (r.H3.text().trim().replaceAll('\\n', ' ') - k).trim(),
-                    description: r."**".find {it.@class.toString().contains("description")}.text().trim().replaceAll('\\n', ' '),
-                    severity: catMapping[cat.H2.text()]
+                    category   : cat.H2.text(),
+                    key        : k,
+                    name       : (r.H3.text().trim().replaceAll('\\n', ' ') - k).trim(),
+                    description: r."**".find {
+                        it.@class.toString().contains("description")
+                    }.text().trim().replaceAll('\\n', ' '),
+                    severity   : catMapping[cat.H2.text()]
             ]
 
             result.add(rule)
@@ -65,7 +71,7 @@ def writeProfileFauxPas(rls, file) {
         name "FauxPas"
         language "objc"
         rules {
-            rls.each {rl ->
+            rls.each { rl ->
                 rule {
                     repositoryKey "FauxPas"
                     key rl.key
@@ -93,14 +99,14 @@ File profileXml = new File('objclang/src/main/resources/org/sonar/plugins/fauxpa
 
 // Parse online documentation
 def rules = parseRules('http://fauxpasapp.com/rules/', [
-        BestPractice: 'MAJOR',
-        Resources: 'MAJOR',
-        Config: 'MINOR',
-        Localization: 'MAJOR',
-        APIUsage: 'CRITICAL',
-        VCS: 'INFO',
-        Style: 'MAJOR',
-        Pedantic: 'MINOR',
+        BestPractice : 'MAJOR',
+        Resources    : 'MAJOR',
+        Config       : 'MINOR',
+        Localization : 'MAJOR',
+        APIUsage     : 'CRITICAL',
+        VCS          : 'INFO',
+        Style        : 'MAJOR',
+        Pedantic     : 'MINOR',
         Miscellaneous: 'MINOR'
 ])
 

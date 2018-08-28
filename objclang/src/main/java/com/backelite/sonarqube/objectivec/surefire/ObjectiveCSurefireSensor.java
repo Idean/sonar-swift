@@ -18,17 +18,12 @@
 package com.backelite.sonarqube.objectivec.surefire;
 
 import com.backelite.sonarqube.commons.surefire.BaseSurefireSensor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.CoverageExtension;
-import org.sonar.api.batch.DependsUpon;
-import org.sonar.api.batch.Sensor;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.sonar.api.scan.filesystem.PathResolver;
 
 import java.io.File;

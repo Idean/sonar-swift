@@ -17,14 +17,14 @@
  */
 package com.backelite.sonarqube.swift.cpd;
 
+import com.backelite.sonarqube.swift.lang.SwiftConfiguration;
+import com.backelite.sonarqube.swift.lang.lexer.SwiftLexer;
 import com.sonar.sslr.api.Token;
 import com.sonar.sslr.impl.Lexer;
 import net.sourceforge.pmd.cpd.SourceCode;
 import net.sourceforge.pmd.cpd.TokenEntry;
 import net.sourceforge.pmd.cpd.Tokenizer;
 import net.sourceforge.pmd.cpd.Tokens;
-import com.backelite.sonarqube.swift.lang.lexer.SwiftLexer;
-import com.backelite.sonarqube.swift.lang.SwiftConfiguration;
 
 import java.io.File;
 import java.io.IOException;

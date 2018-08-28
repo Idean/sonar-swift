@@ -17,9 +17,9 @@
  */
 package com.backelite.sonarqube.objectivec.lang;
 
-import java.nio.charset.Charset;
-
 import org.sonar.squidbridge.api.SquidConfiguration;
+
+import java.nio.charset.Charset;
 
 public class ObjectiveCConfiguration extends SquidConfiguration {
 
@@ -32,12 +32,12 @@ public class ObjectiveCConfiguration extends SquidConfiguration {
         super(charset);
     }
 
-    public void setIgnoreHeaderComments(boolean ignoreHeaderComments) {
-        this.ignoreHeaderComments = ignoreHeaderComments;
-    }
-
     public boolean getIgnoreHeaderComments() {
         return ignoreHeaderComments;
+    }
+
+    public void setIgnoreHeaderComments(boolean ignoreHeaderComments) {
+        this.ignoreHeaderComments = ignoreHeaderComments;
     }
 
 }

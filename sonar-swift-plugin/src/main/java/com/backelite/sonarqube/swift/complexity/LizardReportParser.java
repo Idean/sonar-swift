@@ -40,9 +40,6 @@ import java.util.Map;
 
 public class LizardReportParser {
 
-    private final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12, 20, 30};
-    private final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
-
     private static final String MEASURE = "measure";
     private static final String MEASURE_TYPE = "type";
     private static final String MEASURE_ITEM = "item";
@@ -52,6 +49,8 @@ public class LizardReportParser {
     private static final String VALUE = "value";
     private static final int CYCLOMATIC_COMPLEXITY_INDEX = 2;
     private static final int FUNCTIONS_INDEX = 3;
+    private final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12, 20, 30};
+    private final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
 
     public Map<String, List<Measure>> parseReport(final File xmlFile) {
         Map<String, List<Measure>> result = null;
@@ -61,7 +60,7 @@ public class LizardReportParser {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(xmlFile);
             result = parseFile(document);
-        } catch (final FileNotFoundException e){
+        } catch (final FileNotFoundException e) {
             LoggerFactory.getLogger(getClass()).error("Lizard Report not found {}", xmlFile, e);
         } catch (final IOException e) {
             LoggerFactory.getLogger(getClass()).error("Error processing file named {}", xmlFile, e);
@@ -88,7 +87,7 @@ public class LizardReportParser {
                 if (element.getAttribute(MEASURE_TYPE).equalsIgnoreCase(FILE_MEASURE)) {
                     NodeList itemList = element.getElementsByTagName(MEASURE_ITEM);
                     addComplexityFileMeasures(itemList, reportMeasures);
-                } else if(element.getAttribute(MEASURE_TYPE).equalsIgnoreCase(FUNCTION_MEASURE)) {
+                } else if (element.getAttribute(MEASURE_TYPE).equalsIgnoreCase(FUNCTION_MEASURE)) {
                     NodeList itemList = element.getElementsByTagName(MEASURE_ITEM);
                     collectFunctions(itemList, functions);
                 }
@@ -100,7 +99,7 @@ public class LizardReportParser {
         return reportMeasures;
     }
 
-    private void addComplexityFileMeasures(NodeList itemList, Map<String, List<Measure>> reportMeasures){
+    private void addComplexityFileMeasures(NodeList itemList, Map<String, List<Measure>> reportMeasures) {
         for (int i = 0; i < itemList.getLength(); i++) {
             Node item = itemList.item(i);
 
@@ -110,14 +109,14 @@ public class LizardReportParser {
                 NodeList values = itemElement.getElementsByTagName(VALUE);
                 int complexity = Integer.parseInt(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
                 double fileComplexity = Double.parseDouble(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
-                int numberOfFunctions =  Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
+                int numberOfFunctions = Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
 
                 reportMeasures.put(fileName, buildMeasureList(complexity, fileComplexity, numberOfFunctions));
             }
         }
     }
 
-    private List<Measure> buildMeasureList(int complexity, double fileComplexity, int numberOfFunctions){
+    private List<Measure> buildMeasureList(int complexity, double fileComplexity, int numberOfFunctions) {
         List<Measure> list = new ArrayList<Measure>();
         list.add(new Measure(CoreMetrics.COMPLEXITY).setIntValue(complexity));
         list.add(new Measure(CoreMetrics.FUNCTIONS).setIntValue(numberOfFunctions));
@@ -139,7 +138,7 @@ public class LizardReportParser {
         }
     }
 
-    private void addComplexityFunctionMeasures(Map<String, List<Measure>> reportMeasures, List<SwiftFunction> functions){
+    private void addComplexityFunctionMeasures(Map<String, List<Measure>> reportMeasures, List<SwiftFunction> functions) {
         for (Map.Entry<String, List<Measure>> entry : reportMeasures.entrySet()) {
 
             RangeDistributionBuilder complexityDistribution = new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
@@ -156,20 +155,20 @@ public class LizardReportParser {
 
             if (count != 0) {
                 double complex = 0;
-                for (Measure m : entry.getValue()){
-                    if (m.getMetric().getKey().equalsIgnoreCase(CoreMetrics.FILE_COMPLEXITY.getKey())){
+                for (Measure m : entry.getValue()) {
+                    if (m.getMetric().getKey().equalsIgnoreCase(CoreMetrics.FILE_COMPLEXITY.getKey())) {
                         complex = m.getValue();
                         break;
                     }
                 }
 
-                double complexMean = complex/(double)count;
+                double complexMean = complex / (double) count;
                 entry.getValue().addAll(buildFuncionMeasuresList(complexMean, complexityInFunctions, complexityDistribution));
             }
         }
     }
 
-    public List<Measure> buildFuncionMeasuresList(double complexMean, int complexityInFunctions, RangeDistributionBuilder builder){
+    public List<Measure> buildFuncionMeasuresList(double complexMean, int complexityInFunctions, RangeDistributionBuilder builder) {
         List<Measure> list = new ArrayList<Measure>();
         list.add(new Measure(CoreMetrics.FUNCTION_COMPLEXITY, complexMean));
         list.add(new Measure(CoreMetrics.COMPLEXITY_IN_FUNCTIONS).setIntValue(complexityInFunctions));

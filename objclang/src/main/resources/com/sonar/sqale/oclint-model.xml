@@ -629,19 +629,19 @@
         <chc>
             <key>API_ABUSE</key>
             <name>API abuse</name>
-			<chc>
-				<rule-repo>OCLint</rule-repo>
-				<rule-key>calling prohibited method</rule-key>
-				<prop>
-					<key>remediationFunction</key>
-					<txt>CONSTANT_ISSUE</txt>
-				</prop>
-				<prop>
-					<key>offset</key>
-					<val>10</val>
-					<txt>min</txt>
-				</prop>
-			</chc>
+            <chc>
+                <rule-repo>OCLint</rule-repo>
+                <rule-key>calling prohibited method</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>10</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
         </chc>
         <chc>
             <key>ERRORS</key>
@@ -784,32 +784,32 @@
                     <txt>min</txt>
                 </prop>
             </chc>
-			<chc>
-				<rule-repo>OCLint</rule-repo>
-				<rule-key>calling protected method</rule-key>
-				<prop>
-					<key>remediationFunction</key>
-					<txt>CONSTANT_ISSUE</txt>
-				</prop>
-				<prop>
-					<key>offset</key>
-					<val>10</val>
-					<txt>min</txt>
-				</prop>
-			</chc>
-			<chc>
-				<rule-repo>OCLint</rule-repo>
-				<rule-key>missing abstract method implementation</rule-key>
-				<prop>
-					<key>remediationFunction</key>
-					<txt>CONSTANT_ISSUE</txt>
-				</prop>
-				<prop>
-					<key>offset</key>
-					<val>10</val>
-					<txt>min</txt>
-				</prop>
-			</chc>
+            <chc>
+                <rule-repo>OCLint</rule-repo>
+                <rule-key>calling protected method</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>10</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>OCLint</rule-repo>
+                <rule-key>missing abstract method implementation</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>10</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
             <chc>
                 <rule-repo>OCLint</rule-repo>
                 <rule-key>missing hash method</rule-key>
@@ -823,19 +823,19 @@
                     <txt>min</txt>
                 </prop>
             </chc>
-			<chc>
-				<rule-repo>OCLint</rule-repo>
-				<rule-key>missing call to base method</rule-key>
-				<prop>
-					<key>remediationFunction</key>
-					<txt>CONSTANT_ISSUE</txt>
-				</prop>
-				<prop>
-					<key>offset</key>
-					<val>10</val>
-					<txt>min</txt>
-				</prop>
-			</chc>
+            <chc>
+                <rule-repo>OCLint</rule-repo>
+                <rule-key>missing call to base method</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>10</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
             <chc>
                 <rule-repo>OCLint</rule-repo>
                 <rule-key>parameter reassignment</rule-key>
@@ -1039,11 +1039,11 @@
         <chc>
             <key>RESOURCE_RELIABILITY</key>
             <name>Resource</name>
-        <chc>
-            <key>UNIT_TESTS</key>
-            <name>Unit tests coverage</name>
+            <chc>
+                <key>UNIT_TESTS</key>
+                <name>Unit tests coverage</name>
+            </chc>
         </chc>
-    </chc>
     </chc>
     <chc>
         <key>TESTABILITY</key>

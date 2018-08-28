@@ -17,10 +17,6 @@
  */
 package com.backelite.sonarqube.objectivec.issues.oclint;
 
-import java.io.File;
-
-import javax.xml.stream.XMLStreamException;
-
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.slf4j.LoggerFactory;
@@ -33,6 +29,9 @@ import org.sonar.api.issue.Issue;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.StaxParser.XmlStreamHandler;
+
+import javax.xml.stream.XMLStreamException;
+import java.io.File;
 
 final class OCLintXMLStreamHandler implements XmlStreamHandler {
     private static final int PMD_MINIMUM_PRIORITY = 5;

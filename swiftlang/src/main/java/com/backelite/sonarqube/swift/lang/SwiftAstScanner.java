@@ -18,10 +18,10 @@
 package com.backelite.sonarqube.swift.lang;
 
 
-import com.sonar.sslr.impl.Parser;
 import com.backelite.sonarqube.swift.lang.api.SwiftGrammar;
 import com.backelite.sonarqube.swift.lang.api.SwiftMetric;
 import com.backelite.sonarqube.swift.lang.parser.SwiftParser;
+import com.sonar.sslr.impl.Parser;
 import org.sonar.squidbridge.AstScanner;
 import org.sonar.squidbridge.CommentAnalyser;
 import org.sonar.squidbridge.SquidAstVisitor;
@@ -96,7 +96,7 @@ public class SwiftAstScanner {
         /* Metrics */
         builder.withSquidAstVisitor(new LinesVisitor<SwiftGrammar>(SwiftMetric.LINES));
         builder.withSquidAstVisitor(new LinesOfCodeVisitor<SwiftGrammar>(SwiftMetric.LINES_OF_CODE));
-        builder.withSquidAstVisitor(CommentsVisitor.<SwiftGrammar> builder().withCommentMetric(SwiftMetric.COMMENT_LINES)
+        builder.withSquidAstVisitor(CommentsVisitor.<SwiftGrammar>builder().withCommentMetric(SwiftMetric.COMMENT_LINES)
                 .withNoSonar(true)
                 .withIgnoreHeaderComment(conf.getIgnoreHeaderComments())
                 .build());

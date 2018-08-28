@@ -17,13 +17,13 @@
  */
 package com.backelite.sonarqube.objectivec.issues.oclint;
 
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.server.rule.RulesDefinition;
-import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
 import java.io.BufferedReader;
@@ -39,11 +39,9 @@ import java.util.Map;
  */
 public class OCLintRulesDefinition implements RulesDefinition {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OCLintRulesDefinition.class);
-
     public static final String REPOSITORY_KEY = "OCLint";
     public static final String REPOSITORY_NAME = REPOSITORY_KEY;
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(OCLintRulesDefinition.class);
     private static final String RULES_FILE = "/org/sonar/plugins/oclint/rules.txt";
 
     @Override
@@ -119,7 +117,7 @@ public class OCLintRulesDefinition implements RulesDefinition {
             } else {
                 if (inDescription) {
                     line = ruleDescriptionLink(line);
-                    String description = (String)rule.get("description");
+                    String description = (String) rule.get("description");
                     rule.put("description", description + "<br>" + line);
                 }
             }

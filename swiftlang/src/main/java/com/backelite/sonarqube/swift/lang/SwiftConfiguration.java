@@ -19,7 +19,6 @@ package com.backelite.sonarqube.swift.lang;
 
 import org.sonar.squidbridge.api.SquidConfiguration;
 
-
 import java.nio.charset.Charset;
 
 public class SwiftConfiguration extends SquidConfiguration {
@@ -33,11 +32,11 @@ public class SwiftConfiguration extends SquidConfiguration {
         super(charset);
     }
 
-    public void setIgnoreHeaderComments(boolean ignoreHeaderComments) {
-        this.ignoreHeaderComments = ignoreHeaderComments;
-    }
-
     public boolean getIgnoreHeaderComments() {
         return ignoreHeaderComments;
+    }
+
+    public void setIgnoreHeaderComments(boolean ignoreHeaderComments) {
+        this.ignoreHeaderComments = ignoreHeaderComments;
     }
 }

@@ -107,6 +107,15 @@ public enum SwiftKeyword implements TokenType {
         this.value = value;
     }
 
+    public static String[] keywordValues() {
+        SwiftKeyword[] keywordsEnum = SwiftKeyword.values();
+        String[] keywords = new String[keywordsEnum.length];
+        for (int i = 0; i < keywords.length; i++) {
+            keywords[i] = keywordsEnum[i].getValue();
+        }
+        return keywords;
+    }
+
     public String getName() {
         return name();
     }
@@ -117,14 +126,5 @@ public enum SwiftKeyword implements TokenType {
 
     public boolean hasToBeSkippedFromAst(AstNode node) {
         return false;
-    }
-
-    public static String[] keywordValues() {
-        SwiftKeyword[] keywordsEnum = SwiftKeyword.values();
-        String[] keywords = new String[keywordsEnum.length];
-        for (int i = 0; i < keywords.length; i++) {
-            keywords[i] = keywordsEnum[i].getValue();
-        }
-        return keywords;
     }
 }

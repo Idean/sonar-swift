@@ -17,17 +17,16 @@
  */
 package com.backelite.sonarqube.objectivec.issues.oclint;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
-
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
+import com.google.common.io.Closeables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.utils.ValidationMessages;
-import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 
-import com.google.common.io.Closeables;
+import java.io.InputStreamReader;
+import java.io.Reader;
 
 public final class OCLintProfile extends ProfileDefinition {
 

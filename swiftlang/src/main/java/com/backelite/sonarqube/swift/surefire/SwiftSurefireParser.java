@@ -37,9 +37,10 @@ public final class SwiftSurefireParser extends BaseSurefireParser {
     }
 
 
-    @Nullable  public Resource getUnitTestResource(String classname) {
+    @Nullable
+    public Resource getUnitTestResource(String classname) {
         String fileName = classname.replace('.', '/') + ".swift";
-	String wildcardFileName = classname.replace(".", "/**/") + ".swift";
+        String wildcardFileName = classname.replace(".", "/**/") + ".swift";
 
         InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasPath(fileName));
 

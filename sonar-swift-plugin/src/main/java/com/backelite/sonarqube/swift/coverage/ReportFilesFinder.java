@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.config.Settings;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class ReportFilesFinder {
@@ -74,7 +74,7 @@ public final class ReportFilesFinder {
     private String[] filesMathingPattern(final String reportDirectory, final String reportPath) {
 
         final DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setIncludes(new String[] { reportPath });
+        scanner.setIncludes(new String[]{reportPath});
         scanner.setBasedir(new File(reportDirectory));
         scanner.scan();
 

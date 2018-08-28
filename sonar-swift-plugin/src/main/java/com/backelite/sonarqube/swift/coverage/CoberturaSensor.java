@@ -21,26 +21,24 @@ package com.backelite.sonarqube.swift.coverage;
 import com.backelite.sonarqube.commons.Constants;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import com.backelite.sonarqube.swift.lang.core.Swift;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
 
 public class CoberturaSensor implements Sensor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensor.class);
-
     public static final String REPORT_PATTERN_KEY = Constants.PROPERTY_PREFIX + ".coverage.reportPattern";
     public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage*.xml";
     public static final String REPORT_DIRECTORY_KEY = Constants.PROPERTY_PREFIX + ".coverage.reportDirectory";
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensor.class);
     private final ReportFilesFinder reportFilesFinder;
 
     private final Settings settings;
@@ -74,8 +72,7 @@ public class CoberturaSensor implements Sensor {
         List<File> reports;
         if (project.isRoot()) {
             reports = reportFilesFinder.reportsIn(projectBaseDir);
-        }
-        else {
+        } else {
             final String module = project.getName();
             final String rootDir = getRootDirectory(project);
             reports = reportFilesFinder.reportsIn(module, rootDir, projectBaseDir);

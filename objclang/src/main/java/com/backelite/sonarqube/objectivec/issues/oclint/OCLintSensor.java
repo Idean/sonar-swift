@@ -17,10 +17,7 @@
  */
 package com.backelite.sonarqube.objectivec.issues.oclint;
 
-import java.io.File;
-
 import com.backelite.sonarqube.commons.Constants;
-import com.backelite.sonarqube.objectivec.ObjectiveCConstants;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.LoggerFactory;
@@ -30,6 +27,8 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
+
+import java.io.File;
 
 public final class OCLintSensor implements Sensor {
     public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX + ".oclint.report";
@@ -68,7 +67,7 @@ public final class OCLintSensor implements Sensor {
         scanner.scan();
         String[] files = scanner.getIncludedFiles();
 
-        for(String filename : files) {
+        for (String filename : files) {
             LoggerFactory.getLogger(getClass()).info("Processing OCLint report {}", filename);
             parser.parseReport(new File(filename));
         }

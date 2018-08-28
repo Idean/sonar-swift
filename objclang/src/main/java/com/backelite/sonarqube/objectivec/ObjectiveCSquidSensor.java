@@ -17,6 +17,11 @@
  */
 package com.backelite.sonarqube.objectivec;
 
+import com.backelite.sonarqube.objectivec.lang.ObjectiveCAstScanner;
+import com.backelite.sonarqube.objectivec.lang.ObjectiveCConfiguration;
+import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCGrammar;
+import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCMetric;
+import com.backelite.sonarqube.objectivec.lang.checks.CheckList;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -35,11 +40,6 @@ import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.scan.filesystem.PathResolver;
-import com.backelite.sonarqube.objectivec.lang.ObjectiveCAstScanner;
-import com.backelite.sonarqube.objectivec.lang.ObjectiveCConfiguration;
-import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCGrammar;
-import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCMetric;
-import com.backelite.sonarqube.objectivec.lang.checks.CheckList;
 import org.sonar.squidbridge.AstScanner;
 import org.sonar.squidbridge.SquidAstVisitor;
 import org.sonar.squidbridge.api.CheckMessage;

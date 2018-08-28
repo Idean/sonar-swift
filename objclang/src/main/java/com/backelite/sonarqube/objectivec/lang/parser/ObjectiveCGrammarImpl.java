@@ -17,17 +17,17 @@
  */
 package com.backelite.sonarqube.objectivec.lang.parser;
 
+import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCGrammar;
+
 import static com.sonar.sslr.api.GenericTokenType.EOF;
 import static com.sonar.sslr.api.GenericTokenType.LITERAL;
 import static com.sonar.sslr.impl.matcher.GrammarFunctions.Standard.o2n;
-
-import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCGrammar;
 
 public class ObjectiveCGrammarImpl extends ObjectiveCGrammar {
 
     public ObjectiveCGrammarImpl() {
 
-         program.is(o2n(LITERAL), EOF);
+        program.is(o2n(LITERAL), EOF);
 
     }
 

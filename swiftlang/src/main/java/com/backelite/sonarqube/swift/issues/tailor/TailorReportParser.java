@@ -1,29 +1,21 @@
 /**
  * Swift SonarQube Plugin - Swift module - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.backelite.sonarqube.swift.issues.tailor;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -37,80 +29,84 @@ import org.sonar.api.issue.Issue;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
 
+import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by tzwickl on 22/11/2016.
  */
 
 public class TailorReportParser {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TailorReportParser.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TailorReportParser.class);
 
-	private final Project project;
-	private final SensorContext context;
-	private final ResourcePerspectives resourcePerspectives;
-	private final FileSystem fileSystem;
+    private final Project project;
+    private final SensorContext context;
+    private final ResourcePerspectives resourcePerspectives;
+    private final FileSystem fileSystem;
 
-	public TailorReportParser(final Project project, final SensorContext context,
-			final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
-		this.project = project;
-		this.context = context;
-		this.resourcePerspectives = resourcePerspectives;
-		this.fileSystem = fileSystem;
-	}
+    public TailorReportParser(final Project project, final SensorContext context,
+                              final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
+        this.project = project;
+        this.context = context;
+        this.resourcePerspectives = resourcePerspectives;
+        this.fileSystem = fileSystem;
+    }
 
-	public void parseReport(final File reportFile) {
-		try {
-			// Read and parse report
-			FileReader fr = new FileReader(reportFile);
+    public void parseReport(final File reportFile) {
+        try {
+            // Read and parse report
+            FileReader fr = new FileReader(reportFile);
 
-			BufferedReader br = new BufferedReader(fr);
-			String line;
-			while ((line = br.readLine()) != null) {
-				recordIssue(line);
+            BufferedReader br = new BufferedReader(fr);
+            String line;
+            while ((line = br.readLine()) != null) {
+                recordIssue(line);
 
-			}
-			IOUtils.closeQuietly(br);
-			IOUtils.closeQuietly(fr);
+            }
+            IOUtils.closeQuietly(br);
+            IOUtils.closeQuietly(fr);
 
-		} catch (FileNotFoundException e) {
-			LOGGER.error("Failed to parse SwiftLint report file", e);
-		} catch (IOException e) {
-			LOGGER.error("Failed to parse SwiftLint report file", e);
-		}
-	}
+        } catch (FileNotFoundException e) {
+            LOGGER.error("Failed to parse SwiftLint report file", e);
+        } catch (IOException e) {
+            LOGGER.error("Failed to parse SwiftLint report file", e);
+        }
+    }
 
-	private void recordIssue(final String line) {
-		LOGGER.debug("record issue {}", line);
+    private void recordIssue(final String line) {
+        LOGGER.debug("record issue {}", line);
 
-		Pattern pattern = Pattern.compile("(.*.swift):(\\w+):(\\w+): (.*): \\[(.*)\\] (.*)");
-		Matcher matcher = pattern.matcher(line);
-		while (matcher.find()) {
-			String filePath = matcher.group(1);
-			int lineNum = Integer.parseInt(matcher.group(2));
-			String ruleId = matcher.group(5);
-			String message = matcher.group(6);
+        Pattern pattern = Pattern.compile("(.*.swift):(\\w+):(\\w+): (.*): \\[(.*)\\] (.*)");
+        Matcher matcher = pattern.matcher(line);
+        while (matcher.find()) {
+            String filePath = matcher.group(1);
+            int lineNum = Integer.parseInt(matcher.group(2));
+            String ruleId = matcher.group(5);
+            String message = matcher.group(6);
 
-			InputFile inputFile = this.fileSystem.inputFile(this.fileSystem.predicates().hasAbsolutePath(filePath));
+            InputFile inputFile = this.fileSystem.inputFile(this.fileSystem.predicates().hasAbsolutePath(filePath));
 
-			if (inputFile == null) {
-				LOGGER.warn("file not included in sonar {}", filePath);
-				continue;
-			}
+            if (inputFile == null) {
+                LOGGER.warn("file not included in sonar {}", filePath);
+                continue;
+            }
 
-			Issuable issuable = this.resourcePerspectives.as(Issuable.class, inputFile);
+            Issuable issuable = this.resourcePerspectives.as(Issuable.class, inputFile);
 
-			if (issuable != null) {
-				Issue issue = issuable.newIssueBuilder()
-						.ruleKey(RuleKey.of(TailorRulesDefinition.REPOSITORY_KEY, ruleId)).line(lineNum)
-						.message(message).build();
+            if (issuable != null) {
+                Issue issue = issuable.newIssueBuilder()
+                        .ruleKey(RuleKey.of(TailorRulesDefinition.REPOSITORY_KEY, ruleId)).line(lineNum)
+                        .message(message).build();
 
-				try {
-					issuable.addIssue(issue);
-				} catch (Exception e) {
-					// Unable to add issue : probably because does not exist in the repository
-					LOGGER.warn(e.getMessage());
-				}
-			}
-		}
-	}
+                try {
+                    issuable.addIssue(issue);
+                } catch (Exception e) {
+                    // Unable to add issue : probably because does not exist in the repository
+                    LOGGER.warn(e.getMessage());
+                }
+            }
+        }
+    }
 }

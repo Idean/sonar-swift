@@ -18,8 +18,8 @@
 // Update profile-swiftlint.xml from local rules.txt
 // Severity is determined from ...
 
-import groovy.xml.MarkupBuilder
 import groovy.json.JsonBuilder
+import groovy.xml.MarkupBuilder
 
 def magicSerevityAttribution(rule) {
 
@@ -41,7 +41,7 @@ def readSwiftLintRules() {
 
     def processRules = "swiftlint rules".execute()
     // Extract rule identifiers
-    processRules.text.eachLine {line ->
+    processRules.text.eachLine { line ->
 
         def rule = [:]
 
@@ -60,7 +60,7 @@ def readSwiftLintRules() {
     }
 
     // Get details of each rule
-    result.each {rule ->
+    result.each { rule ->
         def processRuleDetails = "swiftlint rules ${rule.key}".execute()
         def details = processRuleDetails.text.readLines().first()
 
@@ -85,7 +85,7 @@ def writeProfileSwiftLint(rls, file) {
         name "SwiftLint"
         language "swift"
         rules {
-            rls.each {rl ->
+            rls.each { rl ->
                 rule {
                     repositoryKey "SwiftLint"
                     key rl.key

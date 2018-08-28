@@ -170,7 +170,5 @@ public class SwiftPlugin extends SonarPlugin {
         );
 
 
-
-
     }
 }

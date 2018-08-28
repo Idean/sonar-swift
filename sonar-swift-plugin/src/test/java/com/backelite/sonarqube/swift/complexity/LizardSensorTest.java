@@ -17,13 +17,12 @@
  */
 package com.backelite.sonarqube.swift.complexity;
 
+import com.backelite.sonarqube.swift.lang.core.Swift;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import com.backelite.sonarqube.swift.complexity.LizardSensor;
-import com.backelite.sonarqube.swift.lang.core.Swift;
 
 import java.util.SortedSet;
 import java.util.TreeSet;

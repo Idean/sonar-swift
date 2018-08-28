@@ -23,7 +23,6 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 
 import javax.annotation.Nullable;

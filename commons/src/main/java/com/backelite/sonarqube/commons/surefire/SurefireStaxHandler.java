@@ -37,29 +37,6 @@ public class SurefireStaxHandler implements XmlStreamHandler {
         this.index = index;
     }
 
-    public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
-        SMInputCursor testSuite = rootCursor.constructDescendantCursor(new ElementFilter("testsuite"));
-        SMEvent testSuiteEvent;
-        for (testSuiteEvent = testSuite.getNext(); testSuiteEvent != null; testSuiteEvent = testSuite.getNext()) {
-            if (testSuiteEvent.compareTo(SMEvent.START_ELEMENT) == 0) {
-                String testSuiteClassName = testSuite.getAttrValue("name");
-                if (StringUtils.contains(testSuiteClassName, "$")) {
-                    // test suites for inner classes are ignored
-                    return;
-                }
-                SMInputCursor testCase = testSuite.childCursor(new ElementFilter("testcase"));
-                SMEvent event;
-                for (event = testCase.getNext(); event != null; event = testCase.getNext()) {
-                    if (event.compareTo(SMEvent.START_ELEMENT) == 0) {
-                        String testClassName = getClassname(testCase, testSuiteClassName);
-                        UnitTestClassReport classReport = index.index(testClassName);
-                        parseTestCase(testCase, classReport);
-                    }
-                }
-            }
-        }
-    }
-
     private static String getClassname(SMInputCursor testCaseCursor,
                                        String defaultClassname) throws XMLStreamException {
         String testClassName = testCaseCursor.getAttrValue("classname");
@@ -135,5 +112,28 @@ public class SurefireStaxHandler implements XmlStreamHandler {
             return StringUtils.substringAfter(classname, "$") + "/" + name;
         }
         return name;
+    }
+
+    public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
+        SMInputCursor testSuite = rootCursor.constructDescendantCursor(new ElementFilter("testsuite"));
+        SMEvent testSuiteEvent;
+        for (testSuiteEvent = testSuite.getNext(); testSuiteEvent != null; testSuiteEvent = testSuite.getNext()) {
+            if (testSuiteEvent.compareTo(SMEvent.START_ELEMENT) == 0) {
+                String testSuiteClassName = testSuite.getAttrValue("name");
+                if (StringUtils.contains(testSuiteClassName, "$")) {
+                    // test suites for inner classes are ignored
+                    return;
+                }
+                SMInputCursor testCase = testSuite.childCursor(new ElementFilter("testcase"));
+                SMEvent event;
+                for (event = testCase.getNext(); event != null; event = testCase.getNext()) {
+                    if (event.compareTo(SMEvent.START_ELEMENT) == 0) {
+                        String testClassName = getClassname(testCase, testSuiteClassName);
+                        UnitTestClassReport classReport = index.index(testClassName);
+                        parseTestCase(testCase, classReport);
+                    }
+                }
+            }
+        }
     }
 }

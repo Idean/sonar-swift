@@ -38,11 +38,9 @@ import java.io.Reader;
  */
 public class FauxPasRulesDefinition implements RulesDefinition {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FauxPasRulesDefinition.class);
-
     public static final String REPOSITORY_KEY = "FauxPas";
     public static final String REPOSITORY_NAME = REPOSITORY_KEY;
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(FauxPasRulesDefinition.class);
     private static final String RULES_FILE = "/org/sonar/plugins/fauxpas/rules.json";
 
     @Override
@@ -74,13 +72,13 @@ public class FauxPasRulesDefinition implements RulesDefinition {
         Object rulesObj = JSONValue.parse(jsonString);
 
         if (rulesObj != null) {
-            JSONArray slRules = (JSONArray)rulesObj;
+            JSONArray slRules = (JSONArray) rulesObj;
             for (Object obj : slRules) {
-                JSONObject fpRule = (JSONObject)obj;
+                JSONObject fpRule = (JSONObject) obj;
 
-                RulesDefinition.NewRule rule = repository.createRule((String)fpRule.get("key"));
+                RulesDefinition.NewRule rule = repository.createRule((String) fpRule.get("key"));
                 rule.setName((String) fpRule.get("name"));
-                rule.setSeverity((String)fpRule.get("severity"));
+                rule.setSeverity((String) fpRule.get("severity"));
                 rule.setHtmlDescription((String) fpRule.get("description"));
 
             }

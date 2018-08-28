@@ -17,14 +17,13 @@
  */
 package com.backelite.sonarqube.objectivec.lang.lexer;
 
+import com.backelite.sonarqube.objectivec.lang.ObjectiveCConfiguration;
+import com.sonar.sslr.impl.Lexer;
+import com.sonar.sslr.impl.channel.BlackHoleChannel;
+
 import static com.sonar.sslr.api.GenericTokenType.LITERAL;
 import static com.sonar.sslr.impl.channel.RegexpChannelBuilder.commentRegexp;
 import static com.sonar.sslr.impl.channel.RegexpChannelBuilder.regexp;
-
-import com.backelite.sonarqube.objectivec.lang.ObjectiveCConfiguration;
-
-import com.sonar.sslr.impl.Lexer;
-import com.sonar.sslr.impl.channel.BlackHoleChannel;
 
 public class ObjectiveCLexer {
 

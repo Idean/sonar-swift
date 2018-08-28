@@ -17,10 +17,11 @@
  */
 package com.backelite.sonarqube.objectivec.issues;
 
-import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import com.backelite.sonarqube.objectivec.issues.fauxpas.FauxPasProfile;
 import com.backelite.sonarqube.objectivec.issues.fauxpas.FauxPasProfileImporter;
 import com.backelite.sonarqube.objectivec.issues.oclint.OCLintProfile;
+import com.backelite.sonarqube.objectivec.issues.oclint.OCLintProfileImporter;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import com.google.common.io.Closeables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,6 @@ import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
 import org.sonar.api.utils.ValidationMessages;
-import com.backelite.sonarqube.objectivec.issues.oclint.OCLintProfileImporter;
 
 import java.io.InputStreamReader;
 import java.io.Reader;

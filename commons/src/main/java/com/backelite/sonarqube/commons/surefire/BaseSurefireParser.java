@@ -53,6 +53,18 @@ public abstract class BaseSurefireParser {
         this.context = context;
     }
 
+    private static void parseFiles(File[] reports, UnitTestIndex index) {
+        SurefireStaxHandler staxParser = new SurefireStaxHandler(index);
+        StaxParser parser = new StaxParser(staxParser, false);
+        for (File report : reports) {
+            try {
+                parser.parse(report);
+            } catch (XMLStreamException e) {
+                throw new IllegalStateException("Fail to parse the Surefire report: " + report, e);
+            }
+        }
+    }
+
     public void collect(File reportsDir) {
 
 
@@ -87,18 +99,6 @@ public abstract class BaseSurefireParser {
         UnitTestIndex index = new UnitTestIndex();
         parseFiles(reports, index);
         save(index);
-    }
-
-    private static void parseFiles(File[] reports, UnitTestIndex index) {
-        SurefireStaxHandler staxParser = new SurefireStaxHandler(index);
-        StaxParser parser = new StaxParser(staxParser, false);
-        for (File report : reports) {
-            try {
-                parser.parse(report);
-            } catch (XMLStreamException e) {
-                throw new IllegalStateException("Fail to parse the Surefire report: " + report, e);
-            }
-        }
     }
 
     private void save(UnitTestIndex index) {

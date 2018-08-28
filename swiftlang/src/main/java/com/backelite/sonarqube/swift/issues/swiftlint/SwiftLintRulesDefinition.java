@@ -1,17 +1,17 @@
 /**
  * Swift SonarQube Plugin - Swift module - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -38,11 +38,9 @@ import java.io.Reader;
  */
 public class SwiftLintRulesDefinition implements RulesDefinition {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftLintRulesDefinition.class);
-
     public static final String REPOSITORY_KEY = "SwiftLint";
     public static final String REPOSITORY_NAME = REPOSITORY_KEY;
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftLintRulesDefinition.class);
     private static final String RULES_FILE = "/org/sonar/plugins/swiftlint/rules.json";
 
     @Override
@@ -74,13 +72,13 @@ public class SwiftLintRulesDefinition implements RulesDefinition {
         Object rulesObj = JSONValue.parse(jsonString);
 
         if (rulesObj != null) {
-            JSONArray slRules = (JSONArray)rulesObj;
+            JSONArray slRules = (JSONArray) rulesObj;
             for (Object obj : slRules) {
-                JSONObject slRule = (JSONObject)obj;
+                JSONObject slRule = (JSONObject) obj;
 
-                RulesDefinition.NewRule rule = repository.createRule((String)slRule.get("key"));
+                RulesDefinition.NewRule rule = repository.createRule((String) slRule.get("key"));
                 rule.setName((String) slRule.get("name"));
-                rule.setSeverity((String)slRule.get("severity"));
+                rule.setSeverity((String) slRule.get("severity"));
                 rule.setHtmlDescription((String) slRule.get("description"));
 
             }

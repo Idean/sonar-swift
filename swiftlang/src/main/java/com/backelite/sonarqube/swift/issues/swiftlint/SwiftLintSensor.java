@@ -1,22 +1,23 @@
 /**
  * Swift SonarQube Plugin - Swift module - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.backelite.sonarqube.swift.issues.swiftlint;
 
+import com.backelite.sonarqube.commons.Constants;
 import com.backelite.sonarqube.swift.lang.core.Swift;
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.Logger;
@@ -27,7 +28,6 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import com.backelite.sonarqube.commons.Constants;
 
 import java.io.File;
 
@@ -54,6 +54,7 @@ public class SwiftLintSensor implements Sensor {
 
         return project.isRoot() && fileSystem.languages().contains(Swift.KEY);
     }
+
     @Override
     public void analyse(Project module, SensorContext context) {
 
@@ -72,7 +73,7 @@ public class SwiftLintSensor implements Sensor {
         scanner.scan();
         String[] files = scanner.getIncludedFiles();
 
-        for(String filename : files) {
+        for (String filename : files) {
             LOGGER.info("Processing SwiftLint report {}", filename);
             parser.parseReport(new File(filename));
         }

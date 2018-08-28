@@ -18,9 +18,9 @@
 package com.backelite.sonarqube.swift.lang.lexer;
 
 
+import com.backelite.sonarqube.swift.lang.SwiftConfiguration;
 import com.sonar.sslr.impl.Lexer;
 import com.sonar.sslr.impl.channel.BlackHoleChannel;
-import com.backelite.sonarqube.swift.lang.SwiftConfiguration;
 
 import static com.sonar.sslr.api.GenericTokenType.LITERAL;
 import static com.sonar.sslr.impl.channel.RegexpChannelBuilder.commentRegexp;
@@ -42,11 +42,11 @@ public class SwiftLexer {
 
                 .withFailIfNoChannelToConsumeOneCharacter(false)
 
-                        // Comments
+                // Comments
                 .withChannel(commentRegexp("//[^\\n\\r]*+"))
                 .withChannel(commentRegexp("/\\*[\\s\\S]*?\\*/"))
 
-                        // All other tokens
+                // All other tokens
                 .withChannel(regexp(LITERAL, "[^\r\n\\s/]+"))
 
                 .withChannel(new BlackHoleChannel("[\\s]"))

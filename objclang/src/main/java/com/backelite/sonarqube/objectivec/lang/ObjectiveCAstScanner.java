@@ -17,12 +17,10 @@
  */
 package com.backelite.sonarqube.objectivec.lang;
 
-import java.io.File;
-import java.util.Collection;
-
 import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCGrammar;
 import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCMetric;
 import com.backelite.sonarqube.objectivec.lang.parser.ObjectiveCParser;
+import com.sonar.sslr.impl.Parser;
 import org.sonar.squidbridge.AstScanner;
 import org.sonar.squidbridge.CommentAnalyser;
 import org.sonar.squidbridge.SquidAstVisitor;
@@ -35,7 +33,8 @@ import org.sonar.squidbridge.metrics.CommentsVisitor;
 import org.sonar.squidbridge.metrics.LinesOfCodeVisitor;
 import org.sonar.squidbridge.metrics.LinesVisitor;
 
-import com.sonar.sslr.impl.Parser;
+import java.io.File;
+import java.util.Collection;
 
 public class ObjectiveCAstScanner {
 
@@ -62,7 +61,7 @@ public class ObjectiveCAstScanner {
         final SquidAstVisitorContextImpl<ObjectiveCGrammar> context = new SquidAstVisitorContextImpl<ObjectiveCGrammar>(new SourceProject("Objective-C Project"));
         final Parser<ObjectiveCGrammar> parser = ObjectiveCParser.create(conf);
 
-        AstScanner.Builder<ObjectiveCGrammar> builder = AstScanner.<ObjectiveCGrammar> builder(context).setBaseParser(parser);
+        AstScanner.Builder<ObjectiveCGrammar> builder = AstScanner.<ObjectiveCGrammar>builder(context).setBaseParser(parser);
 
         /* Metrics */
         builder.withMetrics(ObjectiveCMetric.values());
@@ -87,15 +86,15 @@ public class ObjectiveCAstScanner {
                 });
 
         /* Files */
-      builder.setFilesMetric(ObjectiveCMetric.FILES);
+        builder.setFilesMetric(ObjectiveCMetric.FILES);
 
         /* Metrics */
-      	builder.withSquidAstVisitor(new LinesVisitor<ObjectiveCGrammar>(ObjectiveCMetric.LINES));
-      	builder.withSquidAstVisitor(new LinesOfCodeVisitor<ObjectiveCGrammar>(ObjectiveCMetric.LINES_OF_CODE));
-      	builder.withSquidAstVisitor(CommentsVisitor.<ObjectiveCGrammar> builder().withCommentMetric(ObjectiveCMetric.COMMENT_LINES)
-      			.withNoSonar(true)
-      			.withIgnoreHeaderComment(conf.getIgnoreHeaderComments())
-      			.build());
+        builder.withSquidAstVisitor(new LinesVisitor<ObjectiveCGrammar>(ObjectiveCMetric.LINES));
+        builder.withSquidAstVisitor(new LinesOfCodeVisitor<ObjectiveCGrammar>(ObjectiveCMetric.LINES_OF_CODE));
+        builder.withSquidAstVisitor(CommentsVisitor.<ObjectiveCGrammar>builder().withCommentMetric(ObjectiveCMetric.COMMENT_LINES)
+                .withNoSonar(true)
+                .withIgnoreHeaderComment(conf.getIgnoreHeaderComments())
+                .build());
 
         return builder.build();
     }

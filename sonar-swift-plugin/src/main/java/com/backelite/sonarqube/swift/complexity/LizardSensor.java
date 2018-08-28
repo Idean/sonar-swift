@@ -17,6 +17,8 @@
  */
 package com.backelite.sonarqube.swift.complexity;
 
+import com.backelite.sonarqube.commons.Constants;
+import com.backelite.sonarqube.swift.lang.core.Swift;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
@@ -24,8 +26,6 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
-import com.backelite.sonarqube.commons.Constants;
-import com.backelite.sonarqube.swift.lang.core.Swift;
 
 import java.io.File;
 import java.util.List;

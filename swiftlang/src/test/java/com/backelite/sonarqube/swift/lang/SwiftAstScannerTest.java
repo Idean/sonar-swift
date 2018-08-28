@@ -17,14 +17,14 @@
  */
 package com.backelite.sonarqube.swift.lang;
 
-import org.junit.Test;
 import com.backelite.sonarqube.swift.lang.api.SwiftMetric;
+import org.junit.Test;
 import org.sonar.squidbridge.api.SourceFile;
 
 import java.io.File;
 
-import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class SwiftAstScannerTest {
 

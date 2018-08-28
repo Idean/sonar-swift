@@ -17,22 +17,17 @@
  */
 package com.backelite.sonarqube.objectivec.lang.lexer;
 
-import static com.sonar.sslr.test.lexer.LexerMatchers.hasComment;
-import static com.sonar.sslr.test.lexer.LexerMatchers.hasToken;
-import static org.junit.Assert.assertThat;
-
-import java.io.File;
-import java.util.List;
-
+import com.sonar.sslr.api.GenericTokenType;
+import com.sonar.sslr.api.Token;
+import com.sonar.sslr.impl.Lexer;
 import com.sonar.sslr.test.lexer.LexerMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.sonar.sslr.api.GenericTokenType;
-import com.sonar.sslr.api.Token;
-import com.sonar.sslr.impl.Lexer;
+import java.io.File;
+import java.util.List;
 
 public class ObjectiveCLexerTest {
 

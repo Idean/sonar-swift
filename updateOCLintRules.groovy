@@ -18,11 +18,15 @@
 // Update rules.txt and profile-clint.xml from OCLint documentation
 // Severity is determined from the category
 
-@Grab(group='org.codehaus.groovy.modules.http-builder',
-        module='http-builder', version='0.7')
+import groovy.xml.MarkupBuilder
+@Grab(group = 'org.codehaus.groovy.modules.http-builder',
+        module = 'http-builder', version = '0.7')
 
 import groovyx.net.http.*
-import groovy.xml.MarkupBuilder
+@Grab(group = 'org.codehaus.groovy.modules.http-builder',
+        module = 'http-builder', version = '0.7')
+
+import groovyx.net.http.*
 
 def splitCamelCase(value) {
     value.replaceAll(
@@ -43,21 +47,21 @@ def parseCategory(url, name, severity) {
     def http = new HTTPBuilder(url)
     def html = http.get([:])
 
-    def root = html."**".find { it.@id.toString().contains(name)}
-    root."**".findAll { it.@class.toString() == 'section'}.each {rule ->
+    def root = html."**".find { it.@id.toString().contains(name) }
+    root."**".findAll { it.@class.toString() == 'section' }.each { rule ->
 
         def entry = [:]
 
 
-        def ruleName =  splitCamelCase(rule.H2.text() - '¶').capitalize()
+        def ruleName = splitCamelCase(rule.H2.text() - '¶').capitalize()
 
         // Original name
         entry.originalName = null
         try {
-            def sourceHttp = new HTTPBuilder(rule."**".findAll {it.name() == 'A'}.last().@href)
-            def sourceHtml = sourceHttp.get[:]
+            def sourceHttp = new HTTPBuilder(rule."**".findAll { it.name() == 'A' }.last().@href)
+            def sourceHtml = sourceHttp.get [:]
 
-            def found = sourceHtml."**".find {it.name() == "TR" && it.text().contains("return\"")}.text()
+            def found = sourceHtml."**".find { it.name() == "TR" && it.text().contains("return\"") }.text()
             def match = found =~ /"([^"]*)"/
             entry.originalName = match[0][1]
 
@@ -95,7 +99,7 @@ def writeRulesTxt(rules, file) {
             "OCLint\n" +
             "======\n\n"
 
-    rules.each {rule ->
+    rules.each { rule ->
         if (rule.name != '') {
             text += rule.originalName + '\n'
             text += '----------\n'
@@ -121,7 +125,7 @@ def readRulesTxt(file) {
 
     def previousLine = ''
     def rule = null
-    file.eachLine {line ->
+    file.eachLine { line ->
 
         if (line.startsWith('--')) {
             rule = [:]
@@ -157,7 +161,7 @@ def writeProfileOCLint(rls, file) {
         name "OCLint"
         language "objc"
         rules {
-            rls.each {rl ->
+            rls.each { rl ->
                 rule {
                     repositoryKey "OCLint"
                     key rl.originalName
@@ -175,9 +179,9 @@ def mergeRules(existingRules, freshRules) {
     def result = []
 
     // Update existing rules
-    existingRules.each {rule ->
+    existingRules.each { rule ->
 
-        def freshRule = freshRules.find {it.originalName?.trim() == rule.originalName?.trim()}
+        def freshRule = freshRules.find { it.originalName?.trim() == rule.originalName?.trim() }
         if (freshRule) {
 
             println "Updating rule [$rule.originalName]"
@@ -186,7 +190,7 @@ def mergeRules(existingRules, freshRules) {
             rule.summary = freshRule.summary
         }
 
-        if (!result.find {it.originalName?.trim() == rule.originalName?.trim()}) {
+        if (!result.find { it.originalName?.trim() == rule.originalName?.trim() }) {
             result.add rule
         } else {
             println "Skipping rule [$rule.originalName]"
@@ -194,9 +198,9 @@ def mergeRules(existingRules, freshRules) {
     }
 
     // Add new rules (if any)
-    freshRules.each {rule ->
+    freshRules.each { rule ->
 
-        def existingRule =  existingRules.find {it.originalName?.trim() == rule.originalName?.trim()}
+        def existingRule = existingRules.find { it.originalName?.trim() == rule.originalName?.trim() }
         if (!existingRule) {
             result.add rule
         }
@@ -208,7 +212,6 @@ def mergeRules(existingRules, freshRules) {
 // Files
 File rulesTxt = new File('objclang/src/main/resources/org/sonar/plugins/oclint/rules.txt')
 File profileXml = new File('objclang/src/main/resources/org/sonar/plugins/oclint/profile-oclint.xml')
-
 
 // Parse OCLint online documentation
 def rules = []
@@ -222,7 +225,6 @@ rules.addAll parseCategory("http://docs.oclint.org/en/stable/rules/redundant.htm
 rules.addAll parseCategory("http://docs.oclint.org/en/stable/rules/size.html", "size", 3)
 rules.addAll parseCategory("http://docs.oclint.org/en/stable/rules/unused.html", "unused", 0)
 println "${rules.size()} rules found"
-
 
 // Read existing rules
 def existingRules = readRulesTxt(rulesTxt)

@@ -1,26 +1,21 @@
 /**
  * Swift SonarQube Plugin - Swift module - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.backelite.sonarqube.swift.issues.tailor;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
 
 import com.backelite.sonarqube.swift.lang.core.Swift;
 import org.apache.commons.io.IOUtils;
@@ -33,56 +28,59 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
 /**
  * Created by tzwickl on 22/11/2016.
  */
 
 public class TailorRulesDefinition implements RulesDefinition {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TailorRulesDefinition.class);
+    public static final String REPOSITORY_KEY = "Tailor";
+    public static final String REPOSITORY_NAME = REPOSITORY_KEY;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TailorRulesDefinition.class);
+    private static final String RULES_FILE = "/org/sonar/plugins/tailor/rules.json";
 
-	public static final String REPOSITORY_KEY = "Tailor";
-	public static final String REPOSITORY_NAME = REPOSITORY_KEY;
+    @Override
+    public void define(final Context context) {
 
-	private static final String RULES_FILE = "/org/sonar/plugins/tailor/rules.json";
+        NewRepository repository = context.createRepository(REPOSITORY_KEY, Swift.KEY).setName(REPOSITORY_NAME);
 
-	@Override
-	public void define(final Context context) {
+        try {
+            loadRules(repository);
+        } catch (IOException e) {
+            LOGGER.error("Failed to load tailor rules", e);
+        }
 
-		NewRepository repository = context.createRepository(REPOSITORY_KEY, Swift.KEY).setName(REPOSITORY_NAME);
+        SqaleXmlLoader.load(repository, "/com/sonar/sqale/tailor-model.xml");
 
-		try {
-			loadRules(repository);
-		} catch (IOException e) {
-			LOGGER.error("Failed to load tailor rules", e);
-		}
+        repository.done();
 
-		SqaleXmlLoader.load(repository, "/com/sonar/sqale/tailor-model.xml");
+    }
 
-		repository.done();
+    private void loadRules(final NewRepository repository) throws IOException {
 
-	}
+        Reader reader = new BufferedReader(
+                new InputStreamReader(getClass().getResourceAsStream(RULES_FILE), CharEncoding.UTF_8));
 
-	private void loadRules(final NewRepository repository) throws IOException {
+        String jsonString = IOUtils.toString(reader);
 
-		Reader reader = new BufferedReader(
-				new InputStreamReader(getClass().getResourceAsStream(RULES_FILE), CharEncoding.UTF_8));
+        Object rulesObj = JSONValue.parse(jsonString);
 
-		String jsonString = IOUtils.toString(reader);
+        if (rulesObj != null) {
+            JSONArray slRules = (JSONArray) rulesObj;
+            for (Object obj : slRules) {
+                JSONObject slRule = (JSONObject) obj;
 
-		Object rulesObj = JSONValue.parse(jsonString);
-
-		if (rulesObj != null) {
-			JSONArray slRules = (JSONArray) rulesObj;
-			for (Object obj : slRules) {
-				JSONObject slRule = (JSONObject) obj;
-
-				RulesDefinition.NewRule rule = repository.createRule((String) slRule.get("key"));
-				rule.setName((String) slRule.get("name"));
-				rule.setSeverity((String) slRule.get("severity"));
-				rule.setHtmlDescription((String) slRule.get("description") 
-						+ " (<a href=" + (String) slRule.get("styleguide") + ">" + (String) slRule.get("styleguide") + "</a>)");
-			}
-		}
-	}
+                RulesDefinition.NewRule rule = repository.createRule((String) slRule.get("key"));
+                rule.setName((String) slRule.get("name"));
+                rule.setSeverity((String) slRule.get("severity"));
+                rule.setHtmlDescription((String) slRule.get("description")
+                        + " (<a href=" + (String) slRule.get("styleguide") + ">" + (String) slRule.get("styleguide") + "</a>)");
+            }
+        }
+    }
 }

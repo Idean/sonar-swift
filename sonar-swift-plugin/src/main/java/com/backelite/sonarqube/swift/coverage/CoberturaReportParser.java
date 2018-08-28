@@ -62,6 +62,39 @@ public final class CoberturaReportParser {
         new CoberturaReportParser(fileSystem, project, context).parse(xmlFile);
     }
 
+    private static void collectFileMeasures(SMInputCursor clazz,
+                                            Map<String, CoverageMeasuresBuilder> builderByFilename) throws XMLStreamException {
+        while (clazz.getNext() != null) {
+            String fileName = clazz.getAttrValue("filename");
+            CoverageMeasuresBuilder builder = builderByFilename.get(fileName);
+            if (builder == null) {
+                builder = CoverageMeasuresBuilder.create();
+                builderByFilename.put(fileName, builder);
+            }
+            collectFileData(clazz, builder);
+        }
+    }
+
+    private static void collectFileData(SMInputCursor clazz,
+                                        CoverageMeasuresBuilder builder) throws XMLStreamException {
+        SMInputCursor line = clazz.childElementCursor("lines").advance().childElementCursor("line");
+        while (line.getNext() != null) {
+            int lineId = Integer.parseInt(line.getAttrValue("number"));
+            try {
+                builder.setHits(lineId, (int) ParsingUtils.parseNumber(line.getAttrValue("hits"), Locale.ENGLISH));
+            } catch (ParseException e) {
+                throw new XmlParserException(e);
+            }
+
+            String isBranch = line.getAttrValue("branch");
+            String text = line.getAttrValue("condition-coverage");
+            if (StringUtils.equals(isBranch, "true") && StringUtils.isNotBlank(text)) {
+                String[] conditions = StringUtils.split(StringUtils.substringBetween(text, "(", ")"), "/");
+                builder.setConditions(lineId, Integer.parseInt(conditions[1]), Integer.parseInt(conditions[0]));
+            }
+        }
+    }
+
     private void parse(File xmlFile) {
         try {
             StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
@@ -121,38 +154,5 @@ public final class CoberturaReportParser {
             return filePath.substring(project.path().length());
         }
         return filePath;
-    }
-
-    private static void collectFileMeasures(SMInputCursor clazz,
-                                            Map<String, CoverageMeasuresBuilder> builderByFilename) throws XMLStreamException {
-        while (clazz.getNext() != null) {
-            String fileName = clazz.getAttrValue("filename");
-            CoverageMeasuresBuilder builder = builderByFilename.get(fileName);
-            if (builder == null) {
-                builder = CoverageMeasuresBuilder.create();
-                builderByFilename.put(fileName, builder);
-            }
-            collectFileData(clazz, builder);
-        }
-    }
-
-    private static void collectFileData(SMInputCursor clazz,
-                                        CoverageMeasuresBuilder builder) throws XMLStreamException {
-        SMInputCursor line = clazz.childElementCursor("lines").advance().childElementCursor("line");
-        while (line.getNext() != null) {
-            int lineId = Integer.parseInt(line.getAttrValue("number"));
-            try {
-                builder.setHits(lineId, (int) ParsingUtils.parseNumber(line.getAttrValue("hits"), Locale.ENGLISH));
-            } catch (ParseException e) {
-                throw new XmlParserException(e);
-            }
-
-            String isBranch = line.getAttrValue("branch");
-            String text = line.getAttrValue("condition-coverage");
-            if (StringUtils.equals(isBranch, "true") && StringUtils.isNotBlank(text)) {
-                String[] conditions = StringUtils.split(StringUtils.substringBetween(text, "(", ")"), "/");
-                builder.setConditions(lineId, Integer.parseInt(conditions[1]), Integer.parseInt(conditions[0]));
-            }
-        }
     }
 }
