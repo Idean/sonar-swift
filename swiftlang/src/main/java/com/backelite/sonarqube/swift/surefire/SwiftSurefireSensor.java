@@ -36,7 +36,7 @@ public final class SwiftSurefireSensor implements Sensor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftSurefireSensor.class);
 
-    public static final String REPORTS_PATH_KEY = Constants.PROPERTY_PREFIX + "swiftsurefire.junit.reportsPath";
+    public static final String REPORTS_PATH_KEY = Constants.PROPERTY_PREFIX + ".surefire.junit.reportsPath";
     public static final String DEFAULT_REPORTS_PATH = "sonar-reports/";
 
 

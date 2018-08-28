@@ -55,7 +55,7 @@ import java.util.List;
         @Property(
                 key = CoberturaSensor.REPORT_PATTERN_KEY,
                 defaultValue = CoberturaSensor.DEFAULT_REPORT_PATTERN,
-                name = "Path to unit test coverage report(s)",
+                name = "Path to Cobertura reports (coverage)",
                 description = "Relative to projects' root. Ant patterns are accepted",
                 global = false,
                 project = true),
@@ -76,14 +76,14 @@ import java.util.List;
         @Property(
                 key = LizardSensor.REPORT_PATH_KEY,
                 defaultValue = LizardSensor.DEFAULT_REPORT_PATH,
-                name = "Path to lizard report",
+                name = "Path to Lizard report (complexity)",
                 description = "Relative to projects' root.",
                 global = false,
                 project = true),
         @Property(
                 key = SwiftSurefireSensor.REPORTS_PATH_KEY,
                 defaultValue = SwiftSurefireSensor.DEFAULT_REPORTS_PATH,
-                name = "Path to surefire junit report",
+                name = "Path to surefire JUnit reports (unit tests)",
                 description = "Relative to projects' root.",
                 global = false,
                 project = true),
@@ -91,14 +91,14 @@ import java.util.List;
         @Property(
                 key = OCLintSensor.REPORT_PATH_KEY,
                 defaultValue = OCLintSensor.DEFAULT_REPORT_PATH,
-                name = "Path to oclint pmd formatted report",
+                name = "Path to OCLint pmd formatted report",
                 description = "Relative to projects' root.",
                 global = false,
                 project = true),
         @Property(
                 key = FauxPasSensor.REPORT_PATH_KEY,
                 defaultValue = FauxPasSensor.DEFAULT_REPORT_PATH,
-                name = "Path to fauxpas json formatted report",
+                name = "Path to FauxPas json formatted report",
                 description = "Relative to projects' root.",
                 global = false,
                 project = true)
