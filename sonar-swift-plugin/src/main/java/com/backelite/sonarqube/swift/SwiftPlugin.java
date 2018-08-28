@@ -29,7 +29,7 @@ import com.backelite.sonarqube.objectivec.issues.oclint.OCLintProfileImporter;
 import com.backelite.sonarqube.objectivec.issues.oclint.OCLintRulesDefinition;
 import com.backelite.sonarqube.objectivec.issues.oclint.OCLintSensor;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
-import com.backelite.sonarqube.objectivec.surefire.SurefireSensor;
+import com.backelite.sonarqube.objectivec.surefire.ObjectiveCSurefireSensor;
 import com.backelite.sonarqube.swift.complexity.LizardSensor;
 import com.backelite.sonarqube.swift.coverage.CoberturaSensor;
 import com.backelite.sonarqube.swift.cpd.SwiftCpdMapping;
@@ -159,7 +159,7 @@ public class SwiftPlugin extends SonarPlugin {
 
                 // Surefire
                 SwiftSurefireSensor.class,
-                SurefireSensor.class,
+                ObjectiveCSurefireSensor.class,
 
                 // Coverage
                 CoberturaSensor.class,

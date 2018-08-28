@@ -1,5 +1,5 @@
 /**
- * Swift SonarQube Plugin - Swift module - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * Swift SonarQube Plugin - Objective-C module - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,41 +15,46 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.swift.surefire;
+package com.backelite.sonarqube.objectivec.surefire;
 
 import com.backelite.sonarqube.commons.surefire.BaseSurefireSensor;
-import com.backelite.sonarqube.swift.lang.core.Swift;
-import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.sonar.api.batch.CoverageExtension;
+import org.sonar.api.batch.DependsUpon;
+import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.sonar.api.scan.filesystem.PathResolver;
 
 import java.io.File;
 
-public final class SwiftSurefireSensor extends BaseSurefireSensor {
+public class ObjectiveCSurefireSensor extends BaseSurefireSensor {
 
-
-    public SwiftSurefireSensor(FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, Settings settings) {
+    public ObjectiveCSurefireSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings, final ResourcePerspectives resourcePerspectives) {
         super(fileSystem, pathResolver, resourcePerspectives, settings);
     }
 
     @Override
     public boolean shouldExecuteOnProject(Project project) {
-        return StringUtils.isNotEmpty(this.reportPath()) && fileSystem.languages().contains(Swift.KEY);
+
+        return project.isRoot() && fileSystem.hasFiles(fileSystem.predicates().hasLanguage(ObjectiveC.KEY));
     }
 
     @Override
     protected void collect(SensorContext context, File reportsDir) {
         LOGGER.info("parsing {}", reportsDir);
-        new SwiftSurefireParser(fileSystem, resourcePerspectives, context).collect(reportsDir);
+        new ObjectiveCSurefireParser(fileSystem, resourcePerspectives, context).collect(reportsDir);
     }
 
     @Override
     public String toString() {
-        return "Swift Surefire Sensor";
+        return "Objective-C Surefire Sensor";
     }
+
 
 }

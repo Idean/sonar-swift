@@ -1,5 +1,5 @@
 /**
- * Swift SonarQube Plugin - Swift module - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * Swift SonarQube Plugin - Objective-C module - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.swift.surefire;
+package com.backelite.sonarqube.objectivec.surefire;
 
 import com.backelite.sonarqube.commons.surefire.BaseSurefireParser;
 import com.google.common.collect.ImmutableList;
@@ -23,23 +23,25 @@ import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
+import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * Created by gillesgrousset on 06/01/15.
+ */
+public class ObjectiveCSurefireParser extends BaseSurefireParser {
 
-public final class SwiftSurefireParser extends BaseSurefireParser {
-
-
-    public SwiftSurefireParser(FileSystem fileSystem, ResourcePerspectives perspectives, SensorContext context) {
-        super(fileSystem, perspectives, context);
+    public ObjectiveCSurefireParser(FileSystem fileSystem, ResourcePerspectives resourcePerspectives, SensorContext context) {
+        super(fileSystem, resourcePerspectives, context);
     }
 
+    @Nullable
+    public Resource getUnitTestResource(String classname) {
 
-    @Nullable  public Resource getUnitTestResource(String classname) {
-        String fileName = classname.replace('.', '/') + ".swift";
-	String wildcardFileName = classname.replace(".", "/**/") + ".swift";
+        String fileName = classname.replace('.', '/') + ".m";
 
         InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasPath(fileName));
 
@@ -50,10 +52,10 @@ public final class SwiftSurefireParser extends BaseSurefireParser {
         if (inputFile == null) {
             List<InputFile> files = ImmutableList.copyOf(fileSystem.inputFiles(fileSystem.predicates().and(
                     fileSystem.predicates().hasType(InputFile.Type.TEST),
-                    fileSystem.predicates().matchesPathPattern("**/" + wildcardFileName))));
+                    fileSystem.predicates().matchesPathPattern("**/" + fileName.replace("_", "+")))));
 
             if (files.isEmpty()) {
-                LOGGER.info("Unable to locate test source file {}", wildcardFileName);
+                LOGGER.info("Unable to locate test source file {}", fileName);
             } else {
                 /*
                  * Lazily get the first file, since we wouldn't be able to determine the correct one from just the

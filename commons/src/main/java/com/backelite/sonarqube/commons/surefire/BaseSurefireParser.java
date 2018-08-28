@@ -1,5 +1,5 @@
 /**
- * Swift SonarQube Plugin - Objective-C module - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * commons - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,50 +15,41 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.objectivec.surefire;
+package com.backelite.sonarqube.commons.surefire;
 
-import com.backelite.sonarqube.commons.surefire.SurefireStaxHandler;
-import com.backelite.sonarqube.commons.surefire.UnitTestClassReport;
-import com.backelite.sonarqube.commons.surefire.UnitTestIndex;
-import com.backelite.sonarqube.commons.surefire.UnitTestResult;
-import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.resources.Project;
 import org.sonar.api.resources.Resource;
 import org.sonar.api.test.MutableTestPlan;
 import org.sonar.api.test.TestCase;
 import org.sonar.api.utils.ParsingUtils;
 import org.sonar.api.utils.StaxParser;
+
 import javax.annotation.Nullable;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Created by gillesgrousset on 06/01/15.
+ * Created by gillesgrousset on 28/08/2018.
  */
-public class SurefireParser {
+public abstract class BaseSurefireParser {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireParser.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(BaseSurefireParser.class);
 
-    private final Project project;
-    private final FileSystem fileSystem;
-    private final ResourcePerspectives perspectives;
-    private final SensorContext context;
+    protected final FileSystem fileSystem;
+    protected final SensorContext context;
+    protected final ResourcePerspectives perspectives;
 
-    public SurefireParser(Project project, FileSystem fileSystem, ResourcePerspectives resourcePerspectives, SensorContext context) {
-        this.project = project;
+    protected BaseSurefireParser(FileSystem fileSystem, ResourcePerspectives perspectives, SensorContext context) {
         this.fileSystem = fileSystem;
-        this.perspectives = resourcePerspectives;
+        this.perspectives = perspectives;
         this.context = context;
     }
 
@@ -75,19 +66,15 @@ public class SurefireParser {
     }
 
     private File[] getReports(File dir) {
+
         if (dir == null || !dir.isDirectory() || !dir.exists()) {
             return new File[0];
         }
 
-        File[] list = dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.startsWith("TEST") && name.endsWith(".xml");
-            }
-        });
-
         return dir.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
-                return name.startsWith("TEST") && name.endsWith(".xml");
+                // .junit is for fastlane support
+                return (name.startsWith("TEST") && name.endsWith(".xml")) || (name.endsWith(".junit"));
             }
         });
     }
@@ -164,34 +151,7 @@ public class SurefireParser {
     }
 
     @Nullable
-    public Resource getUnitTestResource(String classname) {
-
-        String fileName = classname.replace('.', '/') + ".m";
-
-        InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasPath(fileName));
-
-        /*
-         * Most xcodebuild JUnit parsers don't include the path to the class in the class field, so search for it if it
-         * wasn't found in the root.
-         */
-        if (inputFile == null) {
-            List<InputFile> files = ImmutableList.copyOf(fileSystem.inputFiles(fileSystem.predicates().and(
-                    fileSystem.predicates().hasType(InputFile.Type.TEST),
-                    fileSystem.predicates().matchesPathPattern("**/" + fileName.replace("_", "+")))));
-
-            if (files.isEmpty()) {
-                LOGGER.info("Unable to locate test source file {}", fileName);
-            } else {
-                /*
-                 * Lazily get the first file, since we wouldn't be able to determine the correct one from just the
-                 * test class name in the event that there are multiple matches.
-                 */
-                inputFile = files.get(0);
-            }
-        }
-
-        return inputFile == null ? null : context.getResource(inputFile);
-    }
+    public abstract Resource getUnitTestResource(String classname);
 
     private void saveMeasure(Resource resource, Metric metric, double value) {
         if (!Double.isNaN(value)) {
