@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    backelite-sonar-swift-plugin - Enables analysis of Swift projects into SonarQube.
+    backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
     Copyright © 2015 Backelite (${email})
 
     This program is free software: you can redistribute it and/or modify
@@ -18,8 +18,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -34,6 +34,151 @@
     <version>0.3.8</version>
 
     <packaging>sonar-plugin</packaging>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.backelite.sonarqube</groupId>
+            <artifactId>swift-lang</artifactId>
+            <version>0.3.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.backelite.sonarqube</groupId>
+            <artifactId>objc-lang</artifactId>
+            <version>0.3.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonarsource.sslr</groupId>
+            <artifactId>sslr-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.sslr-squid-bridge</groupId>
+            <artifactId>sslr-squid-bridge</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.sonarqube</groupId>
+            <artifactId>sonar-testing-harness</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.sslr</groupId>
+            <artifactId>sslr-testing-harness</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.sonarlint.core</groupId>
+            <artifactId>sonarlint-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.orchestrator</groupId>
+            <artifactId>sonar-orchestrator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.sonarqube</groupId>
+            <artifactId>sonar-plugin-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
+                <artifactId>sonar-packaging-maven-plugin</artifactId>
+                <version>1.16</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <pluginClass>com.backelite.sonarqube.swift.SwiftPlugin</pluginClass>
+                    <pluginName>Swift (Backelite)</pluginName>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <minimizeJar>true</minimizeJar>
+                            <filters>
+                                <filter>
+                                    <artifact>jaxen:jaxen</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/LICENSE*</exclude>
+                                        <exclude>META-INF/NOTICE*</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>LICENSE*</exclude>
+                                        <exclude>NOTICE*</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
 
 
 </project>

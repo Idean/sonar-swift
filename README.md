@@ -25,16 +25,22 @@ In SonarQube under Quality Profiles the used Linter can be specified by selectin
 
 ### Features
 
-| Feature 		| Supported	| MacOS	| Unix |
-|---------------|----------|:-----------:|:-----------:|
-| Complexity	|YES			|Uses [Lizard](https://github.com/terryyin/lizard)| Uses [Lizard](https://github.com/terryyin/lizard)|
-| Design		|NO			|			| |
-| Documentation	|YES		|			| |
-| Duplications	|YES		|			| |
-| Issues		|YES		| Uses [SwiftLint](https://github.com/realm/SwiftLint) and/or [Tailor](https://github.com/sleekbyte/tailor)| Uses [Tailor](https://github.com/sleekbyte/tailor)|
-| Size			|YES		|			||
+| Feature 		| Supported	| MacOS	      | Unix        |
+|---------------|-----------|:-----------:|:-----------:|
+| Complexity	|YES		|Uses [Lizard](https://github.com/terryyin/lizard)| Uses [Lizard](https://github.com/terryyin/lizard)|
+| Design		|NO			|			  |             |
+| Documentation	|YES		|			  |             |
+| Duplications	|YES		|			  |             |
+| Issues		|YES		| Uses [SwiftLint](https://github.com/realm/SwiftLint) and/or [Tailor](https://github.com/sleekbyte/tailor) for Swift. [OCLint](http://oclint-docs.readthedocs.io/en/stable/) and [Faux Pas](http://fauxpasapp.com/) for Objective-C| Uses [Tailor](https://github.com/sleekbyte/tailor)|
+| Size			|YES		|			  |             |
 | Tests			|YES		| Uses xcodebuild + xcpretty [xcpretty](https://github.com/supermarin/xcpretty)	| Not Supported |
-| Code coverage	|YES			| Uses [slather](https://github.com/venmo/slather)			| Not Supported|
+| Code coverage	|YES	    | Uses [slather](https://github.com/venmo/slather)			| Not Supported|
+
+### Faux Pas support
+
+[Faux Pas](http://fauxpasapp.com/) is a wonderful tool to analyse iOS or Mac applications Objective-C source code, however it is not free. A 30 trial version is available [here](http://fauxpasapp.com/try/).
+
+The plugin runs fine even if Faux Pas is not installed (Faux Pas analysis will be skipped).
 
 
 ### Download
@@ -56,6 +62,8 @@ Otherwise, run the ```run-sonar-swift.sh``` script from your Xcode project root 
 - [Tailor](https://github.com/sleekbyte/tailor) ([HomeBrew](http://brew.sh) installed and ```brew install tailor```). Version 0.11.1 or above.
 - [slather](https://github.com/SlatherOrg/slather) (```gem install slather```). Version 2.1.0 or above (2.4 since Xcode 8.3).
 - [lizard](https://github.com/terryyin/lizard) ([PIP](https://pip.pypa.io/en/stable/installing/) installed and ```sudo pip install lizard```)
+- [OCLint](http://oclint-docs.readthedocs.io/en/stable/) installed. Version 0.11.0 recommended (0.13.0 since Xcode 9).
+- [Faux Pas](http://fauxpasapp.com/) command line tools installed (optional)
 
 ### Installation of xcpretty with JUnit reports fix
 

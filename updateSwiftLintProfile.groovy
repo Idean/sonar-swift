@@ -1,5 +1,5 @@
 /**
- * Swift SonarQube Plugin - Enables analysis of Swift projects into SonarQube.
+ * Swift SonarQube Plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,8 +18,8 @@
 // Update profile-swiftlint.xml from local rules.txt
 // Severity is determined from ...
 
-import groovy.xml.MarkupBuilder
 import groovy.json.JsonBuilder
+import groovy.xml.MarkupBuilder
 
 def magicSerevityAttribution(rule) {
 
@@ -41,7 +41,7 @@ def readSwiftLintRules() {
 
     def processRules = "swiftlint rules".execute()
     // Extract rule identifiers
-    processRules.text.eachLine {line ->
+    processRules.text.eachLine { line ->
 
         def rule = [:]
 
@@ -60,7 +60,7 @@ def readSwiftLintRules() {
     }
 
     // Get details of each rule
-    result.each {rule ->
+    result.each { rule ->
         def processRuleDetails = "swiftlint rules ${rule.key}".execute()
         def details = processRuleDetails.text.readLines().first()
 
@@ -85,7 +85,7 @@ def writeProfileSwiftLint(rls, file) {
         name "SwiftLint"
         language "swift"
         rules {
-            rls.each {rl ->
+            rls.each { rl ->
                 rule {
                     repositoryKey "SwiftLint"
                     key rl.key
@@ -108,8 +108,8 @@ def writeRules(rls, file) {
 }
 
 // Files
-File rulesJson = new File('sonar-swift-plugin/src/main/resources/org/sonar/plugins/swiftlint/rules.json')
-File profileXml = new File('sonar-swift-plugin/src/main/resources/org/sonar/plugins/swiftlint/profile-swiftlint.xml')
+File rulesJson = new File('swiftlang/src/main/resources/org/sonar/plugins/swiftlint/rules.json')
+File profileXml = new File('swiftlang/src/main/resources/org/sonar/plugins/swiftlint/profile-swiftlint.xml')
 
 // Read rules from swiftlint_rules.txt
 def rules = readSwiftLintRules()
