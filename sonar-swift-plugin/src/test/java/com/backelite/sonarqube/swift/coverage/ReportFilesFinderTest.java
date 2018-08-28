@@ -1,5 +1,5 @@
 /**
- * Swift SonarQube Plugin - Swift module - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@ package com.backelite.sonarqube.swift.coverage;
 import java.io.*;
 import java.util.*;
 
+import com.backelite.sonarqube.swift.coverage.ReportFilesFinder;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,11 +44,11 @@ public class ReportFilesFinderTest {
 	@Before
 	public void setUp() {
 		settings = mock(Settings.class);
-		when(settings.getString(SwiftCoberturaSensor.REPORT_PATTERN_KEY)).thenReturn(TEST_REPORT_PATTERN);
-		when(settings.getString(TEST_MOD_NAME + "." + SwiftCoberturaSensor.REPORT_PATTERN_KEY)).thenReturn(TEST_REPORT_PATTERN);
+		when(settings.getString(CoberturaSensor.REPORT_PATTERN_KEY)).thenReturn(TEST_REPORT_PATTERN);
+		when(settings.getString(TEST_MOD_NAME + "." + CoberturaSensor.REPORT_PATTERN_KEY)).thenReturn(TEST_REPORT_PATTERN);
 
-		reportFilesFinder = new ReportFilesFinder(settings, SwiftCoberturaSensor.REPORT_PATTERN_KEY, 
-			SwiftCoberturaSensor.DEFAULT_REPORT_PATTERN, SwiftCoberturaSensor.REPORT_DIRECTORY_KEY);
+		reportFilesFinder = new ReportFilesFinder(settings, CoberturaSensor.REPORT_PATTERN_KEY,
+				CoberturaSensor.DEFAULT_REPORT_PATTERN, CoberturaSensor.REPORT_DIRECTORY_KEY);
 	}
 
 	@Test
@@ -57,7 +58,7 @@ public class ReportFilesFinderTest {
 
 	@Test
 	public void findsFoldersInRootWithReportsDirectory() {
-		when(settings.getString(SwiftCoberturaSensor.REPORT_DIRECTORY_KEY)).thenReturn("/dir1");
+		when(settings.getString(CoberturaSensor.REPORT_DIRECTORY_KEY)).thenReturn("/dir1");
 		assertSameFiles(Arrays.asList(REPORT_PATH_1), reportFilesFinder.reportsIn(TEST_MATERIALS_DIR));
 	}
 
@@ -68,14 +69,14 @@ public class ReportFilesFinderTest {
 
 	@Test
 	public void findsFoldersInModuleWithDefaultReportsDirectory() {
-		when(settings.getString(SwiftCoberturaSensor.REPORT_DIRECTORY_KEY)).thenReturn("/dir2");
+		when(settings.getString(CoberturaSensor.REPORT_DIRECTORY_KEY)).thenReturn("/dir2");
 		assertSameFiles(Arrays.asList(REPORT_PATH_2), reportFilesFinder.reportsIn(TEST_MOD_NAME, TEST_MATERIALS_DIR, TEST_MATERIALS_DIR + "/dir1"));
 	}
 
 	@Test
 	public void findsFoldersInModuleWithModuleReportsDirectory() {
-		when(settings.getString(SwiftCoberturaSensor.REPORT_DIRECTORY_KEY)).thenReturn("/dir2");
-		when(settings.getString(TEST_MOD_NAME + "." + SwiftCoberturaSensor.REPORT_DIRECTORY_KEY)).thenReturn("/dir3");
+		when(settings.getString(CoberturaSensor.REPORT_DIRECTORY_KEY)).thenReturn("/dir2");
+		when(settings.getString(TEST_MOD_NAME + "." + CoberturaSensor.REPORT_DIRECTORY_KEY)).thenReturn("/dir3");
 		assertSameFiles(Arrays.asList(REPORT_PATH_3), reportFilesFinder.reportsIn(TEST_MOD_NAME, TEST_MATERIALS_DIR, TEST_MATERIALS_DIR + "/dir1"));
 	}
 

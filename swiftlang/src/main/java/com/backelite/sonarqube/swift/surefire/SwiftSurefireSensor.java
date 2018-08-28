@@ -17,7 +17,7 @@
  */
 package com.backelite.sonarqube.swift.surefire;
 
-import com.backelite.sonarqube.swift.SwiftConstants;
+import com.backelite.sonarqube.commons.Constants;
 import com.backelite.sonarqube.swift.lang.core.Swift;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -36,7 +36,7 @@ public final class SwiftSurefireSensor implements Sensor {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftSurefireSensor.class);
 
-    public static final String REPORTS_PATH_KEY = SwiftConstants.PROPERTY_PREFIX + "swiftsurefire.junit.reportsPath";
+    public static final String REPORTS_PATH_KEY = Constants.PROPERTY_PREFIX + "swiftsurefire.junit.reportsPath";
     public static final String DEFAULT_REPORTS_PATH = "sonar-reports/";
 
 

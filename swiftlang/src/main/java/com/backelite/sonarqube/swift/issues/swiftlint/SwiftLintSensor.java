@@ -27,14 +27,14 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
-import com.backelite.sonarqube.swift.SwiftConstants;
+import com.backelite.sonarqube.commons.Constants;
 
 import java.io.File;
 
 
 public class SwiftLintSensor implements Sensor {
 
-    public static final String REPORT_PATH_KEY = SwiftConstants.PROPERTY_PREFIX + ".swiftlint.report";
+    public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX + ".swiftlint.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/*swiftlint.txt";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftLintSensor.class);

@@ -17,13 +17,10 @@
  */
 package com.backelite.sonarqube.swift.lang.core;
 
-import com.google.common.collect.Lists;
+import com.backelite.sonarqube.swift.SwiftConstants;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.AbstractLanguage;
-import com.backelite.sonarqube.swift.SwiftConstants;
-
-import java.util.List;
 
 public class Swift extends AbstractLanguage {
 
@@ -38,20 +35,7 @@ public class Swift extends AbstractLanguage {
     }
 
     public String[] getFileSuffixes() {
-        String[] suffixes = filterEmptyStrings(settings.getStringArray(SwiftConstants.FILE_SUFFIXES_KEY));
-        if (suffixes == null || suffixes.length == 0) {
-            suffixes = StringUtils.split(SwiftConstants.FILE_SUFFIXES_DEFVALUE, ",");
-        }
-        return suffixes;
-    }
 
-    private String[] filterEmptyStrings(String[] stringArray) {
-        List<String> nonEmptyStrings = Lists.newArrayList();
-        for (String string : stringArray) {
-            if (StringUtils.isNotBlank(string.trim())) {
-                nonEmptyStrings.add(string.trim());
-            }
-        }
-        return nonEmptyStrings.toArray(new String[nonEmptyStrings.size()]);
+        return StringUtils.split(SwiftConstants.FILE_SUFFIXES, ",");
     }
 }

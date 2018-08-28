@@ -17,20 +17,7 @@
  */
 package com.backelite.sonarqube.swift;
 
-/**
- * Created by gillesgrousset on 23/08/2018.
- */
-public class SwiftConstants {
+public final class SwiftConstants {
 
-    // Global Swift constants
-    public static final String FALSE = "false";
-
-    public static final String FILE_SUFFIXES_KEY = "sonar.swift.file.suffixes";
-    public static final String FILE_SUFFIXES_DEFVALUE = "swift";
-
-    public static final String PROPERTY_PREFIX = "sonar.swift";
-
-    public static final String TEST_FRAMEWORK_KEY = PROPERTY_PREFIX + ".testframework";
-    public static final String TEST_FRAMEWORK_DEFAULT = "ghunit";
-
+    public static final String FILE_SUFFIXES = "swift";
 }

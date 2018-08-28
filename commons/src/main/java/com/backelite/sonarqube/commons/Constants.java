@@ -1,5 +1,5 @@
 /**
- * Swift SonarQube Plugin - Objective-C module - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * commons - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,12 +15,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.objectivec;
+package com.backelite.sonarqube.commons;
 
+/**
+ * Created by gillesgrousset on 23/08/2018.
+ */
+public final class Constants {
 
-public final class ObjectiveCConstants {
+    // Common constants
+    public static final String FALSE = "false";
 
-    public static final String FILE_SUFFIXES = "h,m,mm";
+    public static final String PROPERTY_PREFIX = "sonar.swift";
 
+    public static final String TEST_FRAMEWORK_KEY = PROPERTY_PREFIX + ".testframework";
+    public static final String TEST_FRAMEWORK_DEFAULT = "ghunit";
 
 }

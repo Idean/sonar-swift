@@ -17,14 +17,10 @@
  */
 package com.backelite.sonarqube.objectivec.lang.core;
 
-import java.util.List;
-
+import com.backelite.sonarqube.objectivec.ObjectiveCConstants;
 import org.apache.commons.lang.StringUtils;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.AbstractLanguage;
-
-import com.google.common.collect.Lists;
-import com.backelite.sonarqube.objectivec.ObjectiveCConstants;
 
 public class ObjectiveC extends AbstractLanguage {
 
@@ -39,20 +35,8 @@ public class ObjectiveC extends AbstractLanguage {
     }
 
     public String[] getFileSuffixes() {
-        String[] suffixes = filterEmptyStrings(settings.getStringArray(ObjectiveCConstants.FILE_SUFFIXES_KEY));
-        if (suffixes == null || suffixes.length == 0) {
-            suffixes = StringUtils.split(ObjectiveCConstants.FILE_SUFFIXES_DEFVALUE, ",");
-        }
-        return suffixes;
+
+        return StringUtils.split(ObjectiveCConstants.FILE_SUFFIXES, ",");
     }
 
-    private String[] filterEmptyStrings(String[] stringArray) {
-        List<String> nonEmptyStrings = Lists.newArrayList();
-        for (String string : stringArray) {
-          if (StringUtils.isNotBlank(string.trim())) {
-            nonEmptyStrings.add(string.trim());
-          }
-        }
-        return nonEmptyStrings.toArray(new String[nonEmptyStrings.size()]);
-      }
 }

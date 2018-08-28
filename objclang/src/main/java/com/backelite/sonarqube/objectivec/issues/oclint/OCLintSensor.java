@@ -19,6 +19,7 @@ package com.backelite.sonarqube.objectivec.issues.oclint;
 
 import java.io.File;
 
+import com.backelite.sonarqube.commons.Constants;
 import com.backelite.sonarqube.objectivec.ObjectiveCConstants;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.apache.tools.ant.DirectoryScanner;
@@ -31,7 +32,7 @@ import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 
 public final class OCLintSensor implements Sensor {
-    public static final String REPORT_PATH_KEY = ObjectiveCConstants.PROPERTY_PREFIX + ".oclint.report";
+    public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX + ".oclint.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/*oclint.xml";
 
     private final Settings conf;

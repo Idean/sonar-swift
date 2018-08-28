@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.sonar.swift.complexity;
+package com.backelite.sonarqube.swift.complexity;
 
 import org.junit.Before;
 import org.junit.Rule;

@@ -1,5 +1,5 @@
 /**
- * Swift SonarQube Plugin - Swift module - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.Map;
 
-final class CoberturaReportParser {
+public final class CoberturaReportParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaReportParser.class);
 

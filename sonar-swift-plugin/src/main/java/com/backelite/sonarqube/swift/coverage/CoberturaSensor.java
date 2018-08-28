@@ -1,5 +1,5 @@
 /**
- * Swift SonarQube Plugin - Swift module - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,28 +17,29 @@
  */
 package com.backelite.sonarqube.swift.coverage;
 
+
+import com.backelite.sonarqube.commons.Constants;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import com.backelite.sonarqube.swift.lang.core.Swift;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.Sensor;
 import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
-import com.backelite.sonarqube.swift.SwiftConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
 
+public class CoberturaSensor implements Sensor {
 
-public final class SwiftCoberturaSensor implements Sensor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensor.class);
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftCoberturaSensor.class);
-
-    public static final String REPORT_PATTERN_KEY = SwiftConstants.PROPERTY_PREFIX + ".coverage.reportPattern";
-    public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage-swift*.xml";
-    public static final String REPORT_DIRECTORY_KEY = SwiftConstants.PROPERTY_PREFIX + ".coverage.reportDirectory";
+    public static final String REPORT_PATTERN_KEY = Constants.PROPERTY_PREFIX + ".coverage.reportPattern";
+    public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage*.xml";
+    public static final String REPORT_DIRECTORY_KEY = Constants.PROPERTY_PREFIX + ".coverage.reportDirectory";
 
     private final ReportFilesFinder reportFilesFinder;
 
@@ -47,7 +48,7 @@ public final class SwiftCoberturaSensor implements Sensor {
     private final PathResolver pathResolver;
     private Project project;
 
-    public SwiftCoberturaSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings) {
+    public CoberturaSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings) {
 
         this.settings = settings;
         this.fileSystem = fileSystem;
@@ -56,13 +57,15 @@ public final class SwiftCoberturaSensor implements Sensor {
         reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN, REPORT_DIRECTORY_KEY);
     }
 
+    @Override
     public boolean shouldExecuteOnProject(final Project project) {
 
         this.project = project;
 
-        return fileSystem.languages().contains(Swift.KEY);
+        return fileSystem.languages().contains(Swift.KEY) || fileSystem.languages().contains(ObjectiveC.KEY);
     }
 
+    @Override
     public void analyse(final Project project, final SensorContext context) {
 
         final String projectBaseDir = fileSystem.baseDir().getPath();
@@ -93,4 +96,5 @@ public final class SwiftCoberturaSensor implements Sensor {
             return projectBaseDir.substring(0, projectBaseDir.length() - modulePath.length());
         }
     }
+
 }

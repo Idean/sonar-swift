@@ -17,24 +17,8 @@
  */
 package com.backelite.sonarqube.swift;
 
-import com.backelite.sonarqube.swift.complexity.LizardSensor;
-import com.backelite.sonarqube.swift.coverage.SwiftCoberturaSensor;
-import com.backelite.sonarqube.swift.cpd.SwiftCpdMapping;
-import com.backelite.sonarqube.swift.issues.SwiftProfile;
-import com.backelite.sonarqube.swift.issues.swiftlint.SwiftLintProfile;
-import com.backelite.sonarqube.swift.issues.swiftlint.SwiftLintRulesDefinition;
-import com.backelite.sonarqube.swift.issues.swiftlint.SwiftLintSensor;
-import com.backelite.sonarqube.swift.issues.tailor.TailorRulesDefinition;
-import com.backelite.sonarqube.swift.lang.core.Swift;
-import com.google.common.collect.ImmutableList;
-import org.sonar.api.Properties;
-import org.sonar.api.Property;
-import org.sonar.api.SonarPlugin;
 import com.backelite.sonarqube.objectivec.ObjectiveCSquidSensor;
-import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
-import com.backelite.sonarqube.objectivec.coverage.CoberturaSensor;
 import com.backelite.sonarqube.objectivec.cpd.ObjectiveCCpdMapping;
-import com.backelite.sonarqube.objectivec.surefire.SurefireSensor;
 import com.backelite.sonarqube.objectivec.issues.ObjectiveCProfile;
 import com.backelite.sonarqube.objectivec.issues.fauxpas.FauxPasProfile;
 import com.backelite.sonarqube.objectivec.issues.fauxpas.FauxPasProfileImporter;
@@ -44,18 +28,33 @@ import com.backelite.sonarqube.objectivec.issues.oclint.OCLintProfile;
 import com.backelite.sonarqube.objectivec.issues.oclint.OCLintProfileImporter;
 import com.backelite.sonarqube.objectivec.issues.oclint.OCLintRulesDefinition;
 import com.backelite.sonarqube.objectivec.issues.oclint.OCLintSensor;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
+import com.backelite.sonarqube.objectivec.surefire.SurefireSensor;
+import com.backelite.sonarqube.swift.complexity.LizardSensor;
+import com.backelite.sonarqube.swift.coverage.CoberturaSensor;
+import com.backelite.sonarqube.swift.cpd.SwiftCpdMapping;
+import com.backelite.sonarqube.swift.issues.SwiftProfile;
+import com.backelite.sonarqube.swift.issues.swiftlint.SwiftLintProfile;
 import com.backelite.sonarqube.swift.issues.swiftlint.SwiftLintProfileImporter;
-import com.backelite.sonarqube.swift.issues.tailor.TailorProfileImporter;
-import com.backelite.sonarqube.swift.issues.tailor.TailorSensor;
-import com.backelite.sonarqube.swift.surefire.SwiftSurefireSensor;
+import com.backelite.sonarqube.swift.issues.swiftlint.SwiftLintRulesDefinition;
+import com.backelite.sonarqube.swift.issues.swiftlint.SwiftLintSensor;
 import com.backelite.sonarqube.swift.issues.tailor.TailorProfile;
+import com.backelite.sonarqube.swift.issues.tailor.TailorProfileImporter;
+import com.backelite.sonarqube.swift.issues.tailor.TailorRulesDefinition;
+import com.backelite.sonarqube.swift.issues.tailor.TailorSensor;
+import com.backelite.sonarqube.swift.lang.core.Swift;
+import com.backelite.sonarqube.swift.surefire.SwiftSurefireSensor;
+import com.google.common.collect.ImmutableList;
+import org.sonar.api.Properties;
+import org.sonar.api.Property;
+import org.sonar.api.SonarPlugin;
 
 import java.util.List;
 
 @Properties({
         @Property(
-                key = SwiftCoberturaSensor.REPORT_PATTERN_KEY,
-                defaultValue = SwiftCoberturaSensor.DEFAULT_REPORT_PATTERN,
+                key = CoberturaSensor.REPORT_PATTERN_KEY,
+                defaultValue = CoberturaSensor.DEFAULT_REPORT_PATTERN,
                 name = "Path to unit test coverage report(s)",
                 description = "Relative to projects' root. Ant patterns are accepted",
                 global = false,
@@ -89,14 +88,6 @@ import java.util.List;
                 global = false,
                 project = true),
 
-
-        @Property(
-                key = CoberturaSensor.REPORT_PATTERN_KEY,
-                defaultValue = CoberturaSensor.DEFAULT_REPORT_PATTERN,
-                name = "Path to unit test coverage report(s)",
-                description = "Relative to projects' root. Ant patterns are accepted",
-                global = false,
-                project = true),
         @Property(
                 key = OCLintSensor.REPORT_PATH_KEY,
                 defaultValue = OCLintSensor.DEFAULT_REPORT_PATH,
@@ -168,8 +159,9 @@ public class SwiftPlugin extends SonarPlugin {
 
                 // Surefire
                 SwiftSurefireSensor.class,
-                SwiftCoberturaSensor.class,
                 SurefireSensor.class,
+
+                // Coverage
                 CoberturaSensor.class,
 
                 // Complexity

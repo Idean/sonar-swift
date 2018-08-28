@@ -24,7 +24,7 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.config.Settings;
 import org.sonar.api.measures.Measure;
 import org.sonar.api.resources.Project;
-import com.backelite.sonarqube.swift.SwiftConstants;
+import com.backelite.sonarqube.commons.Constants;
 import com.backelite.sonarqube.swift.lang.core.Swift;
 
 import java.io.File;
@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class LizardSensor implements Sensor {
 
-    public static final String REPORT_PATH_KEY = SwiftConstants.PROPERTY_PREFIX
+    public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX
             + ".lizard.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard-report.xml";
 

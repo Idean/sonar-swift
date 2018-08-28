@@ -17,6 +17,7 @@
  */
 package com.backelite.sonarqube.objectivec.issues.fauxpas;
 
+import com.backelite.sonarqube.commons.Constants;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.Logger;
@@ -33,7 +34,7 @@ import java.io.File;
 
 public class FauxPasSensor implements Sensor {
 
-    public static final String REPORT_PATH_KEY = ObjectiveCConstants.PROPERTY_PREFIX
+    public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX
             + ".fauxpas.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/*fauxpas.json";
 

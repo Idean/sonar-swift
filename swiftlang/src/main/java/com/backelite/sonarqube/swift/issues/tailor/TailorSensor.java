@@ -19,7 +19,7 @@ package com.backelite.sonarqube.swift.issues.tailor;
 
 import java.io.File;
 
-import com.backelite.sonarqube.swift.SwiftConstants;
+import com.backelite.sonarqube.commons.Constants;
 import com.backelite.sonarqube.swift.lang.core.Swift;
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ import org.sonar.api.resources.Project;
 
 public class TailorSensor implements Sensor {
 
-	public static final String REPORT_PATH_KEY = SwiftConstants.PROPERTY_PREFIX + ".tailor.report";
+	public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX + ".tailor.report";
 	public static final String DEFAULT_REPORT_PATH = "sonar-reports/*tailor.txt";
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(TailorSensor.class);
