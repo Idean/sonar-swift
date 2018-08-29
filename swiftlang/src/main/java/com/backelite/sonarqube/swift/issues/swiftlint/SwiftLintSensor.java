@@ -22,12 +22,12 @@ import com.backelite.sonarqube.swift.lang.core.Swift;
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
-import org.sonar.api.resources.Project;
 
 import java.io.File;
 
@@ -47,21 +47,6 @@ public class SwiftLintSensor implements Sensor {
         this.conf = config;
         this.fileSystem = fileSystem;
         this.resourcePerspectives = resourcePerspectives;
-    }
-
-    @Override
-    public boolean shouldExecuteOnProject(final Project project) {
-
-        return project.isRoot() && fileSystem.languages().contains(Swift.KEY);
-    }
-
-    @Override
-    public void analyse(Project module, SensorContext context) {
-
-        final String projectBaseDir = fileSystem.baseDir().getAbsolutePath();
-
-        SwiftLintReportParser parser = new SwiftLintReportParser(module, context, resourcePerspectives, fileSystem);
-        parseReportIn(projectBaseDir, parser);
     }
 
     private void parseReportIn(final String baseDir, final SwiftLintReportParser parser) {
@@ -88,4 +73,20 @@ public class SwiftLintSensor implements Sensor {
         return reportPath;
     }
 
+    @Override
+    public void describe(SensorDescriptor descriptor) {
+        descriptor
+                .onlyOnLanguage(Swift.KEY)
+                .name("SwiftLint")
+                .onlyOnFileType(InputFile.Type.MAIN);
+    }
+
+    @Override
+    public void execute(org.sonar.api.batch.sensor.SensorContext context) {
+
+        final String projectBaseDir = fileSystem.baseDir().getAbsolutePath();
+
+        SwiftLintReportParser parser = new SwiftLintReportParser(context, resourcePerspectives, fileSystem);
+        parseReportIn(projectBaseDir, parser);
+    }
 }

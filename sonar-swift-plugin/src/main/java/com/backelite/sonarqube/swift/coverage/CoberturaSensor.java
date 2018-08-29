@@ -19,13 +19,13 @@ package com.backelite.sonarqube.swift.coverage;
 
 
 import com.backelite.sonarqube.commons.Constants;
-import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
-import com.backelite.sonarqube.swift.lang.core.Swift;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
@@ -46,25 +46,35 @@ public class CoberturaSensor implements Sensor {
     private final PathResolver pathResolver;
     private Project project;
 
-    public CoberturaSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings) {
+    public CoberturaSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings, final Project project) {
 
         this.settings = settings;
         this.fileSystem = fileSystem;
         this.pathResolver = pathResolver;
+        this.project = project;
 
         reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN, REPORT_DIRECTORY_KEY);
     }
 
-    @Override
-    public boolean shouldExecuteOnProject(final Project project) {
-
-        this.project = project;
-
-        return fileSystem.languages().contains(Swift.KEY) || fileSystem.languages().contains(ObjectiveC.KEY);
+    private String getRootDirectory(Project project) {
+        final String projectBaseDir = fileSystem.baseDir().getPath();
+        if (project.isRoot()) {
+            return projectBaseDir;
+        } else {
+            final String modulePath = project.path();
+            return projectBaseDir.substring(0, projectBaseDir.length() - modulePath.length());
+        }
     }
 
     @Override
-    public void analyse(final Project project, final SensorContext context) {
+    public void describe(SensorDescriptor descriptor) {
+        descriptor
+                .name("Cobertura")
+                .onlyOnFileType(InputFile.Type.MAIN);
+    }
+
+    @Override
+    public void execute(SensorContext context) {
 
         final String projectBaseDir = fileSystem.baseDir().getPath();
         LOGGER.info("Analyzing directory: {}", projectBaseDir);
@@ -83,15 +93,4 @@ public class CoberturaSensor implements Sensor {
             CoberturaReportParser.parseReport(report, fileSystem, project, context);
         }
     }
-
-    private String getRootDirectory(Project project) {
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-        if (project.isRoot()) {
-            return projectBaseDir;
-        } else {
-            final String modulePath = project.path();
-            return projectBaseDir.substring(0, projectBaseDir.length() - modulePath.length());
-        }
-    }
-
 }

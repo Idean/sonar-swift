@@ -18,19 +18,21 @@
 package com.backelite.sonarqube.swift.coverage;
 
 
+import com.backelite.sonarqube.commons.MeasureUtil;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputComponent;
 import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.measures.CoverageMeasuresBuilder;
 import org.sonar.api.measures.Measure;
+import org.sonar.api.measures.Metric;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Resource;
 import org.sonar.api.utils.ParsingUtils;
 import org.sonar.api.utils.StaxParser;
 import org.sonar.api.utils.XmlParserException;
@@ -127,22 +129,20 @@ public final class CoberturaReportParser {
                 if (inputFile == null) {
                     LOGGER.warn("file not included in sonar {}", filePath);
                     continue;
-                }
+                } else {
 
-                Resource resource = context.getResource(inputFile);
-                if (resourceExists(resource)) {
                     for (Measure measure : entry.getValue().createMeasures()) {
-                        context.saveMeasure(resource, measure);
+                        if (measure.getValue() != null && measure.getMetric() != null) {
+                            MeasureUtil.saveMeasure(context, inputFile, (Metric<Integer>) measure.getMetric(), measure.getValue().intValue());
+                        }
                     }
                 }
+
                 LOGGER.info("Successfully collected measures for file {}", file.getPath());
             }
         }
     }
 
-    private boolean resourceExists(Resource file) {
-        return context.getResource(file) != null;
-    }
 
     private String getAdjustedPathIfProjectIsModule(String filePath) {
         if (project.isModule()) {

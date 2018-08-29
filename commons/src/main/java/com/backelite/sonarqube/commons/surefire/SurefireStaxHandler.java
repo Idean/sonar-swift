@@ -121,7 +121,7 @@ public class SurefireStaxHandler implements XmlStreamHandler {
             if (testSuiteEvent.compareTo(SMEvent.START_ELEMENT) == 0) {
                 String testSuiteClassName = testSuite.getAttrValue("name");
                 if (StringUtils.contains(testSuiteClassName, "$")) {
-                    // test suites for inner classes are ignored
+                    // Test suites for inner classes are ignored
                     return;
                 }
                 SMInputCursor testCase = testSuite.childCursor(new ElementFilter("testcase"));

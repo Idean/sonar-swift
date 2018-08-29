@@ -17,6 +17,7 @@
  */
 package com.backelite.sonarqube.objectivec;
 
+import com.backelite.sonarqube.commons.MeasureUtil;
 import com.backelite.sonarqube.objectivec.lang.ObjectiveCAstScanner;
 import com.backelite.sonarqube.objectivec.lang.ObjectiveCConfiguration;
 import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCGrammar;
@@ -25,19 +26,19 @@ import com.backelite.sonarqube.objectivec.lang.checks.CheckList;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
 import org.sonar.api.batch.rule.Checks;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Resource;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.squidbridge.AstScanner;
@@ -78,26 +79,6 @@ public class ObjectiveCSquidSensor implements Sensor {
         this.mainFilePredicates = fileSystem.predicates().and(fileSystem.predicates().hasLanguage(ObjectiveC.KEY), fileSystem.predicates().hasType(InputFile.Type.MAIN));
     }
 
-    public boolean shouldExecuteOnProject(Project project) {
-
-        return project.isRoot() && fileSystem.hasFiles(fileSystem.predicates().hasLanguage(ObjectiveC.KEY));
-
-    }
-
-    public void analyse(Project project, SensorContext context) {
-        this.project = project;
-        this.context = context;
-
-        List<SquidAstVisitor<ObjectiveCGrammar>> visitors = Lists.<SquidAstVisitor<ObjectiveCGrammar>>newArrayList(checks.all());
-        AstScanner<ObjectiveCGrammar> scanner = ObjectiveCAstScanner.create(createConfiguration(), visitors.toArray(new SquidAstVisitor[visitors.size()]));
-
-
-        scanner.scanFiles(ImmutableList.copyOf(fileSystem.files(mainFilePredicates)));
-
-        Collection<SourceCode> squidSourceFiles = scanner.getIndex().search(new QueryByType(SourceFile.class));
-        save(squidSourceFiles);
-    }
-
     private ObjectiveCConfiguration createConfiguration() {
 
         return new ObjectiveCConfiguration(fileSystem.encoding());
@@ -117,23 +98,22 @@ public class ObjectiveCSquidSensor implements Sensor {
     }
 
     private void saveMeasures(InputFile inputFile, SourceFile squidFile) {
-        context.saveMeasure(inputFile, CoreMetrics.FILES, squidFile.getDouble(ObjectiveCMetric.FILES));
-        context.saveMeasure(inputFile, CoreMetrics.LINES, squidFile.getDouble(ObjectiveCMetric.LINES));
-        context.saveMeasure(inputFile, CoreMetrics.NCLOC, squidFile.getDouble(ObjectiveCMetric.LINES_OF_CODE));
-        context.saveMeasure(inputFile, CoreMetrics.STATEMENTS, squidFile.getDouble(ObjectiveCMetric.STATEMENTS));
-        context.saveMeasure(inputFile, CoreMetrics.COMMENT_LINES, squidFile.getDouble(ObjectiveCMetric.COMMENT_LINES));
+        MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.FILES, squidFile.getInt(ObjectiveCMetric.FILES));
+        MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.LINES, squidFile.getInt(ObjectiveCMetric.LINES));
+        MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.NCLOC, squidFile.getInt(ObjectiveCMetric.LINES_OF_CODE));
+        MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.STATEMENTS, squidFile.getInt(ObjectiveCMetric.STATEMENTS));
+        MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.COMMENT_LINES, squidFile.getInt(ObjectiveCMetric.COMMENT_LINES));
     }
 
     private void saveIssues(InputFile inputFile, SourceFile squidFile) {
 
         Collection<CheckMessage> messages = squidFile.getCheckMessages();
 
-        Resource resource = context.getResource(inputFile);
 
-        if (messages != null && resource != null) {
+        if (inputFile != null) {
             for (CheckMessage message : messages) {
                 RuleKey ruleKey = checks.ruleKey((SquidCheck<ObjectiveCGrammar>) message.getCheck());
-                Issuable issuable = resourcePerspectives.as(Issuable.class, resource);
+                Issuable issuable = resourcePerspectives.as(Issuable.class, inputFile);
 
                 if (issuable != null) {
                     Issuable.IssueBuilder issueBuilder = issuable.newIssueBuilder()
@@ -157,4 +137,24 @@ public class ObjectiveCSquidSensor implements Sensor {
         return getClass().getSimpleName();
     }
 
+    @Override
+    public void describe(SensorDescriptor descriptor) {
+        descriptor
+                .onlyOnLanguage(ObjectiveC.KEY)
+                .name("Objective-C Squid")
+                .onlyOnFileType(InputFile.Type.MAIN);
+    }
+
+    @Override
+    public void execute(SensorContext context) {
+
+        List<SquidAstVisitor<ObjectiveCGrammar>> visitors = Lists.<SquidAstVisitor<ObjectiveCGrammar>>newArrayList(checks.all());
+        AstScanner<ObjectiveCGrammar> scanner = ObjectiveCAstScanner.create(createConfiguration(), visitors.toArray(new SquidAstVisitor[visitors.size()]));
+
+
+        scanner.scanFiles(ImmutableList.copyOf(fileSystem.files(mainFilePredicates)));
+
+        Collection<SourceCode> squidSourceFiles = scanner.getIndex().search(new QueryByType(SourceFile.class));
+        save(squidSourceFiles);
+    }
 }

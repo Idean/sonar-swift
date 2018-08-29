@@ -21,9 +21,11 @@ import com.backelite.sonarqube.commons.Constants;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
@@ -37,25 +39,13 @@ public final class OCLintSensor implements Sensor {
     private final Settings conf;
     private final FileSystem fileSystem;
     private final ResourcePerspectives resourcePerspectives;
+    private final Project project;
 
-    public OCLintSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
+    public OCLintSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives, final Project project) {
         this.conf = config;
         this.fileSystem = fileSystem;
         this.resourcePerspectives = resourcePerspectives;
-    }
-
-    public boolean shouldExecuteOnProject(final Project project) {
-
-        return project.isRoot() && fileSystem.languages().contains(ObjectiveC.KEY);
-
-    }
-
-    public void analyse(final Project project, final SensorContext context) {
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-        final OCLintParser parser = new OCLintParser(project, context, resourcePerspectives, fileSystem);
-
-        parseReportIn(projectBaseDir, parser);
-
+        this.project = project;
     }
 
     private void parseReportIn(final String baseDir, final OCLintParser parser) {
@@ -79,5 +69,21 @@ public final class OCLintSensor implements Sensor {
             reportPath = DEFAULT_REPORT_PATH;
         }
         return reportPath;
+    }
+
+    @Override
+    public void describe(SensorDescriptor descriptor) {
+        descriptor
+                .onlyOnLanguage(ObjectiveC.KEY)
+                .name("OCLint")
+                .onlyOnFileType(InputFile.Type.MAIN);
+    }
+
+    @Override
+    public void execute(SensorContext context) {
+        final String projectBaseDir = fileSystem.baseDir().getPath();
+        final OCLintParser parser = new OCLintParser(project, context, resourcePerspectives, fileSystem);
+
+        parseReportIn(projectBaseDir, parser);
     }
 }

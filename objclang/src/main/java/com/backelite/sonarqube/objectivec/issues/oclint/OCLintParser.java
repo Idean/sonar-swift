@@ -18,8 +18,8 @@
 package com.backelite.sonarqube.objectivec.issues.oclint;
 
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.resources.Project;
 import org.sonar.api.utils.StaxParser;

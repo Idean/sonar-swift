@@ -17,6 +17,8 @@
  */
 package com.backelite.sonarqube.swift;
 
+import com.backelite.sonarqube.commons.surefire.SurefireSensor;
+import com.backelite.sonarqube.commons.surefire.TestFileFinders;
 import com.backelite.sonarqube.objectivec.ObjectiveCSquidSensor;
 import com.backelite.sonarqube.objectivec.cpd.ObjectiveCCpdMapping;
 import com.backelite.sonarqube.objectivec.issues.ObjectiveCProfile;
@@ -29,7 +31,7 @@ import com.backelite.sonarqube.objectivec.issues.oclint.OCLintProfileImporter;
 import com.backelite.sonarqube.objectivec.issues.oclint.OCLintRulesDefinition;
 import com.backelite.sonarqube.objectivec.issues.oclint.OCLintSensor;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
-import com.backelite.sonarqube.objectivec.surefire.ObjectiveCSurefireSensor;
+import com.backelite.sonarqube.objectivec.surefire.ObjectiveCTestFileFinder;
 import com.backelite.sonarqube.swift.complexity.LizardSensor;
 import com.backelite.sonarqube.swift.coverage.CoberturaSensor;
 import com.backelite.sonarqube.swift.cpd.SwiftCpdMapping;
@@ -43,7 +45,7 @@ import com.backelite.sonarqube.swift.issues.tailor.TailorProfileImporter;
 import com.backelite.sonarqube.swift.issues.tailor.TailorRulesDefinition;
 import com.backelite.sonarqube.swift.issues.tailor.TailorSensor;
 import com.backelite.sonarqube.swift.lang.core.Swift;
-import com.backelite.sonarqube.swift.surefire.SwiftSurefireSensor;
+import com.backelite.sonarqube.swift.surefire.SwiftTestFileFinder;
 import com.google.common.collect.ImmutableList;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
@@ -81,8 +83,8 @@ import java.util.List;
                 global = false,
                 project = true),
         @Property(
-                key = SwiftSurefireSensor.REPORTS_PATH_KEY,
-                defaultValue = SwiftSurefireSensor.DEFAULT_REPORTS_PATH,
+                key = SurefireSensor.REPORTS_PATH_KEY,
+                defaultValue = SurefireSensor.DEFAULT_REPORTS_PATH,
                 name = "Path to surefire JUnit reports (unit tests)",
                 description = "Relative to projects' root.",
                 global = false,
@@ -108,6 +110,10 @@ public class SwiftPlugin extends SonarPlugin {
 
     @Override
     public List getExtensions() {
+
+        // Add test finders for each language
+        TestFileFinders.getInstance().addFinder(new SwiftTestFileFinder());
+        TestFileFinders.getInstance().addFinder(new ObjectiveCTestFileFinder());
 
 
         return ImmutableList.of(
@@ -158,8 +164,7 @@ public class SwiftPlugin extends SonarPlugin {
                 ObjectiveCSquidSensor.class,
 
                 // Surefire
-                SwiftSurefireSensor.class,
-                ObjectiveCSurefireSensor.class,
+                SurefireSensor.class,
 
                 // Coverage
                 CoberturaSensor.class,

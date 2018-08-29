@@ -20,12 +20,13 @@ package com.backelite.sonarqube.commons.surefire;
 import com.backelite.sonarqube.commons.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
-import org.sonar.api.resources.Project;
 import org.sonar.api.scan.filesystem.PathResolver;
 
 import java.io.File;
@@ -33,17 +34,18 @@ import java.io.File;
 /**
  * Created by gillesgrousset on 28/08/2018.
  */
-public abstract class BaseSurefireSensor implements Sensor {
+public class SurefireSensor implements Sensor {
 
     public static final String REPORTS_PATH_KEY = Constants.PROPERTY_PREFIX + ".surefire.junit.reportsPath";
     public static final String DEFAULT_REPORTS_PATH = "sonar-reports/";
-    protected static final Logger LOGGER = LoggerFactory.getLogger(BaseSurefireSensor.class);
-    protected final FileSystem fileSystem;
-    protected final PathResolver pathResolver;
-    protected final ResourcePerspectives resourcePerspectives;
-    protected final Settings settings;
 
-    protected BaseSurefireSensor(FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, Settings settings) {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
+    private final FileSystem fileSystem;
+    private final PathResolver pathResolver;
+    private final ResourcePerspectives resourcePerspectives;
+    private final Settings settings;
+
+    public SurefireSensor(FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, Settings settings) {
         this.fileSystem = fileSystem;
         this.pathResolver = pathResolver;
         this.resourcePerspectives = resourcePerspectives;
@@ -51,10 +53,14 @@ public abstract class BaseSurefireSensor implements Sensor {
     }
 
     @Override
-    public abstract boolean shouldExecuteOnProject(Project project);
+    public void describe(SensorDescriptor descriptor) {
+        descriptor
+                .name("Surefire")
+                .onlyOnFileType(InputFile.Type.MAIN);
+    }
 
     @Override
-    public void analyse(Project project, SensorContext context) {
+    public void execute(SensorContext context) {
 
         String path = this.reportPath();
         File reportsDir = pathResolver.relativeFile(fileSystem.baseDir(), path);
@@ -69,7 +75,10 @@ public abstract class BaseSurefireSensor implements Sensor {
         collect(context, reportsDir);
     }
 
-    protected abstract void collect(SensorContext context, File reportsDir);
+    protected  void collect(SensorContext context, File reportsDir) {
+        LOGGER.info("parsing {}", reportsDir);
+        new SurefireParser(fileSystem, resourcePerspectives, context).collect(reportsDir);
+    }
 
     protected String reportPath() {
         String reportPath = settings.getString(REPORTS_PATH_KEY);

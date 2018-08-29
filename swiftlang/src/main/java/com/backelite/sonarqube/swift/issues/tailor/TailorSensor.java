@@ -22,12 +22,13 @@ import com.backelite.sonarqube.swift.lang.core.Swift;
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
-import org.sonar.api.resources.Project;
 
 import java.io.File;
 
@@ -46,26 +47,10 @@ public class TailorSensor implements Sensor {
     private final FileSystem fileSystem;
     private final ResourcePerspectives resourcePerspectives;
 
-    public TailorSensor(final FileSystem fileSystem, final Settings config,
-                        final ResourcePerspectives resourcePerspectives) {
+    public TailorSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
         this.conf = config;
         this.fileSystem = fileSystem;
         this.resourcePerspectives = resourcePerspectives;
-    }
-
-    @Override
-    public boolean shouldExecuteOnProject(final Project project) {
-
-        return project.isRoot() && this.fileSystem.languages().contains(Swift.KEY);
-    }
-
-    @Override
-    public void analyse(final Project module, final SensorContext context) {
-
-        final String projectBaseDir = this.fileSystem.baseDir().getAbsolutePath();
-
-        TailorReportParser parser = new TailorReportParser(module, context, this.resourcePerspectives, this.fileSystem);
-        parseReportIn(projectBaseDir, parser);
     }
 
     private void parseReportIn(final String baseDir, final TailorReportParser parser) {
@@ -92,4 +77,21 @@ public class TailorSensor implements Sensor {
         return reportPath;
     }
 
+    @Override
+    public void describe(SensorDescriptor descriptor) {
+        descriptor
+                .onlyOnLanguage(Swift.KEY)
+                .name("Tailor")
+                .onlyOnFileType(InputFile.Type.MAIN);
+    }
+
+    @Override
+    public void execute(SensorContext context) {
+
+        final String projectBaseDir = this.fileSystem.baseDir().getAbsolutePath();
+
+        TailorReportParser parser = new TailorReportParser(context, this.resourcePerspectives, this.fileSystem);
+        parseReportIn(projectBaseDir, parser);
+
+    }
 }

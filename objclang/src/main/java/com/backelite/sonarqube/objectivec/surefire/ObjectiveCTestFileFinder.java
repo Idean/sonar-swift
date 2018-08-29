@@ -17,28 +17,26 @@
  */
 package com.backelite.sonarqube.objectivec.surefire;
 
-import com.backelite.sonarqube.commons.surefire.BaseSurefireParser;
+import com.backelite.sonarqube.commons.surefire.TestFileFinder;
 import com.google.common.collect.ImmutableList;
-import org.sonar.api.batch.SensorContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.resources.Resource;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by gillesgrousset on 06/01/15.
+ * Created by gillesgrousset on 28/08/2018.
  */
-public class ObjectiveCSurefireParser extends BaseSurefireParser {
+public class ObjectiveCTestFileFinder implements TestFileFinder {
 
-    public ObjectiveCSurefireParser(FileSystem fileSystem, ResourcePerspectives resourcePerspectives, SensorContext context) {
-        super(fileSystem, resourcePerspectives, context);
-    }
+    private static final Logger LOGGER = LoggerFactory.getLogger(ObjectiveCTestFileFinder.class);
 
     @Nullable
-    public Resource getUnitTestResource(String classname) {
+    @Override
+    public InputFile getUnitTestResource(FileSystem fileSystem, String classname) {
 
         String fileName = classname.replace('.', '/') + ".m";
 
@@ -64,7 +62,6 @@ public class ObjectiveCSurefireParser extends BaseSurefireParser {
             }
         }
 
-        return inputFile == null ? null : context.getResource(inputFile);
+        return inputFile;
     }
-
 }

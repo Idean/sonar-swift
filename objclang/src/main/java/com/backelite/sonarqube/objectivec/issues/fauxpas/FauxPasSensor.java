@@ -22,9 +22,11 @@ import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.Sensor;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 import org.sonar.api.resources.Project;
@@ -42,26 +44,13 @@ public class FauxPasSensor implements Sensor {
     private final Settings conf;
     private final FileSystem fileSystem;
     private final ResourcePerspectives resourcePerspectives;
+    private final Project project;
 
-    public FauxPasSensor(final FileSystem moduleFileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
+    public FauxPasSensor(final FileSystem moduleFileSystem, final Settings config, final ResourcePerspectives resourcePerspectives, final Project project) {
         this.conf = config;
         this.fileSystem = moduleFileSystem;
         this.resourcePerspectives = resourcePerspectives;
-    }
-
-    @Override
-    public boolean shouldExecuteOnProject(final Project project) {
-
-        return project.isRoot() && fileSystem.languages().contains(ObjectiveC.KEY);
-    }
-
-    @Override
-    public void analyse(Project module, SensorContext context) {
-
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-
-        FauxPasReportParser parser = new FauxPasReportParser(module, context, resourcePerspectives, fileSystem);
-        parseReportIn(projectBaseDir, parser);
+        this.project = project;
     }
 
 
@@ -89,4 +78,20 @@ public class FauxPasSensor implements Sensor {
         return reportPath;
     }
 
+    @Override
+    public void describe(SensorDescriptor descriptor) {
+        descriptor
+                .onlyOnLanguage(ObjectiveC.KEY)
+                .name("FauxPas")
+                .onlyOnFileType(InputFile.Type.MAIN);
+    }
+
+    @Override
+    public void execute(SensorContext context) {
+
+        final String projectBaseDir = fileSystem.baseDir().getPath();
+
+        FauxPasReportParser parser = new FauxPasReportParser(project, context, resourcePerspectives, fileSystem);
+        parseReportIn(projectBaseDir, parser);
+    }
 }

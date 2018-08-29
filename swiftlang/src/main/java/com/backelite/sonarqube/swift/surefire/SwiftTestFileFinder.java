@@ -17,28 +17,27 @@
  */
 package com.backelite.sonarqube.swift.surefire;
 
-import com.backelite.sonarqube.commons.surefire.BaseSurefireParser;
+import com.backelite.sonarqube.commons.surefire.TestFileFinder;
 import com.google.common.collect.ImmutableList;
-import org.sonar.api.batch.SensorContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.resources.Resource;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * Created by gillesgrousset on 28/08/2018.
+ */
+public class SwiftTestFileFinder implements TestFileFinder {
 
-public final class SwiftSurefireParser extends BaseSurefireParser {
-
-
-    public SwiftSurefireParser(FileSystem fileSystem, ResourcePerspectives perspectives, SensorContext context) {
-        super(fileSystem, perspectives, context);
-    }
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftTestFileFinder.class);
 
     @Nullable
-    public Resource getUnitTestResource(String classname) {
+    @Override
+    public InputFile getUnitTestResource(FileSystem fileSystem, String classname) {
+
         String fileName = classname.replace('.', '/') + ".swift";
         String wildcardFileName = classname.replace(".", "/**/") + ".swift";
 
@@ -64,7 +63,6 @@ public final class SwiftSurefireParser extends BaseSurefireParser {
             }
         }
 
-        return inputFile == null ? null : context.getResource(inputFile);
+        return inputFile;
     }
-
 }

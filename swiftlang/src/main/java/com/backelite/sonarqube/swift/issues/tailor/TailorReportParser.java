@@ -20,13 +20,12 @@ package com.backelite.sonarqube.swift.issues.tailor;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
-import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
 
 import java.io.*;
@@ -41,14 +40,11 @@ public class TailorReportParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TailorReportParser.class);
 
-    private final Project project;
     private final SensorContext context;
     private final ResourcePerspectives resourcePerspectives;
     private final FileSystem fileSystem;
 
-    public TailorReportParser(final Project project, final SensorContext context,
-                              final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
-        this.project = project;
+    public TailorReportParser(final SensorContext context, final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
         this.context = context;
         this.resourcePerspectives = resourcePerspectives;
         this.fileSystem = fileSystem;

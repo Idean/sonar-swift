@@ -20,9 +20,9 @@ package com.backelite.sonarqube.objectivec.issues.oclint;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
@@ -105,7 +105,7 @@ final class OCLintXMLStreamHandler implements XmlStreamHandler {
             return false;
         }
 
-        return context.getResource(file) != null;
+        return file.file().exists();
     }
 
 }
