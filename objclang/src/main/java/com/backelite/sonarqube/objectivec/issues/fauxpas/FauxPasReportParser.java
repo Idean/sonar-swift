@@ -25,11 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
-import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
 
 import java.io.File;
@@ -39,14 +37,10 @@ import java.io.FileReader;
 public class FauxPasReportParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FauxPasReportParser.class);
-    private final Project project;
-    private final SensorContext context;
     private final ResourcePerspectives resourcePerspectives;
     private final FileSystem fileSystem;
 
-    public FauxPasReportParser(final Project p, final SensorContext c, final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
-        project = p;
-        context = c;
+    public FauxPasReportParser(final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
         this.resourcePerspectives = resourcePerspectives;
         this.fileSystem = fileSystem;
     }

@@ -38,8 +38,6 @@ import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.resources.Project;
-import org.sonar.api.resources.Resource;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.squidbridge.AstScanner;
@@ -66,12 +64,12 @@ public class SwiftSquidSensor implements Sensor {
     private final Checks<SquidCheck<SwiftGrammar>> checks;
     private final FilePredicate mainFilePredicates;
 
-    private Project project;
     private SensorContext context;
     private AstScanner<SwiftGrammar> scanner;
 
-    public SwiftSquidSensor(RulesProfile profile, FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
+    public SwiftSquidSensor(SensorContext context, FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
 
+        this.context = context;
         this.fileSystem = fileSystem;
         this.pathResolver = pathResolver;
         this.resourcePerspectives = resourcePerspectives;

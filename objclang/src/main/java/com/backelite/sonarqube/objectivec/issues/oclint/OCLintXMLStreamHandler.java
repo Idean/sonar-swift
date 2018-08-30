@@ -22,11 +22,9 @@ import org.codehaus.staxmate.in.SMInputCursor;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.issue.Issuable;
 import org.sonar.api.issue.Issue;
-import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.utils.StaxParser.XmlStreamHandler;
 
@@ -35,14 +33,10 @@ import java.io.File;
 
 final class OCLintXMLStreamHandler implements XmlStreamHandler {
     private static final int PMD_MINIMUM_PRIORITY = 5;
-    private final Project project;
-    private final SensorContext context;
     private final ResourcePerspectives resourcePerspectives;
     private final FileSystem fileSystem;
 
-    public OCLintXMLStreamHandler(final Project p, final SensorContext c, final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
-        project = p;
-        context = c;
+    public OCLintXMLStreamHandler(final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
         this.resourcePerspectives = resourcePerspectives;
         this.fileSystem = fileSystem;
     }

@@ -28,7 +28,6 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
-import org.sonar.api.resources.Project;
 
 import java.io.File;
 
@@ -39,13 +38,11 @@ public final class OCLintSensor implements Sensor {
     private final Settings conf;
     private final FileSystem fileSystem;
     private final ResourcePerspectives resourcePerspectives;
-    private final Project project;
 
-    public OCLintSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives, final Project project) {
+    public OCLintSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
         this.conf = config;
         this.fileSystem = fileSystem;
         this.resourcePerspectives = resourcePerspectives;
-        this.project = project;
     }
 
     private void parseReportIn(final String baseDir, final OCLintParser parser) {
@@ -82,7 +79,7 @@ public final class OCLintSensor implements Sensor {
     @Override
     public void execute(SensorContext context) {
         final String projectBaseDir = fileSystem.baseDir().getPath();
-        final OCLintParser parser = new OCLintParser(project, context, resourcePerspectives, fileSystem);
+        final OCLintParser parser = new OCLintParser(resourcePerspectives, fileSystem);
 
         parseReportIn(projectBaseDir, parser);
     }

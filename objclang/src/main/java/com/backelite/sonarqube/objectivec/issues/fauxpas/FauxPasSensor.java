@@ -29,7 +29,6 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
-import org.sonar.api.resources.Project;
 
 import java.io.File;
 
@@ -44,13 +43,11 @@ public class FauxPasSensor implements Sensor {
     private final Settings conf;
     private final FileSystem fileSystem;
     private final ResourcePerspectives resourcePerspectives;
-    private final Project project;
 
-    public FauxPasSensor(final FileSystem moduleFileSystem, final Settings config, final ResourcePerspectives resourcePerspectives, final Project project) {
+    public FauxPasSensor(final FileSystem moduleFileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
         this.conf = config;
         this.fileSystem = moduleFileSystem;
         this.resourcePerspectives = resourcePerspectives;
-        this.project = project;
     }
 
 
@@ -91,7 +88,7 @@ public class FauxPasSensor implements Sensor {
 
         final String projectBaseDir = fileSystem.baseDir().getPath();
 
-        FauxPasReportParser parser = new FauxPasReportParser(project, context, resourcePerspectives, fileSystem);
+        FauxPasReportParser parser = new FauxPasReportParser(resourcePerspectives, fileSystem);
         parseReportIn(projectBaseDir, parser);
     }
 }

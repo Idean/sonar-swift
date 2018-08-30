@@ -66,12 +66,12 @@ public class ObjectiveCSquidSensor implements Sensor {
     private final FilePredicate mainFilePredicates;
 
 
-    private Project project;
     private SensorContext context;
     private AstScanner<ObjectiveCGrammar> scanner;
 
-    public ObjectiveCSquidSensor(RulesProfile profile, FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
+    public ObjectiveCSquidSensor(SensorContext context, FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
 
+        this.context = context;
         this.fileSystem = fileSystem;
         this.pathResolver = pathResolver;
         this.resourcePerspectives = resourcePerspectives;

@@ -19,9 +19,7 @@ package com.backelite.sonarqube.objectivec.issues.oclint;
 
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.resources.Project;
 import org.sonar.api.utils.StaxParser;
 
 import javax.xml.stream.XMLStreamException;
@@ -32,14 +30,10 @@ import java.io.InputStream;
 
 final class OCLintParser {
 
-    private final Project project;
-    private final SensorContext context;
     private final ResourcePerspectives resourcePerspectives;
     private final FileSystem fileSystem;
 
-    public OCLintParser(final Project p, final SensorContext c, final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
-        project = p;
-        context = c;
+    public OCLintParser(final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
         this.resourcePerspectives = resourcePerspectives;
         this.fileSystem = fileSystem;
     }
@@ -60,7 +54,7 @@ final class OCLintParser {
 
         try {
             final StaxParser parser = new StaxParser(
-                    new OCLintXMLStreamHandler(project, context, resourcePerspectives, fileSystem));
+                    new OCLintXMLStreamHandler(resourcePerspectives, fileSystem));
             parser.parse(inputStream);
         } catch (final XMLStreamException e) {
             LoggerFactory.getLogger(getClass()).error(
