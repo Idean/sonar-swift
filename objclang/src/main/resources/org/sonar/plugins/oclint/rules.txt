@@ -563,3 +563,11 @@ Summary: Name: missing abstract method implementation
 Severity: 1
 Category: OCLint
 
+compiler warning
+----------------
+
+Summary: Name: compiler warning
+
+Severity: 3
+Category: OCLint
+
