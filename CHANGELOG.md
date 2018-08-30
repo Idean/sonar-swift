@@ -1,5 +1,9 @@
 # _SonarQube Plugin for Swift_ Changelog
 
+
+##  v0.4.1
+- Fixed NPE on SquidSensor
+
 ##  v0.4.0
 - Objective-C support (merged from our [Objective-C plugin](https://github.com/Backelite/sonar-objective-c)). When upgrading to this version you must install OCLint (brew install oclint). If you used our Objective-C plugin, you must uninstall it (remove it from /extensions/plugins directory).
 
