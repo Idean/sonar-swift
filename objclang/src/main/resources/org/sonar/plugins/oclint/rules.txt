@@ -43,6 +43,14 @@ Summary: Name: broken oddness check
 Severity: 3
 Category: OCLint
 
+compiler warning
+----------
+
+Summary: Name: compiler warning
+
+Severity: 3
+Category: OCLint
+
 collapsible if statements
 ----------
 
