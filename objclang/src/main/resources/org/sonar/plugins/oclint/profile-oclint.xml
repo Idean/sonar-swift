@@ -29,6 +29,10 @@
         </rule>
         <rule>
             <repositoryKey>OCLint</repositoryKey>
+            <key>compiler warning</key>
+        </rule>
+        <rule>
+            <repositoryKey>OCLint</repositoryKey>
             <key>constant conditional operator</key>
         </rule>
         <rule>
