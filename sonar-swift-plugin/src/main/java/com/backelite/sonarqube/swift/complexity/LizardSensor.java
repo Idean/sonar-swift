@@ -18,6 +18,8 @@
 package com.backelite.sonarqube.swift.complexity;
 
 import com.backelite.sonarqube.commons.Constants;
+import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
+import com.backelite.sonarqube.swift.lang.core.Swift;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -62,6 +64,7 @@ public class LizardSensor implements Sensor {
     @Override
     public void describe(SensorDescriptor descriptor) {
         descriptor
+                .onlyOnLanguages(ObjectiveC.KEY, Swift.KEY)
                 .name("Lizard")
                 .onlyOnFileType(InputFile.Type.MAIN);
     }
