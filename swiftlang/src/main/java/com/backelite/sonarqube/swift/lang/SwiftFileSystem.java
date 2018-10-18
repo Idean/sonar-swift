@@ -18,7 +18,7 @@
 package com.backelite.sonarqube.swift.lang;
 
 import com.backelite.sonarqube.swift.lang.core.Swift;
-import org.sonar.api.batch.BatchSide;
+import org.sonar.api.batch.ScannerSide;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@BatchSide
+@ScannerSide
 public class SwiftFileSystem {
 
     private final FileSystem fileSystem;

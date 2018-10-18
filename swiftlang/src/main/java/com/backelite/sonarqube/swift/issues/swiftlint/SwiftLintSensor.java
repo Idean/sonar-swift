@@ -22,35 +22,26 @@ import com.backelite.sonarqube.swift.lang.core.Swift;
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.Sensor;
+import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.config.Settings;
 
 import java.io.File;
 
 
 public class SwiftLintSensor implements Sensor {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftLintSensor.class);
     public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX + ".swiftlint.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/*swiftlint.txt";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftLintSensor.class);
+    private final SensorContext context;
 
-    private final Settings conf;
-    private final FileSystem fileSystem;
-    private final ResourcePerspectives resourcePerspectives;
-
-    public SwiftLintSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
-        this.conf = config;
-        this.fileSystem = fileSystem;
-        this.resourcePerspectives = resourcePerspectives;
+    public SwiftLintSensor(final SensorContext context) {
+        this.context = context;
     }
 
     private void parseReportIn(final String baseDir, final SwiftLintReportParser parser) {
-
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setIncludes(new String[]{reportPath()});
         scanner.setBasedir(baseDir);
@@ -62,31 +53,27 @@ public class SwiftLintSensor implements Sensor {
             LOGGER.info("Processing SwiftLint report {}", filename);
             parser.parseReport(new File(filename));
         }
-
     }
 
     private String reportPath() {
-        String reportPath = conf.getString(REPORT_PATH_KEY);
-        if (reportPath == null) {
-            reportPath = DEFAULT_REPORT_PATH;
-        }
-        return reportPath;
+        return context.config()
+            .get(REPORT_PATH_KEY)
+            .orElse(DEFAULT_REPORT_PATH);
     }
 
     @Override
     public void describe(SensorDescriptor descriptor) {
         descriptor
-                .onlyOnLanguage(Swift.KEY)
-                .name("SwiftLint")
-                .onlyOnFileType(InputFile.Type.MAIN);
+            .onlyOnLanguage(Swift.KEY)
+            .name("SwiftLint")
+            .onlyOnFileType(InputFile.Type.MAIN);
     }
 
     @Override
-    public void execute(org.sonar.api.batch.sensor.SensorContext context) {
+    public void execute(SensorContext context) {
+        final String projectBaseDir = context.fileSystem().baseDir().getAbsolutePath();
 
-        final String projectBaseDir = fileSystem.baseDir().getAbsolutePath();
-
-        SwiftLintReportParser parser = new SwiftLintReportParser(context, resourcePerspectives, fileSystem);
+        SwiftLintReportParser parser = new SwiftLintReportParser(context);
         parseReportIn(projectBaseDir, parser);
     }
 }

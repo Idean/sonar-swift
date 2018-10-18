@@ -17,10 +17,13 @@
  */
 package com.backelite.sonarqube.swift.complexity;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.batch.fs.FilePredicate;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.fs.InputModule;
+import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.measures.RangeDistributionBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,12 +37,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class LizardReportParser {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(LizardReportParser.class);
     private static final String MEASURE = "measure";
     private static final String MEASURE_TYPE = "type";
     private static final String MEASURE_ITEM = "item";
@@ -49,17 +50,18 @@ public class LizardReportParser {
     private static final String VALUE = "value";
     private static final int CYCLOMATIC_COMPLEXITY_INDEX = 2;
     private static final int FUNCTIONS_INDEX = 3;
-    private final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12, 20, 30};
-    private final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
+    private final SensorContext context;
 
-    public Map<String, List<Measure>> parseReport(final File xmlFile) {
-        Map<String, List<Measure>> result = null;
+    public LizardReportParser(final SensorContext context) {
+        this.context = context;
+    }
+
+    public void parseReport(final File xmlFile) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(xmlFile);
-            result = parseFile(document);
+            parseFile(document);
         } catch (final FileNotFoundException e) {
             LoggerFactory.getLogger(getClass()).error("Lizard Report not found {}", xmlFile, e);
         } catch (final IOException e) {
@@ -69,126 +71,116 @@ public class LizardReportParser {
         } catch (final SAXException e) {
             LoggerFactory.getLogger(getClass()).error("Error processing file named {}", xmlFile, e);
         }
-
-        return result;
     }
 
-    private Map<String, List<Measure>> parseFile(Document document) {
-        final Map<String, List<Measure>> reportMeasures = new HashMap<String, List<Measure>>();
-        final List<SwiftFunction> functions = new ArrayList<SwiftFunction>();
-
+    private void parseFile(Document document) {
         NodeList nodeList = document.getElementsByTagName(MEASURE);
-
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
-
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
-                if (element.getAttribute(MEASURE_TYPE).equalsIgnoreCase(FILE_MEASURE)) {
-                    NodeList itemList = element.getElementsByTagName(MEASURE_ITEM);
-                    addComplexityFileMeasures(itemList, reportMeasures);
-                } else if (element.getAttribute(MEASURE_TYPE).equalsIgnoreCase(FUNCTION_MEASURE)) {
-                    NodeList itemList = element.getElementsByTagName(MEASURE_ITEM);
-                    collectFunctions(itemList, functions);
-                }
-            }
-        }
-
-        addComplexityFunctionMeasures(reportMeasures, functions);
-
-        return reportMeasures;
-    }
-
-    private void addComplexityFileMeasures(NodeList itemList, Map<String, List<Measure>> reportMeasures) {
-        for (int i = 0; i < itemList.getLength(); i++) {
-            Node item = itemList.item(i);
-
-            if (item.getNodeType() == Node.ELEMENT_NODE) {
-                Element itemElement = (Element) item;
-                String fileName = itemElement.getAttribute(NAME);
-                NodeList values = itemElement.getElementsByTagName(VALUE);
-                int complexity = Integer.parseInt(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
-                double fileComplexity = Double.parseDouble(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
-                int numberOfFunctions = Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
-
-                reportMeasures.put(fileName, buildMeasureList(complexity, fileComplexity, numberOfFunctions));
+                NodeList nl = element.getElementsByTagName(MEASURE_ITEM);
+                parseMeasure(element.getAttribute(MEASURE_TYPE), nl);
             }
         }
     }
 
-    private List<Measure> buildMeasureList(int complexity, double fileComplexity, int numberOfFunctions) {
-        List<Measure> list = new ArrayList<Measure>();
-        list.add(new Measure(CoreMetrics.COMPLEXITY).setIntValue(complexity));
-        list.add(new Measure(CoreMetrics.FUNCTIONS).setIntValue(numberOfFunctions));
-        RangeDistributionBuilder complexityDistribution = new RangeDistributionBuilder(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, FILES_DISTRIB_BOTTOM_LIMITS);
-        complexityDistribution.add(fileComplexity);
-        return list;
-    }
-
-    private void collectFunctions(NodeList itemList, List<SwiftFunction> functions) {
+    private void parseMeasure(String type, NodeList itemList) {
+        List<SwiftFunction> functions = new ArrayList<>();
         for (int i = 0; i < itemList.getLength(); i++) {
             Node item = itemList.item(i);
             if (item.getNodeType() == Node.ELEMENT_NODE) {
                 Element itemElement = (Element) item;
                 String name = itemElement.getAttribute(NAME);
-                String measure = itemElement.getElementsByTagName(VALUE).item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent();
-                functions.add(new SwiftFunction(name, Integer.parseInt(measure)));
+
+                NodeList values = itemElement.getElementsByTagName(VALUE);
+                if (FILE_MEASURE.equalsIgnoreCase(type)) {
+                    addComplexityFileMeasures(name,values);
+                } else if (FUNCTION_MEASURE.equalsIgnoreCase(type)) {
+                    String measure = values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent();
+                    functions.add(new SwiftFunction(name, Integer.parseInt(measure)));
+                }
             }
+        }
+        if (!functions.isEmpty()) {
+            addComplexityFunctionMeasures(functions);
         }
     }
 
-    private void addComplexityFunctionMeasures(Map<String, List<Measure>> reportMeasures, List<SwiftFunction> functions) {
-        for (Map.Entry<String, List<Measure>> entry : reportMeasures.entrySet()) {
+    private void addComplexityFileMeasures(String fileName, NodeList values) {
+        File file = new File(fileName);
+        FilePredicate fp = context.fileSystem().predicates().hasAbsolutePath(file.getAbsolutePath());
+        if(!context.fileSystem().hasFiles(fp)){
+            LOGGER.warn("file not included in sonar {}", fileName);
+            return;
+        }
+        InputFile component = context.fileSystem().inputFile(fp);
+        int complexity = Integer.parseInt(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
+        context.<Integer>newMeasure()
+            .on(component)
+            .forMetric(CoreMetrics.COMPLEXITY)
+            .withValue(complexity)
+            .save();
 
-            RangeDistributionBuilder complexityDistribution = new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
-            int count = 0;
-            int complexityInFunctions = 0;
+        int numberOfFunctions = Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
+        context.<Integer>newMeasure()
+            .on(component)
+            .forMetric(CoreMetrics.FUNCTIONS)
+            .withValue(numberOfFunctions)
+            .save();
 
-            for (SwiftFunction func : functions) {
-                if (func.getName().contains(entry.getKey())) {
-                    complexityDistribution.add(func.getCyclomaticComplexity());
-                    count++;
-                    complexityInFunctions += func.getCyclomaticComplexity();
-                }
-            }
+        double fileComplexity = Double.parseDouble(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
+        context.<Double>newMeasure()
+            .on(component)
+            .forMetric(CoreMetrics.FILE_COMPLEXITY)
+            .withValue(fileComplexity)
+            .save();
+    }
 
-            if (count != 0) {
-                double complex = 0;
-                for (Measure m : entry.getValue()) {
-                    if (m.getMetric().getKey().equalsIgnoreCase(CoreMetrics.FILE_COMPLEXITY.getKey())) {
-                        complex = m.getValue();
-                        break;
-                    }
-                }
+    private void addComplexityFunctionMeasures(List<SwiftFunction> functions) {
+        int count = 0;
+        int complexityInFunctions = 0;
 
-                double complexMean = complex / (double) count;
-                entry.getValue().addAll(buildFuncionMeasuresList(complexMean, complexityInFunctions, complexityDistribution));
-            }
+        for (SwiftFunction func : functions) {
+            count++;
+            complexityInFunctions += func.getCyclomaticComplexity();
+
+            context.<Integer>newMeasure()
+                .on(func)
+                .forMetric(CoreMetrics.COMPLEXITY_IN_FUNCTIONS)
+                .withValue(complexityInFunctions)
+                .save();
+        }
+
+        if (count != 0) {
+            context.<Double>newMeasure()
+                .forMetric(CoreMetrics.FUNCTION_COMPLEXITY)
+                .withValue(((double)complexityInFunctions)/count)
+                .save();
         }
     }
 
-    public List<Measure> buildFuncionMeasuresList(double complexMean, int complexityInFunctions, RangeDistributionBuilder builder) {
-        List<Measure> list = new ArrayList<Measure>();
-        list.add(new Measure(CoreMetrics.COMPLEXITY_IN_FUNCTIONS).setIntValue(complexityInFunctions));
-        return list;
-    }
-
-    private class SwiftFunction {
-        private String name;
+    private static class SwiftFunction implements InputModule {
+        private String key;
         private int cyclomaticComplexity;
 
-        public SwiftFunction(String name, int cyclomaticComplexity) {
-            this.name = name;
+        public SwiftFunction(String functionName, int cyclomaticComplexity) {
+            this.key = functionName;
             this.cyclomaticComplexity = cyclomaticComplexity;
-        }
-
-        public String getName() {
-            return name;
         }
 
         public int getCyclomaticComplexity() {
             return cyclomaticComplexity;
         }
 
+        @Override
+        public String key() {
+            return key;
+        }
+
+        @Override
+        public boolean isFile() {
+            return false;
+        }
     }
 }

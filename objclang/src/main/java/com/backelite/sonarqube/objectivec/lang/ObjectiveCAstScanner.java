@@ -87,15 +87,19 @@ public class ObjectiveCAstScanner {
 
         /* Files */
         builder.setFilesMetric(ObjectiveCMetric.FILES);
-
-        /* Metrics */
-        builder.withSquidAstVisitor(new LinesVisitor<ObjectiveCGrammar>(ObjectiveCMetric.LINES));
-        builder.withSquidAstVisitor(new LinesOfCodeVisitor<ObjectiveCGrammar>(ObjectiveCMetric.LINES_OF_CODE));
-        builder.withSquidAstVisitor(CommentsVisitor.<ObjectiveCGrammar>builder().withCommentMetric(ObjectiveCMetric.COMMENT_LINES)
+        if(visitors != null && visitors.length > 0) {
+            for (SquidAstVisitor<ObjectiveCGrammar> sv : visitors) {
+                builder.withSquidAstVisitor(sv);
+            }
+        } else {
+            /* Metrics */
+            builder.withSquidAstVisitor(new LinesVisitor(ObjectiveCMetric.LINES));
+            builder.withSquidAstVisitor(new LinesOfCodeVisitor(ObjectiveCMetric.LINES_OF_CODE));
+            builder.withSquidAstVisitor(CommentsVisitor.<ObjectiveCGrammar>builder().withCommentMetric(ObjectiveCMetric.COMMENT_LINES)
                 .withNoSonar(true)
                 .withIgnoreHeaderComment(conf.getIgnoreHeaderComments())
                 .build());
-
+        }
         return builder.build();
     }
 

@@ -33,26 +33,17 @@ import org.sonar.api.config.Settings;
 import java.io.File;
 
 public class FauxPasSensor implements Sensor {
-
-    public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX
-            + ".fauxpas.report";
+    private static final Logger LOGGER = LoggerFactory.getLogger(FauxPasSensor.class);
+    public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX + ".fauxpas.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/*fauxpas.json";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FauxPasSensor.class);
+    private final SensorContext context;
 
-    private final Settings conf;
-    private final FileSystem fileSystem;
-    private final ResourcePerspectives resourcePerspectives;
-
-    public FauxPasSensor(final FileSystem moduleFileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
-        this.conf = config;
-        this.fileSystem = moduleFileSystem;
-        this.resourcePerspectives = resourcePerspectives;
+    public FauxPasSensor(SensorContext context) {
+        this.context = context;
     }
 
-
     private void parseReportIn(final String baseDir, final FauxPasReportParser parser) {
-
         DirectoryScanner scanner = new DirectoryScanner();
         scanner.setIncludes(new String[]{reportPath()});
         scanner.setBasedir(baseDir);
@@ -64,31 +55,27 @@ public class FauxPasSensor implements Sensor {
             LOGGER.info("Processing FauxPas report {}", filename);
             parser.parseReport(new File(filename));
         }
-
     }
 
     private String reportPath() {
-        String reportPath = conf.getString(REPORT_PATH_KEY);
-        if (reportPath == null) {
-            reportPath = DEFAULT_REPORT_PATH;
-        }
-        return reportPath;
+        return context.config()
+            .get(REPORT_PATH_KEY)
+            .orElse(DEFAULT_REPORT_PATH);
     }
 
     @Override
     public void describe(SensorDescriptor descriptor) {
         descriptor
-                .onlyOnLanguage(ObjectiveC.KEY)
-                .name("FauxPas")
-                .onlyOnFileType(InputFile.Type.MAIN);
+            .onlyOnLanguage(ObjectiveC.KEY)
+            .name("FauxPas")
+            .onlyOnFileType(InputFile.Type.MAIN);
     }
 
     @Override
     public void execute(SensorContext context) {
+        final String projectBaseDir = context.fileSystem().baseDir().getAbsolutePath();
 
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-
-        FauxPasReportParser parser = new FauxPasReportParser(resourcePerspectives, fileSystem);
+        FauxPasReportParser parser = new FauxPasReportParser(context);
         parseReportIn(projectBaseDir, parser);
     }
 }

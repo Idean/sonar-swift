@@ -19,23 +19,36 @@ package com.backelite.sonarqube.swift.lang.core;
 
 import com.backelite.sonarqube.swift.SwiftConstants;
 import org.apache.commons.lang.StringUtils;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.api.resources.AbstractLanguage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Swift extends AbstractLanguage {
-
     public static final String KEY = "swift";
+    private final Configuration config;
 
-    private Settings settings;
-
-    public Swift(Settings settings) {
-
+    public Swift(Configuration config) {
         super(KEY, "Swift");
-        this.settings = settings;
+        this.config = config;
     }
 
     public String[] getFileSuffixes() {
+        String[] suffixes = filterEmptyStrings(config.getStringArray(SwiftConstants.FILE_SUFFIXES));
+        if (suffixes.length == 0) {
+            suffixes = StringUtils.split(SwiftConstants.FILE_SUFFIXES, ",");
+        }
+        return suffixes;
+    }
 
-        return StringUtils.split(SwiftConstants.FILE_SUFFIXES, ",");
+    private String[] filterEmptyStrings(String[] stringArray) {
+        List<String> nonEmptyStrings = new ArrayList<>();
+        for (String string : stringArray) {
+            if (StringUtils.isNotBlank(string.trim())) {
+                nonEmptyStrings.add(string.trim());
+            }
+        }
+        return nonEmptyStrings.toArray(new String[nonEmptyStrings.size()]);
     }
 }

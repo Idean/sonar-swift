@@ -17,49 +17,29 @@
  */
 package com.backelite.sonarqube.objectivec.issues.oclint;
 
+import com.backelite.sonarqube.commons.surefire.StaxParser;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.utils.StaxParser;
+import org.sonar.api.batch.sensor.SensorContext;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 final class OCLintParser {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OCLintParser.class);
+    private final SensorContext context;
 
-    private final ResourcePerspectives resourcePerspectives;
-    private final FileSystem fileSystem;
-
-    public OCLintParser(final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
-        this.resourcePerspectives = resourcePerspectives;
-        this.fileSystem = fileSystem;
+    public OCLintParser(SensorContext context) {
+        this.context = context;
     }
 
     public void parseReport(final File file) {
-
         try {
-            final InputStream reportStream = new FileInputStream(file);
-            parseReport(reportStream);
-            reportStream.close();
-        } catch (final IOException e) {
-            LoggerFactory.getLogger(getClass()).error("Error processing file named {}", file, e);
-        }
-
-    }
-
-    public void parseReport(final InputStream inputStream) {
-
-        try {
-            final StaxParser parser = new StaxParser(
-                    new OCLintXMLStreamHandler(resourcePerspectives, fileSystem));
-            parser.parse(inputStream);
+            StaxParser parser = new StaxParser(new OCLintXMLStreamHandler(context));
+            parser.parse(file);
         } catch (final XMLStreamException e) {
-            LoggerFactory.getLogger(getClass()).error(
-                    "Error while parsing XML stream.", e);
+            LOGGER.error( "Error while parsing XML stream.", e);
         }
-    }
 
+    }
 }

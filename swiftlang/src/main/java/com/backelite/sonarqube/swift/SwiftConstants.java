@@ -18,6 +18,5 @@
 package com.backelite.sonarqube.swift;
 
 public final class SwiftConstants {
-
     public static final String FILE_SUFFIXES = "swift";
 }

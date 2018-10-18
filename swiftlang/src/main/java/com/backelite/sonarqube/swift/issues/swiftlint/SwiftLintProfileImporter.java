@@ -42,7 +42,6 @@ public class SwiftLintProfileImporter extends ProfileImporter {
 
     @Override
     public RulesProfile importProfile(Reader reader, ValidationMessages messages) {
-
         final RulesProfile profile = profileParser.parse(reader, messages);
 
         if (null == profile) {

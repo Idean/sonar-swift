@@ -17,142 +17,125 @@
  */
 package com.backelite.sonarqube.swift.coverage;
 
-
-import com.backelite.sonarqube.commons.MeasureUtil;
-import com.google.common.collect.Maps;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.staxmate.SMInputFactory;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputComponent;
+import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.measures.CoverageMeasuresBuilder;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.measures.Metric;
-import org.sonar.api.resources.Project;
-import org.sonar.api.utils.ParsingUtils;
-import org.sonar.api.utils.StaxParser;
-import org.sonar.api.utils.XmlParserException;
+import org.sonar.api.batch.sensor.coverage.NewCoverage;
 
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.text.ParseException;
-import java.util.Locale;
-import java.util.Map;
+
+import static java.util.Locale.ENGLISH;
+import static org.sonar.api.utils.ParsingUtils.parseNumber;
 
 public final class CoberturaReportParser {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaReportParser.class);
-
-    private final FileSystem fileSystem;
-    private final Project project;
+    private static final String PACKAGE = "package";
+    private static final String CLASS = "class";
+    private static final String FILE = "filename";
+    private static final String LINES = "lines";
+    private static final String LINE = "line";
+    private static final String NUMBER = "number";
+    private static final String HITS = "hits";
+    private static final String BRANCH = "branch";
+    private static final String COVERAGE = "condition-coverage";
     private final SensorContext context;
 
-    private CoberturaReportParser(FileSystem fileSystem, Project project, SensorContext context) {
-        this.fileSystem = fileSystem;
-        this.project = project;
+    public CoberturaReportParser(SensorContext context) {
         this.context = context;
     }
 
-    /**
-     * Parse a Cobertura xml report and create measures accordingly
-     */
-    public static void parseReport(File xmlFile, FileSystem fileSystem, Project project, SensorContext context) {
-        new CoberturaReportParser(fileSystem, project, context).parse(xmlFile);
-    }
-
-    private static void collectFileMeasures(SMInputCursor clazz,
-                                            Map<String, CoverageMeasuresBuilder> builderByFilename) throws XMLStreamException {
-        while (clazz.getNext() != null) {
-            String fileName = clazz.getAttrValue("filename");
-            CoverageMeasuresBuilder builder = builderByFilename.get(fileName);
-            if (builder == null) {
-                builder = CoverageMeasuresBuilder.create();
-                builderByFilename.put(fileName, builder);
-            }
-            collectFileData(clazz, builder);
-        }
-    }
-
-    private static void collectFileData(SMInputCursor clazz,
-                                        CoverageMeasuresBuilder builder) throws XMLStreamException {
-        SMInputCursor line = clazz.childElementCursor("lines").advance().childElementCursor("line");
-        while (line.getNext() != null) {
-            int lineId = Integer.parseInt(line.getAttrValue("number"));
-            try {
-                builder.setHits(lineId, (int) ParsingUtils.parseNumber(line.getAttrValue("hits"), Locale.ENGLISH));
-            } catch (ParseException e) {
-                throw new XmlParserException(e);
-            }
-
-            String isBranch = line.getAttrValue("branch");
-            String text = line.getAttrValue("condition-coverage");
-            if (StringUtils.equals(isBranch, "true") && StringUtils.isNotBlank(text)) {
-                String[] conditions = StringUtils.split(StringUtils.substringBetween(text, "(", ")"), "/");
-                builder.setConditions(lineId, Integer.parseInt(conditions[1]), Integer.parseInt(conditions[0]));
-            }
-        }
-    }
-
-    private void parse(File xmlFile) {
+    public void parseReport(final File xmlFile) {
+        final XMLInputFactory xmlFactory = XMLInputFactory.newInstance();
         try {
-            StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
-
-                @Override
-                public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
-                    rootCursor.advance();
-                    collectPackageMeasures(rootCursor.descendantElementCursor("package"));
-                }
-            });
-            parser.parse(xmlFile);
+            SMInputFactory inputFactory = new SMInputFactory(xmlFactory);
+            SMHierarchicCursor rootCursor = inputFactory.rootElementCursor(xmlFile);
+            while (rootCursor.getNext() != null) {
+                collectPackageMeasures(rootCursor.descendantElementCursor(PACKAGE));
+            }
+            rootCursor.getStreamReader().closeCompletely();
         } catch (XMLStreamException e) {
-            throw new XmlParserException(e);
+            throw new IllegalStateException("XML is not valid", e);
         }
     }
 
     private void collectPackageMeasures(SMInputCursor pack) throws XMLStreamException {
         while (pack.getNext() != null) {
-            Map<String, CoverageMeasuresBuilder> builderByFilename = Maps.newHashMap();
-            collectFileMeasures(pack.descendantElementCursor("class"), builderByFilename);
-            for (Map.Entry<String, CoverageMeasuresBuilder> entry : builderByFilename.entrySet()) {
-                String filePath = entry.getKey();
-                filePath = getAdjustedPathIfProjectIsModule(filePath);
-                if (filePath == null) {
-                    continue;
-                }
-                File file = new File(fileSystem.baseDir(), filePath);
-                InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
-
-                if (inputFile == null) {
-                    LOGGER.warn("file not included in sonar {}", filePath);
-                    continue;
-                } else {
-
-                    for (Measure measure : entry.getValue().createMeasures()) {
-                        if (measure.getValue() != null && measure.getMetric() != null) {
-                            MeasureUtil.saveMeasure(context, inputFile, (Metric<Integer>) measure.getMetric(), measure.getValue().intValue());
-                        }
-                    }
-                }
-
-                LOGGER.info("Successfully collected measures for file {}", file.getPath());
-            }
+            collectClassMeasures(pack.descendantElementCursor(CLASS));
         }
     }
 
-
-    private String getAdjustedPathIfProjectIsModule(String filePath) {
-        if (project.isModule()) {
-            // the file doesn't belong to the module we're analyzing
-            if (!filePath.startsWith(project.path())) {
-                return null;
-            }
-            // fileSystem.baseDir() will include the module path, so we need to get rid of it here
-            return filePath.substring(project.path().length());
+    private void collectClassMeasures(SMInputCursor classCursor) throws XMLStreamException {
+        while (classCursor.getNext() != null) {
+            String fileName = classCursor.getAttrValue(FILE);
+            collectFileData(classCursor, fileName);
         }
-        return filePath;
     }
+
+    private void collectFileData(SMInputCursor fileCursor, String filename) throws XMLStreamException {
+        filename = sanitizeFilename(filename);
+        InputFile resource = getFile(filename);
+
+        NewCoverage coverage = null;
+        boolean lineAdded = false;
+        if (resource != null) {
+            coverage = context.newCoverage();
+            coverage.onFile(resource);
+        }
+
+        SMInputCursor line = fileCursor.childElementCursor(LINES).advance().childElementCursor(LINE);
+        while (line.getNext() != null) {
+            int lineId = Integer.parseInt(line.getAttrValue(NUMBER));
+            try {
+                if (coverage != null) {
+                    coverage.lineHits(lineId, (int) parseNumber(line.getAttrValue(HITS), ENGLISH));
+                    lineAdded = true;
+                }
+            } catch (ParseException e) {
+                throw new XMLStreamException(e);
+            }
+
+            String isBranch = line.getAttrValue(BRANCH);
+            String text = line.getAttrValue(COVERAGE);
+            if ("true".equalsIgnoreCase(isBranch) && StringUtils.isNotBlank(text)) {
+                String[] conditions = StringUtils.split(StringUtils.substringBetween(text, "(", ")"), "/");
+                if (coverage != null) {
+                    coverage.conditions(lineId, Integer.parseInt(conditions[1]), Integer.parseInt(conditions[0]));
+                    lineAdded = true;
+                }
+            }
+        }
+        if (coverage != null) {
+            // If there was no lines covered or uncovered (e.g. everything is ignored), but the file exists then Sonar would report the file as uncovered
+            // so adding a fake one to line number 1
+            if (!lineAdded) {
+                coverage.lineHits(1, 1);
+            }
+            coverage.save();
+        }
+    }
+
+    private InputFile getFile(String name) {
+        FilePredicate fpName = context.fileSystem().predicates().hasFilename(name);
+        FilePredicate fpPath = context.fileSystem().predicates().hasAbsolutePath(context.fileSystem().baseDir().getAbsolutePath());
+        InputFile file = context.fileSystem().inputFile(context.fileSystem().predicates().and(fpPath, fpName));
+        return file != null && file.isFile() ? file : null;
+    }
+
+    private static String sanitizeFilename(String s) {
+        String fileName = FilenameUtils.removeExtension(s);
+        fileName = fileName.replace('/', '.').replace('\\', '.');
+        return fileName;
+    }
+
 }
+

@@ -35,56 +35,41 @@ import java.io.File;
  * Created by gillesgrousset on 28/08/2018.
  */
 public class SurefireSensor implements Sensor {
-
-    public static final String REPORTS_PATH_KEY = Constants.PROPERTY_PREFIX + ".surefire.junit.reportsPath";
-    public static final String DEFAULT_REPORTS_PATH = "sonar-reports/";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
-    private final FileSystem fileSystem;
-    private final PathResolver pathResolver;
-    private final ResourcePerspectives resourcePerspectives;
-    private final Settings settings;
+    public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX + ".surefire.junit.reportsPath";
+    public static final String DEFAULT_REPORT_PATH = "sonar-reports/";
 
-    public SurefireSensor(FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, Settings settings) {
-        this.fileSystem = fileSystem;
-        this.pathResolver = pathResolver;
-        this.resourcePerspectives = resourcePerspectives;
-        this.settings = settings;
+    private final SensorContext context;
+
+    public SurefireSensor(SensorContext context) {
+        this.context = context;
+    }
+
+    protected String reportPath() {
+        return context.config()
+            .get(REPORT_PATH_KEY)
+            .orElse(DEFAULT_REPORT_PATH);
     }
 
     @Override
     public void describe(SensorDescriptor descriptor) {
         descriptor
-                .name("Surefire")
-                .onlyOnFileType(InputFile.Type.MAIN);
+            .name("Surefire")
+            .onlyOnLanguages("swift","objc")
+            .onlyOnFileType(InputFile.Type.MAIN);
     }
 
     @Override
     public void execute(SensorContext context) {
-
-        String path = this.reportPath();
-        File reportsDir = pathResolver.relativeFile(fileSystem.baseDir(), path);
-
-        LOGGER.info("Processing test reports in {}", reportsDir);
+        String reportFileName = context.fileSystem().baseDir().getAbsolutePath() + "/"+ reportPath();
+        File reportsDir = new File(reportFileName);
 
         if (!reportsDir.isDirectory()) {
             LOGGER.warn("JUnit report directory not found at {}", reportsDir);
             return;
         }
-
-        collect(context, reportsDir);
-    }
-
-    protected  void collect(SensorContext context, File reportsDir) {
-        LOGGER.info("parsing {}", reportsDir);
-        new SurefireParser(fileSystem, resourcePerspectives, context).collect(reportsDir);
-    }
-
-    protected String reportPath() {
-        String reportPath = settings.getString(REPORTS_PATH_KEY);
-        if (reportPath == null) {
-            reportPath = DEFAULT_REPORTS_PATH;
-        }
-        return reportPath;
+        LOGGER.info("Processing test reports in {}", reportsDir);
+        SurefireParser surefireParser = new SurefireParser(context);
+        surefireParser.collect(reportsDir);
     }
 }

@@ -17,89 +17,58 @@
  */
 package com.backelite.sonarqube.objectivec.issues.oclint;
 
+import com.backelite.sonarqube.commons.surefire.StaxParser;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.issue.Issuable;
-import org.sonar.api.issue.Issue;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.issue.NewIssueLocation;
+import org.sonar.api.batch.sensor.issue.internal.DefaultIssueLocation;
 import org.sonar.api.rule.RuleKey;
-import org.sonar.api.utils.StaxParser.XmlStreamHandler;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 
-final class OCLintXMLStreamHandler implements XmlStreamHandler {
+final class OCLintXMLStreamHandler implements StaxParser.XmlStreamHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OCLintXMLStreamHandler.class);
     private static final int PMD_MINIMUM_PRIORITY = 5;
-    private final ResourcePerspectives resourcePerspectives;
-    private final FileSystem fileSystem;
+    private final SensorContext context;
 
-    public OCLintXMLStreamHandler(final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
-        this.resourcePerspectives = resourcePerspectives;
-        this.fileSystem = fileSystem;
+    public OCLintXMLStreamHandler(SensorContext context) {
+        this.context = context;
     }
 
     public void stream(final SMHierarchicCursor rootCursor) throws XMLStreamException {
+        final SMInputCursor inputCursor = rootCursor.advance().childElementCursor("file");
+        while (null != inputCursor.getNext()) {
+            final String filePath = inputCursor.getAttrValue("name");
+            LOGGER.debug("Collection issues for {}", filePath);
 
-        final SMInputCursor file = rootCursor.advance().childElementCursor("file");
-        while (null != file.getNext()) {
-            collectIssuesFor(file);
+            File file = new File(filePath);
+            FilePredicate fp = context.fileSystem().predicates().hasAbsolutePath(file.getAbsolutePath());
+            if(!context.fileSystem().hasFiles(fp)){
+                LOGGER.warn("file not included in sonar {}", filePath);
+            }
+
+            InputFile inputFile = context.fileSystem().inputFile(fp);
+            SMInputCursor violation = inputCursor.childElementCursor("violation");
+            collectFileIssues(violation,inputFile);
         }
     }
 
-    private void collectIssuesFor(final SMInputCursor file) throws XMLStreamException {
-
-        final String filePath = file.getAttrValue("name");
-        LoggerFactory.getLogger(getClass()).debug("Collection issues for {}", filePath);
-        final InputFile inputFile = findResource(filePath);
-        if (fileExists(inputFile)) {
-            LoggerFactory.getLogger(getClass()).debug("File {} was found in the project.", filePath);
-            collectFileIssues(inputFile, file);
-        }
-    }
-
-    private void collectFileIssues(final InputFile inputFile, final SMInputCursor file) throws XMLStreamException {
-
-        final SMInputCursor line = file.childElementCursor("violation");
-
+    private void collectFileIssues(final SMInputCursor line, final InputFile inputFile) throws XMLStreamException {
         while (null != line.getNext()) {
-            recordViolation(inputFile, line);
+            NewIssueLocation dil = new DefaultIssueLocation()
+                .on(inputFile)
+                .at(inputFile.selectLine(Integer.valueOf(line.getAttrValue("beginline"))))
+                .message(line.getElemStringValue());
+            context.newIssue()
+                .forRule(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, line.getAttrValue("rule")))
+                .at(dil)
+                .save();
         }
     }
-
-    private InputFile findResource(final String filePath) {
-
-        File file = new File(filePath);
-        return fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
-
-    }
-
-    private void recordViolation(InputFile inputFile, final SMInputCursor line) throws XMLStreamException {
-
-        Issuable issuable = resourcePerspectives.as(Issuable.class, inputFile);
-
-        if (issuable != null) {
-
-            Issue issue = issuable.newIssueBuilder()
-                    .ruleKey(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, line.getAttrValue("rule")))
-                    .line(Integer.valueOf(line.getAttrValue("beginline")))
-                    .message(line.getElemStringValue())
-                    .build();
-
-            issuable.addIssue(issue);
-
-
-        }
-    }
-
-    private boolean fileExists(InputFile file) {
-        if (file == null) {
-            return false;
-        }
-
-        return file.file().exists();
-    }
-
 }

@@ -23,13 +23,12 @@ import org.codehaus.staxmate.in.SMEvent;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.sonar.api.utils.ParsingUtils;
-import org.sonar.api.utils.StaxParser.XmlStreamHandler;
 
 import javax.xml.stream.XMLStreamException;
 import java.text.ParseException;
 import java.util.Locale;
 
-public class SurefireStaxHandler implements XmlStreamHandler {
+public class SurefireStaxHandler implements StaxParser.XmlStreamHandler {
 
     private final UnitTestIndex index;
 
