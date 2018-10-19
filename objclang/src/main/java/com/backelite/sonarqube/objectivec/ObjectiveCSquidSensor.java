@@ -34,11 +34,9 @@ import org.sonar.api.batch.rule.Checks;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.issue.Issuable;
+import org.sonar.api.batch.sensor.issue.NewIssue;
+import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.profiles.RulesProfile;
-import org.sonar.api.resources.Project;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.scan.filesystem.PathResolver;
 import org.sonar.squidbridge.AstScanner;
@@ -61,7 +59,6 @@ public class ObjectiveCSquidSensor implements Sensor {
 
     private final FileSystem fileSystem;
     private final PathResolver pathResolver;
-    private final ResourcePerspectives resourcePerspectives;
     private final Checks<SquidCheck<ObjectiveCGrammar>> checks;
     private final FilePredicate mainFilePredicates;
 
@@ -69,12 +66,11 @@ public class ObjectiveCSquidSensor implements Sensor {
     private SensorContext context;
     private AstScanner<ObjectiveCGrammar> scanner;
 
-    public ObjectiveCSquidSensor(SensorContext context, FileSystem fileSystem, PathResolver pathResolver, ResourcePerspectives resourcePerspectives, CheckFactory checkFactory) {
+    public ObjectiveCSquidSensor(SensorContext context, FileSystem fileSystem, PathResolver pathResolver, CheckFactory checkFactory) {
 
         this.context = context;
         this.fileSystem = fileSystem;
         this.pathResolver = pathResolver;
-        this.resourcePerspectives = resourcePerspectives;
         this.checks = checkFactory.<SquidCheck<ObjectiveCGrammar>>create(CheckList.REPOSITORY_KEY).addAnnotatedChecks(CheckList.getChecks());
         this.mainFilePredicates = fileSystem.predicates().and(fileSystem.predicates().hasLanguage(ObjectiveC.KEY), fileSystem.predicates().hasType(InputFile.Type.MAIN));
     }
@@ -113,20 +109,22 @@ public class ObjectiveCSquidSensor implements Sensor {
         if (inputFile != null) {
             for (CheckMessage message : messages) {
                 RuleKey ruleKey = checks.ruleKey((SquidCheck<ObjectiveCGrammar>) message.getCheck());
-                Issuable issuable = resourcePerspectives.as(Issuable.class, inputFile);
+                NewIssue newIssue = context.newIssue();
 
-                if (issuable != null) {
-                    Issuable.IssueBuilder issueBuilder = issuable.newIssueBuilder()
-                            .ruleKey(ruleKey)
-                            .line(message.getLine())
-                            .message(message.getText(Locale.ENGLISH));
+                NewIssueLocation primaryLocation = newIssue.newLocation()
+                        .message(message.getText(Locale.ENGLISH))
+                        .on(inputFile)
+                        .at(inputFile.selectLine(message.getLine()));
 
-                    if (message.getCost() != null) {
-                        issueBuilder.effortToFix(message.getCost());
-                    }
+                newIssue
+                        .forRule(ruleKey)
+                        .at(primaryLocation);
 
-                    issuable.addIssue(issueBuilder.build());
+                if (message.getCost() != null) {
+                    newIssue.gap(message.getCost());
                 }
+
+                newIssue.save();
 
             }
         }

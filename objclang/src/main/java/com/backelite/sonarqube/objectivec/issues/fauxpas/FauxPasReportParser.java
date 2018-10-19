@@ -25,9 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.issue.Issuable;
-import org.sonar.api.issue.Issue;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.issue.NewIssue;
+import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.rule.RuleKey;
 
 import java.io.File;
@@ -37,11 +37,11 @@ import java.io.FileReader;
 public class FauxPasReportParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FauxPasReportParser.class);
-    private final ResourcePerspectives resourcePerspectives;
+    private final SensorContext sensorContext;
     private final FileSystem fileSystem;
 
-    public FauxPasReportParser(final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
-        this.resourcePerspectives = resourcePerspectives;
+    public FauxPasReportParser(final SensorContext sensorContext, final FileSystem fileSystem) {
+        this.sensorContext = sensorContext;
         this.fileSystem = fileSystem;
     }
 
@@ -78,39 +78,33 @@ public class FauxPasReportParser {
 
 
             InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(filePath));
-            Issuable issuable = resourcePerspectives.as(Issuable.class, inputFile);
 
-            if (issuable != null && inputFile != null) {
+            JSONObject extent = (JSONObject) diagnosticJson.get("extent");
+            JSONObject start = (JSONObject) extent.get("start");
 
-                JSONObject extent = (JSONObject) diagnosticJson.get("extent");
-                JSONObject start = (JSONObject) extent.get("start");
-
-                String info = (String) diagnosticJson.get("info");
-                if (info == null) {
-                    info = (String) diagnosticJson.get("ruleName");
-                }
-
-                // Prevent line num 0 case
-                int lineNum = Integer.parseInt(start.get("line").toString());
-                if (lineNum == 0) {
-                    lineNum++;
-                }
-
-                Issue issue = issuable.newIssueBuilder()
-                        .ruleKey(RuleKey.of(FauxPasRulesDefinition.REPOSITORY_KEY, (String) diagnosticJson.get("ruleShortName")))
-                        .line(lineNum)
-                        .message(info)
-                        .build();
-
-                try {
-                    issuable.addIssue(issue);
-                } catch (Exception e) {
-                    // Unable to add issue : probably because does not exist in the repository
-                    LOGGER.warn(e.getMessage());
-                }
-
-
+            String info = (String) diagnosticJson.get("info");
+            if (info == null) {
+                info = (String) diagnosticJson.get("ruleName");
             }
+
+            // Prevent line num 0 case
+            int lineNum = Integer.parseInt(start.get("line").toString());
+            if (lineNum == 0) {
+                lineNum++;
+            }
+
+            NewIssue newIssue = sensorContext.newIssue();
+
+            NewIssueLocation primaryLocation = newIssue.newLocation()
+                    .message(info)
+                    .on(inputFile)
+                    .at(inputFile.selectLine(lineNum));
+
+            newIssue
+                    .forRule(RuleKey.of(FauxPasRulesDefinition.REPOSITORY_KEY, (String) diagnosticJson.get("ruleShortName")))
+                    .at(primaryLocation);
+
+            newIssue.save();
 
         }
 

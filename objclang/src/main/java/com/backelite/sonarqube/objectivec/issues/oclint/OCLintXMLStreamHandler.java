@@ -17,29 +17,29 @@
  */
 package com.backelite.sonarqube.objectivec.issues.oclint;
 
+import com.backelite.sonarqube.commons.StaxParser;
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.issue.Issuable;
-import org.sonar.api.issue.Issue;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.issue.NewIssue;
+import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.rule.RuleKey;
-import org.sonar.api.utils.StaxParser.XmlStreamHandler;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 
-final class OCLintXMLStreamHandler implements XmlStreamHandler {
+final class OCLintXMLStreamHandler implements StaxParser.XmlStreamHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintXMLStreamHandler.class);
-    private static final int PMD_MINIMUM_PRIORITY = 5;
-    private final ResourcePerspectives resourcePerspectives;
+
+    private final SensorContext context;
     private final FileSystem fileSystem;
 
-    public OCLintXMLStreamHandler(final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
-        this.resourcePerspectives = resourcePerspectives;
+    OCLintXMLStreamHandler(final SensorContext context, final FileSystem fileSystem) {
+        this.context = context;
         this.fileSystem = fileSystem;
     }
 
@@ -54,10 +54,10 @@ final class OCLintXMLStreamHandler implements XmlStreamHandler {
     private void collectIssuesFor(final SMInputCursor file) throws XMLStreamException {
 
         final String filePath = file.getAttrValue("name");
-        LoggerFactory.getLogger(getClass()).debug("Collection issues for {}", filePath);
+        LOGGER.debug("Collection issues for {}", filePath);
         final InputFile inputFile = findResource(filePath);
         if (fileExists(inputFile)) {
-            LoggerFactory.getLogger(getClass()).debug("File {} was found in the project.", filePath);
+            LOGGER.debug("File {} was found in the project.", filePath);
             collectFileIssues(inputFile, file);
         }
     }
@@ -80,25 +80,21 @@ final class OCLintXMLStreamHandler implements XmlStreamHandler {
 
     private void recordViolation(InputFile inputFile, final SMInputCursor line) throws XMLStreamException {
 
-        Issuable issuable = resourcePerspectives.as(Issuable.class, inputFile);
+        RuleKey ruleKey = RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, line.getAttrValue("rule"));
+        Integer lineNum = Integer.valueOf(line.getAttrValue("beginline"));
 
-        if (issuable != null) {
+        NewIssue newIssue = context.newIssue();
 
-            Issue issue = issuable.newIssueBuilder()
-                    .ruleKey(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, line.getAttrValue("rule")))
-                    .line(Integer.valueOf(line.getAttrValue("beginline")))
-                    .message(line.getElemStringValue())
-                    .build();
+        NewIssueLocation primaryLocation = newIssue.newLocation()
+                .message(line.getElemStringValue())
+                .on(inputFile)
+                .at(inputFile.selectLine(lineNum));
 
-            try {
-                issuable.addIssue(issue);
-            } catch (Exception e) {
-                // Unable to add issue : probably because does not exist in the repository
-                LOGGER.warn(e.getMessage());
-            }
+        newIssue
+                .forRule(ruleKey)
+                .at(primaryLocation);
 
-
-        }
+        newIssue.save();
     }
 
     private boolean fileExists(InputFile file) {

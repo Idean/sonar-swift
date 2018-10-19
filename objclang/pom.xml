@@ -120,6 +120,11 @@
             <artifactId>commons</artifactId>
             <version>0.4.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.sonarsource.sonarlint.core</groupId>
+            <artifactId>sonarlint-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 

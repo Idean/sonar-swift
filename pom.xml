@@ -105,6 +105,8 @@
         <sslr-squid-bridge.version>2.6.1</sslr-squid-bridge.version>
         <gson.version>2.6.2</gson.version>
         <ant.version>1.6</ant.version>
+        <json-simple.version>1.1.1</json-simple.version>
+        <wstx-asl.version>3.2.9</wstx-asl.version>
 
     </properties>
 
@@ -183,7 +185,12 @@
             <dependency>
                 <groupId>com.googlecode.json-simple</groupId>
                 <artifactId>json-simple</artifactId>
-                <version>1.1.1</version>
+                <version>${json-simple.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.woodstox</groupId>
+                <artifactId>wstx-asl</artifactId>
+                <version>${wstx-asl.version}</version>
             </dependency>
 
             <!-- Test dependencies -->

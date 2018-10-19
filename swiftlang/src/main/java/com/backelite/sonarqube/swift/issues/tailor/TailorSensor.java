@@ -45,12 +45,10 @@ public class TailorSensor implements Sensor {
 
     private final Settings conf;
     private final FileSystem fileSystem;
-    private final ResourcePerspectives resourcePerspectives;
 
-    public TailorSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
+    public TailorSensor(final FileSystem fileSystem, final Settings config) {
         this.conf = config;
         this.fileSystem = fileSystem;
-        this.resourcePerspectives = resourcePerspectives;
     }
 
     private void parseReportIn(final String baseDir, final TailorReportParser parser) {
@@ -90,7 +88,7 @@ public class TailorSensor implements Sensor {
 
         final String projectBaseDir = this.fileSystem.baseDir().getAbsolutePath();
 
-        TailorReportParser parser = new TailorReportParser(context, this.resourcePerspectives, this.fileSystem);
+        TailorReportParser parser = new TailorReportParser(context, this.fileSystem);
         parseReportIn(projectBaseDir, parser);
 
     }

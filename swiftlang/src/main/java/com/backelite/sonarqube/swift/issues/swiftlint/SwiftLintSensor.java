@@ -26,7 +26,6 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.config.Settings;
 
 import java.io.File;
@@ -41,12 +40,10 @@ public class SwiftLintSensor implements Sensor {
 
     private final Settings conf;
     private final FileSystem fileSystem;
-    private final ResourcePerspectives resourcePerspectives;
 
-    public SwiftLintSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
+    public SwiftLintSensor(final FileSystem fileSystem, final Settings config) {
         this.conf = config;
         this.fileSystem = fileSystem;
-        this.resourcePerspectives = resourcePerspectives;
     }
 
     private void parseReportIn(final String baseDir, final SwiftLintReportParser parser) {
@@ -76,8 +73,8 @@ public class SwiftLintSensor implements Sensor {
     @Override
     public void describe(SensorDescriptor descriptor) {
         descriptor
-                .onlyOnLanguage(Swift.KEY)
                 .name("SwiftLint")
+                .onlyOnLanguage(Swift.KEY)
                 .onlyOnFileType(InputFile.Type.MAIN);
     }
 
@@ -86,7 +83,7 @@ public class SwiftLintSensor implements Sensor {
 
         final String projectBaseDir = fileSystem.baseDir().getAbsolutePath();
 
-        SwiftLintReportParser parser = new SwiftLintReportParser(context, resourcePerspectives, fileSystem);
+        SwiftLintReportParser parser = new SwiftLintReportParser(context, fileSystem);
         parseReportIn(projectBaseDir, parser);
     }
 }

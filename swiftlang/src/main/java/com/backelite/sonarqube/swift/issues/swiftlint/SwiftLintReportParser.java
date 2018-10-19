@@ -23,9 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.issue.Issuable;
-import org.sonar.api.issue.Issue;
+import org.sonar.api.batch.sensor.issue.NewIssue;
+import org.sonar.api.batch.sensor.issue.NewIssueLocation;
 import org.sonar.api.rule.RuleKey;
 
 import java.io.*;
@@ -37,12 +36,10 @@ public class SwiftLintReportParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftLintReportParser.class);
 
     private final SensorContext context;
-    private final ResourcePerspectives resourcePerspectives;
     private final FileSystem fileSystem;
 
-    public SwiftLintReportParser(final SensorContext context, final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
+    public SwiftLintReportParser(final SensorContext context, final FileSystem fileSystem) {
         this.context = context;
-        this.resourcePerspectives = resourcePerspectives;
         this.fileSystem = fileSystem;
     }
 
@@ -60,8 +57,6 @@ public class SwiftLintReportParser {
             IOUtils.closeQuietly(br);
             IOUtils.closeQuietly(fr);
 
-        } catch (FileNotFoundException e) {
-            LOGGER.error("Failed to parse SwiftLint report file", e);
         } catch (IOException e) {
             LOGGER.error("Failed to parse SwiftLint report file", e);
         }
@@ -85,22 +80,19 @@ public class SwiftLintReportParser {
                 continue;
             }
 
-            Issuable issuable = resourcePerspectives.as(Issuable.class, inputFile);
+            NewIssue newIssue = context.newIssue();
 
-            if (issuable != null) {
-                Issue issue = issuable.newIssueBuilder()
-                        .ruleKey(RuleKey.of(SwiftLintRulesDefinition.REPOSITORY_KEY, ruleId))
-                        .line(lineNum)
-                        .message(message)
-                        .build();
+            NewIssueLocation primaryLocation = newIssue.newLocation()
+                    .message(message)
+                    .on(inputFile)
+                    .at(inputFile.selectLine(lineNum));
 
-                try {
-                    issuable.addIssue(issue);
-                } catch (Exception e) {
-                    // Unable to add issue : probably because does not exist in the repository
-                    LOGGER.warn(e.getMessage());
-                }
-            }
+            newIssue
+                    .forRule(RuleKey.of(SwiftLintRulesDefinition.REPOSITORY_KEY, ruleId))
+                    .at(primaryLocation);
+
+            newIssue.save();
+
         }
     }
 }

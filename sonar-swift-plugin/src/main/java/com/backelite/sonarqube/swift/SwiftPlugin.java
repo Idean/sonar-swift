@@ -20,7 +20,6 @@ package com.backelite.sonarqube.swift;
 import com.backelite.sonarqube.commons.surefire.SurefireSensor;
 import com.backelite.sonarqube.commons.surefire.TestFileFinders;
 import com.backelite.sonarqube.objectivec.ObjectiveCSquidSensor;
-// import com.backelite.sonarqube.objectivec.cpd.ObjectiveCCpdMapping;
 import com.backelite.sonarqube.objectivec.issues.ObjectiveCProfile;
 import com.backelite.sonarqube.objectivec.issues.fauxpas.FauxPasProfile;
 import com.backelite.sonarqube.objectivec.issues.fauxpas.FauxPasProfileImporter;
@@ -34,7 +33,6 @@ import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import com.backelite.sonarqube.objectivec.surefire.ObjectiveCTestFileFinder;
 import com.backelite.sonarqube.swift.complexity.LizardSensor;
 import com.backelite.sonarqube.swift.coverage.CoberturaSensor;
-// import com.backelite.sonarqube.swift.cpd.SwiftCpdMapping;
 import com.backelite.sonarqube.swift.issues.SwiftProfile;
 import com.backelite.sonarqube.swift.issues.swiftlint.SwiftLintProfile;
 import com.backelite.sonarqube.swift.issues.swiftlint.SwiftLintProfileImporter;
@@ -47,9 +45,9 @@ import com.backelite.sonarqube.swift.issues.tailor.TailorSensor;
 import com.backelite.sonarqube.swift.lang.core.Swift;
 import com.backelite.sonarqube.swift.surefire.SwiftTestFileFinder;
 import com.google.common.collect.ImmutableList;
+import org.sonar.api.Plugin;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
-import org.sonar.api.SonarPlugin;
 
 import java.util.List;
 
@@ -106,10 +104,15 @@ import java.util.List;
                 project = true)
 
 })
-public class SwiftPlugin extends SonarPlugin {
+
+public class SwiftPlugin implements Plugin {
 
     @Override
-    public List getExtensions() {
+    public void define(Context context) {
+        context.addExtensions(getExtensions());
+    }
+
+    private List getExtensions() {
 
         // Add test finders for each language
         TestFileFinders.getInstance().addFinder(new SwiftTestFileFinder());

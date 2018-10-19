@@ -37,12 +37,10 @@ public final class OCLintSensor implements Sensor {
 
     private final Settings conf;
     private final FileSystem fileSystem;
-    private final ResourcePerspectives resourcePerspectives;
 
-    public OCLintSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
+    public OCLintSensor(final FileSystem fileSystem, final Settings config) {
         this.conf = config;
         this.fileSystem = fileSystem;
-        this.resourcePerspectives = resourcePerspectives;
     }
 
     private void parseReportIn(final String baseDir, final OCLintParser parser) {
@@ -79,7 +77,7 @@ public final class OCLintSensor implements Sensor {
     @Override
     public void execute(SensorContext context) {
         final String projectBaseDir = fileSystem.baseDir().getPath();
-        final OCLintParser parser = new OCLintParser(resourcePerspectives, fileSystem);
+        final OCLintParser parser = new OCLintParser(context, fileSystem);
 
         parseReportIn(projectBaseDir, parser);
     }

@@ -21,47 +21,44 @@ import com.backelite.sonarqube.commons.MeasureUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputComponent;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.measures.Metric;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-public class LizardMeasurePersistor {
+class LizardMeasurePersistor {
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardMeasurePersistor.class);
 
     private SensorContext sensorContext;
     private FileSystem fileSystem;
 
-    public LizardMeasurePersistor(final SensorContext c, FileSystem fileSystem) {
+    LizardMeasurePersistor(final SensorContext c, FileSystem fileSystem) {
         this.sensorContext = c;
         this.fileSystem = fileSystem;
     }
 
-    public void saveMeasures(final Map<String, List<Measure>> measures) {
+    void saveMeasures(final Map<String, List<LizardMeasure>> measures) {
 
         if (measures == null) {
             return;
         }
 
-        for (Map.Entry<String, List<Measure>> entry : measures.entrySet()) {
+        for (Map.Entry<String, List<LizardMeasure>> entry : measures.entrySet()) {
             File file = new File(fileSystem.baseDir(), entry.getKey());
             InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
 
             if (inputFile == null) {
                 LOGGER.warn("File not included in sonar {}", entry.getKey());
-
             } else {
-                for (Measure measure : entry.getValue()) {
+                LOGGER.debug("Saving results for Resource: {}", entry.getKey());
+                for (LizardMeasure measure : entry.getValue()) {
                     try {
-                        MeasureUtil.saveMeasure(sensorContext, inputFile, (Metric<Integer>)measure.getMetric(), measure.getValue().intValue());
+                        MeasureUtil.saveMeasure(sensorContext, inputFile, measure.metric(), measure.value());
 
                     } catch (Exception e) {
-                        LOGGER.error(" Exception -> {} -> {}", entry.getKey(), measure.getMetric().getName());
+                        LOGGER.error(" Exception -> {} -> {}", entry.getKey(), measure.metric().key());
                     }
                 }
             }

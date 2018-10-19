@@ -88,7 +88,7 @@ public class FauxPasSensor implements Sensor {
 
         final String projectBaseDir = fileSystem.baseDir().getPath();
 
-        FauxPasReportParser parser = new FauxPasReportParser(resourcePerspectives, fileSystem);
+        FauxPasReportParser parser = new FauxPasReportParser(context, fileSystem);
         parseReportIn(projectBaseDir, parser);
     }
 }

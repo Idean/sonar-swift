@@ -22,7 +22,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.Measure;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -125,47 +124,47 @@ public class LizardReportParserTest {
 
         assertNotNull("correct file is null", correctFile);
 
-        Map<String, List<Measure>> report = parser.parseReport(correctFile);
+        Map<String, List<LizardMeasure>> report = parser.parseReport(correctFile);
 
         assertNotNull("report is null", report);
 
         assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.h"));
-        List<Measure> list1 = report.get("App/Controller/Accelerate/AccelerationViewController.h");
+        List<LizardMeasure> list1 = report.get("App/Controller/Accelerate/AccelerationViewController.h");
         assertEquals(2, list1.size());
 
-        for (Measure measure : list1) {
-            String s = measure.getMetric().getKey();
+        for (LizardMeasure measure : list1) {
+            String s = measure.metric().key();
 
             if (s.equals(CoreMetrics.FUNCTIONS_KEY)) {
-                assertEquals("Header Functions has a wrong value", 0, measure.getIntValue().intValue());
+                assertEquals("Header Functions has a wrong value", 0, measure.value().intValue());
             } else if (s.equals(CoreMetrics.COMPLEXITY_KEY)) {
-                assertEquals("Header Complexity has a wrong value", 0, measure.getIntValue().intValue());
+                assertEquals("Header Complexity has a wrong value", 0, measure.value().intValue());
             } else if (s.equals(CoreMetrics.FILE_COMPLEXITY_KEY)) {
-                assertEquals("Header File Complexity has a wrong value", 0.0d, measure.getValue().doubleValue(), 0.0d);
+                assertEquals("Header File Complexity has a wrong value", 0.0d, measure.value().doubleValue(), 0.0d);
             } else if (s.equals(CoreMetrics.COMPLEXITY_IN_FUNCTIONS_KEY)) {
-                assertEquals("Header Complexity in Functions has a wrong value", 0, measure.getIntValue().intValue());
+                assertEquals("Header Complexity in Functions has a wrong value", 0, measure.value().intValue());
             } else if (s.equals(CoreMetrics.FUNCTION_COMPLEXITY_KEY)) {
-                assertEquals("Header Functions Complexity has a wrong value", 0.0d, measure.getValue().doubleValue(), 0.0d);
+                assertEquals("Header Functions Complexity has a wrong value", 0.0d, measure.value().doubleValue(), 0.0d);
             }
         }
 
         assertTrue("Key is not there", report.containsKey("App/Controller/Accelerate/AccelerationViewController.m"));
 
-        List<Measure> list2 = report.get("App/Controller/Accelerate/AccelerationViewController.m");
+        List<LizardMeasure> list2 = report.get("App/Controller/Accelerate/AccelerationViewController.m");
         assertEquals(3, list2.size());
-        for (Measure measure : list2) {
-            String s = measure.getMetric().getKey();
+        for (LizardMeasure measure : list2) {
+            String s = measure.metric().key();
 
             if (s.equals(CoreMetrics.FUNCTIONS_KEY)) {
-                assertEquals("MFile Functions has a wrong value", 2, measure.getIntValue().intValue());
+                assertEquals("MFile Functions has a wrong value", 2, measure.value().intValue());
             } else if (s.equals(CoreMetrics.COMPLEXITY_KEY)) {
-                assertEquals("MFile Complexity has a wrong value", 6, measure.getIntValue().intValue());
+                assertEquals("MFile Complexity has a wrong value", 6, measure.value().intValue());
             } else if (s.equals(CoreMetrics.FILE_COMPLEXITY_KEY)) {
-                assertEquals("MFile File Complexity has a wrong value", 6.0d, measure.getValue().doubleValue(), 0.0d);
+                assertEquals("MFile File Complexity has a wrong value", 6.0d, measure.value().doubleValue(), 0.0d);
             } else if (s.equals(CoreMetrics.COMPLEXITY_IN_FUNCTIONS_KEY)) {
-                assertEquals("MFile Complexity in Functions has a wrong value", 6, measure.getIntValue().intValue());
+                assertEquals("MFile Complexity in Functions has a wrong value", 6, measure.value().intValue());
             } else if (s.equals(CoreMetrics.FUNCTION_COMPLEXITY_KEY)) {
-                assertEquals("MFile Functions Complexity has a wrong value", 3.0d, measure.getValue().doubleValue(), 0.0d);
+                assertEquals("MFile Functions Complexity has a wrong value", 3.0d, measure.value().doubleValue(), 0.0d);
             }
         }
     }
@@ -176,7 +175,7 @@ public class LizardReportParserTest {
 
         assertNotNull("correct file is null", incorrectFile);
 
-        Map<String, List<Measure>> report = parser.parseReport(incorrectFile);
+        Map<String, List<LizardMeasure>> report = parser.parseReport(incorrectFile);
         assertNull("report is not null", report);
 
     }

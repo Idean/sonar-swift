@@ -21,6 +21,7 @@ package com.backelite.sonarqube.swift.coverage;
 import com.backelite.sonarqube.commons.Constants;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import com.backelite.sonarqube.swift.lang.core.Swift;
+import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
@@ -29,44 +30,48 @@ import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.config.Settings;
-import org.sonar.api.resources.Project;
-import org.sonar.api.scan.filesystem.PathResolver;
 
 import java.io.File;
-import java.util.List;
 
 public class CoberturaSensor implements Sensor {
 
     public static final String REPORT_PATTERN_KEY = Constants.PROPERTY_PREFIX + ".coverage.reportPattern";
     public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage*.xml";
-    public static final String REPORT_DIRECTORY_KEY = Constants.PROPERTY_PREFIX + ".coverage.reportDirectory";
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensor.class);
-    private final ReportFilesFinder reportFilesFinder;
 
-    private final Settings settings;
+    private final Settings conf;
     private final FileSystem fileSystem;
-    private final PathResolver pathResolver;
-    private Project project;
 
-    public CoberturaSensor(final FileSystem fileSystem, final PathResolver pathResolver, final Settings settings, final Project project) {
+    public CoberturaSensor(final FileSystem fileSystem, final Settings config) {
 
-        this.settings = settings;
+        this.conf = config;
         this.fileSystem = fileSystem;
-        this.pathResolver = pathResolver;
-        this.project = project;
-
-        reportFilesFinder = new ReportFilesFinder(settings, REPORT_PATTERN_KEY, DEFAULT_REPORT_PATTERN, REPORT_DIRECTORY_KEY);
     }
 
-    private String getRootDirectory(Project project) {
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-        if (project.isRoot()) {
-            return projectBaseDir;
-        } else {
-            final String modulePath = project.path();
-            return projectBaseDir.substring(0, projectBaseDir.length() - modulePath.length());
+    private void parseReportIn(final String baseDir, final CoberturaReportParser parser) {
+
+        DirectoryScanner scanner = new DirectoryScanner();
+        scanner.setIncludes(new String[]{reportPath()});
+        scanner.setBasedir(baseDir);
+        scanner.setCaseSensitive(false);
+        scanner.scan();
+        String[] files = scanner.getIncludedFiles();
+
+        for (String filename : files) {
+            LOGGER.info("Processing Cobertura report {}", filename);
+            parser.parseReport(new File(filename));
         }
+
     }
+
+    private String reportPath() {
+        String reportPath = conf.getString(REPORT_PATTERN_KEY);
+        if (reportPath == null) {
+            reportPath = DEFAULT_REPORT_PATTERN;
+        }
+        return reportPath;
+    }
+
 
     @Override
     public void describe(SensorDescriptor descriptor) {
@@ -78,22 +83,9 @@ public class CoberturaSensor implements Sensor {
 
     @Override
     public void execute(SensorContext context) {
+        final String projectBaseDir = fileSystem.baseDir().getAbsolutePath();
 
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-        LOGGER.info("Analyzing directory: {}", projectBaseDir);
-
-        List<File> reports;
-        if (project.isRoot()) {
-            reports = reportFilesFinder.reportsIn(projectBaseDir);
-        } else {
-            final String module = project.getName();
-            final String rootDir = getRootDirectory(project);
-            reports = reportFilesFinder.reportsIn(module, rootDir, projectBaseDir);
-        }
-
-        for (final File report : reports) {
-            LOGGER.info("Processing coverage report {}", report);
-            CoberturaReportParser.parseReport(report, fileSystem, project, context);
-        }
+        CoberturaReportParser parser = new CoberturaReportParser(context, fileSystem);
+        parseReportIn(projectBaseDir, parser);
     }
 }

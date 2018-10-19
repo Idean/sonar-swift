@@ -18,24 +18,17 @@
 package com.backelite.sonarqube.swift.coverage;
 
 
-import com.backelite.sonarqube.commons.MeasureUtil;
+import com.backelite.sonarqube.commons.StaxParser;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputComponent;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.measures.CoverageMeasuresBuilder;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.measures.Metric;
-import org.sonar.api.resources.Project;
+import org.sonar.api.batch.sensor.coverage.NewCoverage;
 import org.sonar.api.utils.ParsingUtils;
-import org.sonar.api.utils.StaxParser;
-import org.sonar.api.utils.XmlParserException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -43,116 +36,99 @@ import java.text.ParseException;
 import java.util.Locale;
 import java.util.Map;
 
-public final class CoberturaReportParser {
+final class CoberturaReportParser {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaReportParser.class);
 
-    private final FileSystem fileSystem;
-    private final Project project;
     private final SensorContext context;
+    private final FileSystem fileSystem;
 
-    private CoberturaReportParser(FileSystem fileSystem, Project project, SensorContext context) {
-        this.fileSystem = fileSystem;
-        this.project = project;
+    CoberturaReportParser(final SensorContext context, final FileSystem fileSystem) {
         this.context = context;
+        this.fileSystem = fileSystem;
     }
 
     /**
      * Parse a Cobertura xml report and create measures accordingly
      */
-    public static void parseReport(File xmlFile, FileSystem fileSystem, Project project, SensorContext context) {
-        new CoberturaReportParser(fileSystem, project, context).parse(xmlFile);
+    void parseReport(File xmlFile) {
+        parse(xmlFile);
     }
 
-    private static void collectFileMeasures(SMInputCursor clazz,
-                                            Map<String, CoverageMeasuresBuilder> builderByFilename) throws XMLStreamException {
+    private void collectFileMeasures(SMInputCursor clazz,
+                                            Map<String, NewCoverage> builderByFilename) throws XMLStreamException {
         while (clazz.getNext() != null) {
             String fileName = clazz.getAttrValue("filename");
-            CoverageMeasuresBuilder builder = builderByFilename.get(fileName);
+
+            NewCoverage builder = builderByFilename.get(fileName);
             if (builder == null) {
-                builder = CoverageMeasuresBuilder.create();
-                builderByFilename.put(fileName, builder);
-            }
-            collectFileData(clazz, builder);
-        }
-    }
 
-    private static void collectFileData(SMInputCursor clazz,
-                                        CoverageMeasuresBuilder builder) throws XMLStreamException {
-        SMInputCursor line = clazz.childElementCursor("lines").advance().childElementCursor("line");
-        while (line.getNext() != null) {
-            int lineId = Integer.parseInt(line.getAttrValue("number"));
-            try {
-                builder.setHits(lineId, (int) ParsingUtils.parseNumber(line.getAttrValue("hits"), Locale.ENGLISH));
-            } catch (ParseException e) {
-                throw new XmlParserException(e);
-            }
-
-            String isBranch = line.getAttrValue("branch");
-            String text = line.getAttrValue("condition-coverage");
-            if (StringUtils.equals(isBranch, "true") && StringUtils.isNotBlank(text)) {
-                String[] conditions = StringUtils.split(StringUtils.substringBetween(text, "(", ")"), "/");
-                builder.setConditions(lineId, Integer.parseInt(conditions[1]), Integer.parseInt(conditions[0]));
-            }
-        }
-    }
-
-    private void parse(File xmlFile) {
-        try {
-            StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
-
-                @Override
-                public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
-                    rootCursor.advance();
-                    collectPackageMeasures(rootCursor.descendantElementCursor("package"));
-                }
-            });
-            parser.parse(xmlFile);
-        } catch (XMLStreamException e) {
-            throw new XmlParserException(e);
-        }
-    }
-
-    private void collectPackageMeasures(SMInputCursor pack) throws XMLStreamException {
-        while (pack.getNext() != null) {
-            Map<String, CoverageMeasuresBuilder> builderByFilename = Maps.newHashMap();
-            collectFileMeasures(pack.descendantElementCursor("class"), builderByFilename);
-            for (Map.Entry<String, CoverageMeasuresBuilder> entry : builderByFilename.entrySet()) {
-                String filePath = entry.getKey();
-                filePath = getAdjustedPathIfProjectIsModule(filePath);
+                String filePath = getAdjustedPathIfProjectIsModule(fileName);
                 if (filePath == null) {
+                    LOGGER.warn("File not found {}", fileName);
                     continue;
                 }
                 File file = new File(fileSystem.baseDir(), filePath);
                 InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
 
                 if (inputFile == null) {
-                    LOGGER.warn("file not included in sonar {}", filePath);
+                    LOGGER.warn("File not included in sonar {}", fileName);
                     continue;
                 } else {
-
-                    for (Measure measure : entry.getValue().createMeasures()) {
-                        if (measure.getValue() != null && measure.getMetric() != null) {
-                            MeasureUtil.saveMeasure(context, inputFile, (Metric<Integer>) measure.getMetric(), measure.getValue().intValue());
-                        }
-                    }
+                    builder = context.newCoverage().onFile(inputFile);
                 }
+                
+                builderByFilename.put(fileName, builder);
+            }
+            collectFileData(clazz, builder);
+        }
+    }
 
-                LOGGER.info("Successfully collected measures for file {}", file.getPath());
+    private void collectFileData(SMInputCursor clazz,
+                                 NewCoverage builder) throws XMLStreamException {
+        SMInputCursor line = clazz.childElementCursor("lines").advance().childElementCursor("line");
+        while (line.getNext() != null) {
+            int lineId = Integer.parseInt(line.getAttrValue("number"));
+            try {
+                builder.lineHits(lineId, (int) ParsingUtils.parseNumber(line.getAttrValue("hits"), Locale.ENGLISH));
+            } catch (ParseException e) {
+                throw new XMLStreamException(e);
+            }
+
+            String isBranch = line.getAttrValue("branch");
+            String text = line.getAttrValue("condition-coverage");
+            if (StringUtils.equals(isBranch, "true") && StringUtils.isNotBlank(text)) {
+                String[] conditions = StringUtils.split(StringUtils.substringBetween(text, "(", ")"), "/");
+                builder.conditions(lineId, Integer.parseInt(conditions[1]), Integer.parseInt(conditions[0]));
+            }
+        }
+    }
+
+    private void parse(File xmlFile) {
+        try {
+            StaxParser parser = new StaxParser(rootCursor -> {
+                rootCursor.advance();
+                collectPackageMeasures(rootCursor.descendantElementCursor("package"));
+            });
+            parser.parse(xmlFile);
+        } catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void collectPackageMeasures(SMInputCursor pack) throws XMLStreamException {
+        while (pack.getNext() != null) {
+            Map<String, NewCoverage> builderByFilename = Maps.newHashMap();
+            collectFileMeasures(pack.descendantElementCursor("class"), builderByFilename);
+            for (Map.Entry<String, NewCoverage> entry : builderByFilename.entrySet()) {
+                entry.getValue().save();
+                LOGGER.info("Successfully collected measures for file {}", entry.getKey());
             }
         }
     }
 
 
     private String getAdjustedPathIfProjectIsModule(String filePath) {
-        if (project.isModule()) {
-            // the file doesn't belong to the module we're analyzing
-            if (!filePath.startsWith(project.path())) {
-                return null;
-            }
-            // fileSystem.baseDir() will include the module path, so we need to get rid of it here
-            return filePath.substring(project.path().length());
-        }
         return filePath;
     }
 }

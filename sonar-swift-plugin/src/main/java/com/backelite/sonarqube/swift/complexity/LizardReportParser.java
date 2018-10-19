@@ -19,8 +19,6 @@ package com.backelite.sonarqube.swift.complexity;
 
 import org.slf4j.LoggerFactory;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.measures.RangeDistributionBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -52,8 +50,8 @@ public class LizardReportParser {
     private final Number[] FUNCTIONS_DISTRIB_BOTTOM_LIMITS = {1, 2, 4, 6, 8, 10, 12, 20, 30};
     private final Number[] FILES_DISTRIB_BOTTOM_LIMITS = {0, 5, 10, 20, 30, 60, 90};
 
-    public Map<String, List<Measure>> parseReport(final File xmlFile) {
-        Map<String, List<Measure>> result = null;
+    public Map<String, List<LizardMeasure>> parseReport(final File xmlFile) {
+        Map<String, List<LizardMeasure>> result = null;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         try {
@@ -73,9 +71,9 @@ public class LizardReportParser {
         return result;
     }
 
-    private Map<String, List<Measure>> parseFile(Document document) {
-        final Map<String, List<Measure>> reportMeasures = new HashMap<String, List<Measure>>();
-        final List<SwiftFunction> functions = new ArrayList<SwiftFunction>();
+    private Map<String, List<LizardMeasure>> parseFile(Document document) {
+        final Map<String, List<LizardMeasure>> reportMeasures = new HashMap<>();
+        final List<SwiftFunction> functions = new ArrayList<>();
 
         NodeList nodeList = document.getElementsByTagName(MEASURE);
 
@@ -99,7 +97,7 @@ public class LizardReportParser {
         return reportMeasures;
     }
 
-    private void addComplexityFileMeasures(NodeList itemList, Map<String, List<Measure>> reportMeasures) {
+    private void addComplexityFileMeasures(NodeList itemList, Map<String, List<LizardMeasure>> reportMeasures) {
         for (int i = 0; i < itemList.getLength(); i++) {
             Node item = itemList.item(i);
 
@@ -116,12 +114,10 @@ public class LizardReportParser {
         }
     }
 
-    private List<Measure> buildMeasureList(int complexity, double fileComplexity, int numberOfFunctions) {
-        List<Measure> list = new ArrayList<Measure>();
-        list.add(new Measure(CoreMetrics.COMPLEXITY).setIntValue(complexity));
-        list.add(new Measure(CoreMetrics.FUNCTIONS).setIntValue(numberOfFunctions));
-        RangeDistributionBuilder complexityDistribution = new RangeDistributionBuilder(CoreMetrics.FILE_COMPLEXITY_DISTRIBUTION, FILES_DISTRIB_BOTTOM_LIMITS);
-        complexityDistribution.add(fileComplexity);
+    private List<LizardMeasure> buildMeasureList(int complexity, double fileComplexity, int numberOfFunctions) {
+        List<LizardMeasure> list = new ArrayList<>();
+        list.add(new LizardMeasure(CoreMetrics.COMPLEXITY, complexity));
+        list.add(new LizardMeasure(CoreMetrics.FUNCTIONS, numberOfFunctions));
         return list;
     }
 
@@ -137,16 +133,16 @@ public class LizardReportParser {
         }
     }
 
-    private void addComplexityFunctionMeasures(Map<String, List<Measure>> reportMeasures, List<SwiftFunction> functions) {
-        for (Map.Entry<String, List<Measure>> entry : reportMeasures.entrySet()) {
+    private void addComplexityFunctionMeasures(Map<String, List<LizardMeasure>> reportMeasures, List<SwiftFunction> functions) {
+        for (Map.Entry<String, List<LizardMeasure>> entry : reportMeasures.entrySet()) {
 
-            RangeDistributionBuilder complexityDistribution = new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
+            //RangeDistributionBuilder complexityDistribution = new RangeDistributionBuilder(CoreMetrics.FUNCTION_COMPLEXITY_DISTRIBUTION, FUNCTIONS_DISTRIB_BOTTOM_LIMITS);
             int count = 0;
             int complexityInFunctions = 0;
 
             for (SwiftFunction func : functions) {
                 if (func.getName().contains(entry.getKey())) {
-                    complexityDistribution.add(func.getCyclomaticComplexity());
+                    // complexityDistribution.add(func.getCyclomaticComplexity());
                     count++;
                     complexityInFunctions += func.getCyclomaticComplexity();
                 }
@@ -154,22 +150,22 @@ public class LizardReportParser {
 
             if (count != 0) {
                 double complex = 0;
-                for (Measure m : entry.getValue()) {
-                    if (m.getMetric().getKey().equalsIgnoreCase(CoreMetrics.FILE_COMPLEXITY.getKey())) {
-                        complex = m.getValue();
+                for (LizardMeasure m : entry.getValue()) {
+                    if (m.metric().key().equalsIgnoreCase(CoreMetrics.FILE_COMPLEXITY.getKey())) {
+                        complex = (int) m.value();
                         break;
                     }
                 }
 
                 double complexMean = complex / (double) count;
-                entry.getValue().addAll(buildFuncionMeasuresList(complexMean, complexityInFunctions, complexityDistribution));
+                entry.getValue().addAll(buildFuncionMeasuresList(complexMean, complexityInFunctions));
             }
         }
     }
 
-    public List<Measure> buildFuncionMeasuresList(double complexMean, int complexityInFunctions, RangeDistributionBuilder builder) {
-        List<Measure> list = new ArrayList<Measure>();
-        list.add(new Measure(CoreMetrics.COMPLEXITY_IN_FUNCTIONS).setIntValue(complexityInFunctions));
+    public List<LizardMeasure> buildFuncionMeasuresList(double complexMean, int complexityInFunctions) {
+        List<LizardMeasure> list = new ArrayList<LizardMeasure>();
+        list.add(new LizardMeasure(CoreMetrics.COMPLEXITY_IN_FUNCTIONS, complexityInFunctions));
         return list;
     }
 

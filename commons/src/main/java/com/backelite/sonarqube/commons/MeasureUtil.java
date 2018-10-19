@@ -18,8 +18,8 @@
 package com.backelite.sonarqube.commons;
 
 import org.sonar.api.batch.fs.InputComponent;
+import org.sonar.api.batch.measure.Metric;
 import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.measures.Metric;
 
 /**
  * Created by gillesgrousset on 29/08/2018.

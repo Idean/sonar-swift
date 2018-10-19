@@ -56,6 +56,7 @@ public class SurefireSensor implements Sensor {
     public void describe(SensorDescriptor descriptor) {
         descriptor
                 .name("Surefire")
+                .onlyOnLanguages("swift", "objc")
                 .onlyOnFileType(InputFile.Type.MAIN);
     }
 

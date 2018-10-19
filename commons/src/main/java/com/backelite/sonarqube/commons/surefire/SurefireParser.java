@@ -18,6 +18,7 @@
 package com.backelite.sonarqube.commons.surefire;
 
 import com.backelite.sonarqube.commons.MeasureUtil;
+import com.backelite.sonarqube.commons.StaxParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
@@ -28,7 +29,6 @@ import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.test.MutableTestPlan;
 import org.sonar.api.test.TestCase;
-import org.sonar.api.utils.StaxParser;
 
 import javax.annotation.Nullable;
 import javax.xml.stream.XMLStreamException;
@@ -47,7 +47,7 @@ public class SurefireParser {
     protected final SensorContext context;
     protected final ResourcePerspectives perspectives;
 
-    protected SurefireParser(FileSystem fileSystem, ResourcePerspectives perspectives, SensorContext context) {
+    SurefireParser(FileSystem fileSystem, ResourcePerspectives perspectives, SensorContext context) {
         this.fileSystem = fileSystem;
         this.perspectives = perspectives;
         this.context = context;
@@ -82,11 +82,9 @@ public class SurefireParser {
             return new File[0];
         }
 
-        return dir.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                // .junit is for fastlane support
-                return (name.startsWith("TEST") && name.endsWith(".xml")) || (name.endsWith(".junit"));
-            }
+        return dir.listFiles((dir1, name) -> {
+            // .junit is for fastlane support
+            return (name.startsWith("TEST") && name.endsWith(".xml")) || (name.endsWith(".junit"));
         });
     }
 
@@ -121,6 +119,7 @@ public class SurefireParser {
                 negativeTimeTestNumber += report.getNegativeTimeTestNumber();
                 InputFile inputFile = getUnitTestResource(entry.getKey());
                 if (inputFile != null) {
+                    LOGGER.debug("Saving results for Resource: {}", entry.getKey());
                     saveResults(inputFile, report);
                 } else {
                     LOGGER.warn("Resource not found: {}", entry.getKey());
@@ -147,6 +146,13 @@ public class SurefireParser {
 
 
     protected void saveResults(InputFile testFile, UnitTestClassReport report) {
+        int testsCount = report.getTests() - report.getSkipped();
+        MeasureUtil.saveMeasure(context, testFile, CoreMetrics.SKIPPED_TESTS, report.getSkipped());
+        MeasureUtil.saveMeasure(context, testFile, CoreMetrics.TESTS, testsCount);
+        MeasureUtil.saveMeasure(context, testFile, CoreMetrics.TEST_ERRORS, report.getErrors());
+        MeasureUtil.saveMeasure(context, testFile, CoreMetrics.TEST_FAILURES, report.getFailures());
+        MeasureUtil.saveMeasure(context, testFile, CoreMetrics.TEST_EXECUTION_TIME, report.getDurationMilliseconds());
+
         for (UnitTestResult unitTestResult : report.getResults()) {
             MutableTestPlan testPlan = perspectives.as(MutableTestPlan.class, testFile);
             if (testPlan != null) {

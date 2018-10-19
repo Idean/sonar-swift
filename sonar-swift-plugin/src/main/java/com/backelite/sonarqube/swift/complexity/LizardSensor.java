@@ -26,8 +26,8 @@ import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
+import org.sonar.api.batch.sensor.measure.Measure;
 import org.sonar.api.config.Settings;
-import org.sonar.api.measures.Measure;
 
 import java.io.File;
 import java.util.List;
@@ -46,7 +46,7 @@ public class LizardSensor implements Sensor {
         this.fileSystem = moduleFileSystem;
     }
 
-    private Map<String, List<Measure>> parseReportsIn(final String baseDir, LizardReportParser parser) {
+    private Map<String, List<LizardMeasure>> parseReportsIn(final String baseDir, LizardReportParser parser) {
         final StringBuilder reportFileName = new StringBuilder(baseDir);
         reportFileName.append("/").append(reportPath());
         LoggerFactory.getLogger(getClass()).info("Processing complexity report ");
@@ -73,7 +73,7 @@ public class LizardSensor implements Sensor {
     public void execute(SensorContext context) {
 
         final String projectBaseDir = fileSystem.baseDir().getPath();
-        Map<String, List<Measure>> measures = parseReportsIn(projectBaseDir, new LizardReportParser());
+        Map<String, List<LizardMeasure>> measures = parseReportsIn(projectBaseDir, new LizardReportParser());
         LoggerFactory.getLogger(getClass()).info("Saving results of complexity analysis");
         new LizardMeasurePersistor(context, fileSystem).saveMeasures(measures);
     }
