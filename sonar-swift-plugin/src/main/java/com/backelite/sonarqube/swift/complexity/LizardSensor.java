@@ -56,7 +56,7 @@ public class LizardSensor implements Sensor {
 
     @Override
     public void execute(SensorContext context) {
-        String reportFileName = context.fileSystem().baseDir().getPath() + "/"+ reportPath();
+        String reportFileName = context.fileSystem().baseDir().getPath() + File.separator + reportPath();
         LOGGER.info("Processing complexity report: {}",reportFileName);
 
         LizardReportParser parser = new LizardReportParser(context);

@@ -36,21 +36,24 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class LizardReportParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardReportParser.class);
     private static final String MEASURE = "measure";
     private static final String MEASURE_TYPE = "type";
+    private static final String MEASURE_LABELS = "label";
     private static final String MEASURE_ITEM = "item";
     private static final String FILE_MEASURE = "file";
-    private static final String FUNCTION_MEASURE = "Function";
+    private static final String FUNCTION_MEASURE = "function";
     private static final String NAME = "name";
     private static final String VALUE = "value";
-    private static final int CYCLOMATIC_COMPLEXITY_INDEX = 2;
-    private static final int FUNCTIONS_INDEX = 3;
+    private static final String LINE_COUNT_LABEL = "NCSS";
+    private static final String CYCLOMATIC_COMPLEXITY_LABEL = "CCN";
+    private static final String FUNCTION_COUNT_LABEL = "Functions";
     private final SensorContext context;
+    private int lineCountIndex;
+    private int cyclomaticComplexityIndex;
+    private int functionCountIndex;
 
     public LizardReportParser(final SensorContext context) {
         this.context = context;
@@ -63,13 +66,13 @@ public class LizardReportParser {
             Document document = builder.parse(xmlFile);
             parseFile(document);
         } catch (final FileNotFoundException e) {
-            LoggerFactory.getLogger(getClass()).error("Lizard Report not found {}", xmlFile, e);
+            LOGGER.error("Lizard Report not found {}", xmlFile, e);
         } catch (final IOException e) {
-            LoggerFactory.getLogger(getClass()).error("Error processing file named {}", xmlFile, e);
+            LOGGER.error("Error processing file named {}", xmlFile, e);
         } catch (final ParserConfigurationException e) {
-            LoggerFactory.getLogger(getClass()).error("Error parsing file named {}", xmlFile, e);
+            LOGGER.error("Error parsing file named {}", xmlFile, e);
         } catch (final SAXException e) {
-            LoggerFactory.getLogger(getClass()).error("Error processing file named {}", xmlFile, e);
+            LOGGER.error("Error processing file named {}", xmlFile, e);
         }
     }
 
@@ -79,14 +82,30 @@ public class LizardReportParser {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
-                NodeList nl = element.getElementsByTagName(MEASURE_ITEM);
-                parseMeasure(element.getAttribute(MEASURE_TYPE), nl);
+                updateIndexes(element.getElementsByTagName(MEASURE_LABELS));
+
+                parseMeasure(element.getAttribute(MEASURE_TYPE), element.getElementsByTagName(MEASURE_ITEM));
+            }
+        }
+    }
+
+    private void updateIndexes(NodeList nodeList) {
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) node;
+                String label = element.getTextContent();
+                if(LINE_COUNT_LABEL.equalsIgnoreCase(label))
+                    lineCountIndex = i;
+                else if(CYCLOMATIC_COMPLEXITY_LABEL.equalsIgnoreCase(label))
+                    cyclomaticComplexityIndex = i;
+                else if(FUNCTION_COUNT_LABEL.equalsIgnoreCase(label))
+                    functionCountIndex = i;
             }
         }
     }
 
     private void parseMeasure(String type, NodeList itemList) {
-        List<SwiftFunction> functions = new ArrayList<>();
         for (int i = 0; i < itemList.getLength(); i++) {
             Node item = itemList.item(i);
             if (item.getNodeType() == Node.ELEMENT_NODE) {
@@ -97,85 +116,90 @@ public class LizardReportParser {
                 if (FILE_MEASURE.equalsIgnoreCase(type)) {
                     addComplexityFileMeasures(name,values);
                 } else if (FUNCTION_MEASURE.equalsIgnoreCase(type)) {
-                    String measure = values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent();
-                    functions.add(new SwiftFunction(name, Integer.parseInt(measure)));
+                    addComplexityFunctionMeasures(new SwiftFunction(name),values);
                 }
             }
-        }
-        if (!functions.isEmpty()) {
-            addComplexityFunctionMeasures(functions);
         }
     }
 
     private void addComplexityFileMeasures(String fileName, NodeList values) {
-        File file = new File(fileName);
-        FilePredicate fp = context.fileSystem().predicates().hasAbsolutePath(file.getAbsolutePath());
+        FilePredicate fp = context.fileSystem().predicates().hasRelativePath(fileName);
         if(!context.fileSystem().hasFiles(fp)){
             LOGGER.warn("file not included in sonar {}", fileName);
             return;
         }
         InputFile component = context.fileSystem().inputFile(fp);
-        int complexity = Integer.parseInt(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
+        int complexity = Integer.parseInt(values.item(cyclomaticComplexityIndex).getTextContent());
         context.<Integer>newMeasure()
             .on(component)
             .forMetric(CoreMetrics.COMPLEXITY)
             .withValue(complexity)
             .save();
 
-        int numberOfFunctions = Integer.parseInt(values.item(FUNCTIONS_INDEX).getTextContent());
+        int numberOfFunctions = Integer.parseInt(values.item(functionCountIndex).getTextContent());
         context.<Integer>newMeasure()
             .on(component)
             .forMetric(CoreMetrics.FUNCTIONS)
             .withValue(numberOfFunctions)
             .save();
 
-        double fileComplexity = Double.parseDouble(values.item(CYCLOMATIC_COMPLEXITY_INDEX).getTextContent());
-        context.<Double>newMeasure()
+        int numberOfLines = Integer.parseInt(values.item(lineCountIndex).getTextContent());
+        context.<Integer>newMeasure()
             .on(component)
-            .forMetric(CoreMetrics.FILE_COMPLEXITY)
-            .withValue(fileComplexity)
+            .forMetric(CoreMetrics.LINES)
+            .withValue(numberOfLines)
             .save();
     }
 
-    private void addComplexityFunctionMeasures(List<SwiftFunction> functions) {
-        int count = 0;
-        int complexityInFunctions = 0;
+    private void addComplexityFunctionMeasures(SwiftFunction component, NodeList values) {
+        int complexity = Integer.parseInt(values.item(cyclomaticComplexityIndex).getTextContent());
+        context.<Integer>newMeasure()
+            .on(component)
+            .forMetric(CoreMetrics.COMPLEXITY)
+            .withValue(complexity)
+            .save();
 
-        for (SwiftFunction func : functions) {
-            count++;
-            complexityInFunctions += func.getCyclomaticComplexity();
-
-            context.<Integer>newMeasure()
-                .on(func)
-                .forMetric(CoreMetrics.COMPLEXITY_IN_FUNCTIONS)
-                .withValue(complexityInFunctions)
-                .save();
-        }
-
-        if (count != 0) {
-            context.<Double>newMeasure()
-                .forMetric(CoreMetrics.FUNCTION_COMPLEXITY)
-                .withValue(((double)complexityInFunctions)/count)
-                .save();
-        }
+        int numberOfLines = Integer.parseInt(values.item(lineCountIndex).getTextContent());
+        context.<Integer>newMeasure()
+            .on(component)
+            .forMetric(CoreMetrics.LINES)
+            .withValue(numberOfLines)
+            .save();
     }
 
     private static class SwiftFunction implements InputModule {
+        private String name;
         private String key;
-        private int cyclomaticComplexity;
+        private String file;
+        private int lineNumber;
 
-        public SwiftFunction(String functionName, int cyclomaticComplexity) {
-            this.key = functionName;
-            this.cyclomaticComplexity = cyclomaticComplexity;
-        }
-
-        public int getCyclomaticComplexity() {
-            return cyclomaticComplexity;
+        public SwiftFunction(String name) {
+            String[] vals = name.split(" ");
+            if(vals.length >= 3){
+                this.name = vals[0].substring(0,vals[0].indexOf("("));
+                this.file = vals[2].substring(0,vals[2].lastIndexOf(":"));
+                this.lineNumber = Integer.parseInt(vals[2].substring(vals[2].lastIndexOf(":")+1));
+                this.key = file.substring(0,file.lastIndexOf('.')+1)+name;
+            }else{
+                this.key = name;
+            }
         }
 
         @Override
         public String key() {
             return key;
+        }
+
+        public String getName(){
+            return name;
+        }
+
+        public String getFile(){
+            return file;
+        }
+
+        public int getLineNumber(){
+            return lineNumber;
         }
 
         @Override

@@ -51,7 +51,7 @@ import org.sonar.api.Property;
 
 @Properties({
         @Property(
-                key = CoberturaSensor.REPORT_PATH_KEY,
+                key = CoberturaSensor.REPORT_PATTERN_KEY,
                 defaultValue = CoberturaSensor.DEFAULT_REPORT_PATTERN,
                 name = "Path to Cobertura reports (coverage)",
                 description = "Relative to projects' root. Ant patterns are accepted",

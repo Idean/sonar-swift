@@ -28,27 +28,22 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
 
 public class CoberturaSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaSensor.class);
-    public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX + ".cobertura.reportPath";
-    public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage.xml";
+    public static final String REPORT_PATTERN_KEY = Constants.PROPERTY_PREFIX + ".coverage.reportPattern";
+    public static final String DEFAULT_REPORT_PATTERN = "sonar-reports/coverage*.xml";
     private final SensorContext context;
 
     public CoberturaSensor(final SensorContext context) {
         this.context = context;
     }
 
-    private void parseReportsIn(final String baseDir, CoberturaReportParser parser) {
-        String reportFileName = baseDir + "/"+ reportPath();
-        LOGGER.info("Processing complexity report: {}",reportFileName);
-
-        parser.parseReport(new File(reportFileName));
-    }
-
     private String reportPath() {
         return context.config()
-            .get(REPORT_PATH_KEY)
+            .get(REPORT_PATTERN_KEY)
             .orElse(DEFAULT_REPORT_PATTERN);
     }
 
@@ -62,9 +57,16 @@ public class CoberturaSensor implements Sensor {
 
     @Override
     public void execute(SensorContext context) {
-        final String projectBaseDir = context.fileSystem().baseDir().getPath();
-
         CoberturaReportParser parser = new CoberturaReportParser(context);
-        parseReportsIn(projectBaseDir, parser);
+        String path = reportPath();
+        String dirPath = context.fileSystem().baseDir().getAbsolutePath() + File.separator + path.substring(0,path.lastIndexOf(File.separator)+1);
+        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("regex:"+path.replaceAll("\\*","\\\\w+"));
+        try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(Paths.get(dirPath), pathMatcher::matches)) {
+            for(Path p : dirStream){
+                parser.parseReport(p.toFile());
+            }
+        } catch (IOException ex){
+            LOGGER.error( "Error while finding test files.", ex);
+        }
     }
 }
