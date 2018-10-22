@@ -877,6 +877,19 @@
                     <txt>min</txt>
                 </prop>
             </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>anyobject_protocol</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
         </chc>
         <chc>
             <key>UNDERSTANDABILITY</key>
@@ -1469,6 +1482,19 @@
             <chc>
                 <rule-repo>SwiftLint</rule-repo>
                 <rule-key>no_fallthrough_only</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+            <chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>missing_docs</rule-key>
                 <prop>
                     <key>remediationFunction</key>
                     <txt>CONSTANT_ISSUE</txt>
