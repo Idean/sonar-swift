@@ -41,20 +41,6 @@ public class SwiftLintSensor implements Sensor {
         this.context = context;
     }
 
-    private void parseReportIn(final String baseDir, final SwiftLintReportParser parser) {
-        DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setIncludes(new String[]{reportPath()});
-        scanner.setBasedir(baseDir);
-        scanner.setCaseSensitive(false);
-        scanner.scan();
-        String[] files = scanner.getIncludedFiles();
-
-        for (String filename : files) {
-            LOGGER.info("Processing SwiftLint report {}", filename);
-            parser.parseReport(new File(filename));
-        }
-    }
-
     private String reportPath() {
         return context.config()
             .get(REPORT_PATH_KEY)
@@ -71,9 +57,17 @@ public class SwiftLintSensor implements Sensor {
 
     @Override
     public void execute(SensorContext context) {
-        final String projectBaseDir = context.fileSystem().baseDir().getAbsolutePath();
-
         SwiftLintReportParser parser = new SwiftLintReportParser(context);
-        parseReportIn(projectBaseDir, parser);
+        DirectoryScanner scanner = new DirectoryScanner();
+        scanner.setIncludes(new String[]{reportPath()});
+        scanner.setBasedir(context.fileSystem().baseDir().getAbsolutePath());
+        scanner.setCaseSensitive(false);
+        scanner.scan();
+        String[] files = scanner.getIncludedFiles();
+
+        for (String filename : files) {
+            LOGGER.info("Processing SwiftLint report {}", filename);
+            parser.parseReport(new File(filename));
+        }
     }
 }

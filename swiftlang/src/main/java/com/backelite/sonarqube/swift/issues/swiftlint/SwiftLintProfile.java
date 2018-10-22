@@ -48,7 +48,6 @@ public class SwiftLintProfile implements BuiltInQualityProfilesDefinition {
         LOGGER.info("Creating SwiftLint Profile");
         NewBuiltInQualityProfile nbiqp = context.createBuiltInQualityProfile(SwiftLintRulesDefinition.REPOSITORY_KEY, Swift.KEY);
 
-
         try(Reader config = new InputStreamReader(getClass().getResourceAsStream(SwiftLintProfile.PROFILE_PATH))) {
             RulesProfile ocLintRulesProfile = profileImporter.importProfile(config, ValidationMessages.create());
             for (ActiveRule rule : ocLintRulesProfile.getActiveRules()) {

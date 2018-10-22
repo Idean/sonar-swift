@@ -28,16 +28,15 @@ import org.sonar.api.utils.ValidationMessages;
 import java.io.Reader;
 
 public class SwiftLintProfileImporter extends ProfileImporter {
-
-    private static final String UNABLE_TO_LOAD_DEFAULT_PROFILE = "Unable to load default SwiftLint profile";
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftLintProfileImporter.class);
+    private static final String UNABLE_TO_LOAD_DEFAULT_PROFILE = "Unable to load default SwiftLint profile";
 
     private final XMLProfileParser profileParser;
 
     public SwiftLintProfileImporter(final XMLProfileParser xmlProfileParser) {
         super(SwiftLintRulesDefinition.REPOSITORY_KEY, SwiftLintRulesDefinition.REPOSITORY_KEY);
         setSupportedLanguages(Swift.KEY);
-        profileParser = xmlProfileParser;
+        this.profileParser = xmlProfileParser;
     }
 
     @Override

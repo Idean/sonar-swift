@@ -18,7 +18,6 @@
 package com.backelite.sonarqube.swift.issues.swiftlint;
 
 import com.backelite.sonarqube.swift.lang.core.Swift;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.CharEncoding;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -28,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -37,51 +35,30 @@ import java.io.Reader;
  * Created by gillesgrousset on 27/11/2015.
  */
 public class SwiftLintRulesDefinition implements RulesDefinition {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftLintRulesDefinition.class);
     public static final String REPOSITORY_KEY = "SwiftLint";
     public static final String REPOSITORY_NAME = REPOSITORY_KEY;
-    private static final Logger LOGGER = LoggerFactory.getLogger(SwiftLintRulesDefinition.class);
     private static final String RULES_FILE = "/org/sonar/plugins/swiftlint/rules.json";
 
     @Override
     public void define(Context context) {
+        NewRepository repository = context.createRepository(REPOSITORY_KEY, Swift.KEY).setName(REPOSITORY_NAME);
 
-        NewRepository repository = context
-                .createRepository(REPOSITORY_KEY, Swift.KEY)
-                .setName(REPOSITORY_NAME);
-
-        try {
-            loadRules(repository);
+        try(Reader reader = new InputStreamReader(getClass().getResourceAsStream(RULES_FILE), CharEncoding.UTF_8)){
+            JSONArray slRules = (JSONArray)JSONValue.parse(reader);
+            if(slRules != null){
+                for (Object obj : slRules) {
+                    JSONObject slRule = (JSONObject) obj;
+                    repository.createRule((String) slRule.get("key"))
+                        .setName((String) slRule.get("name"))
+                        .setSeverity((String) slRule.get("severity"))
+                        .setHtmlDescription((String) slRule.get("description"));
+                }
+            }
         } catch (IOException e) {
             LOGGER.error("Failed to load SwiftLint rules", e);
         }
-
         SqaleXmlLoader.load(repository, "/com/sonar/sqale/swiftlint-model.xml");
-
         repository.done();
-
-    }
-
-    private void loadRules(NewRepository repository) throws IOException {
-
-        Reader reader = new BufferedReader(new InputStreamReader(getClass()
-                .getResourceAsStream(RULES_FILE), CharEncoding.UTF_8));
-
-        String jsonString = IOUtils.toString(reader);
-
-        Object rulesObj = JSONValue.parse(jsonString);
-
-        if (rulesObj != null) {
-            JSONArray slRules = (JSONArray) rulesObj;
-            for (Object obj : slRules) {
-                JSONObject slRule = (JSONObject) obj;
-
-                RulesDefinition.NewRule rule = repository.createRule((String) slRule.get("key"));
-                rule.setName((String) slRule.get("name"));
-                rule.setSeverity((String) slRule.get("severity"));
-                rule.setHtmlDescription((String) slRule.get("description"));
-
-            }
-        }
     }
 }

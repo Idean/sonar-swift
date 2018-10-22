@@ -18,13 +18,14 @@
 package com.backelite.sonarqube.swift.issues.tailor;
 
 import com.backelite.sonarqube.swift.lang.core.Swift;
-import com.google.common.io.Closeables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
+import org.sonar.api.rules.ActiveRule;
+import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
 import org.sonar.api.utils.ValidationMessages;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
@@ -32,10 +33,9 @@ import java.io.Reader;
  * Created by tzwickl on 22/11/2016.
  */
 
-public class TailorProfile extends ProfileDefinition {
-
-    public static final String PROFILE_PATH = "/org/sonar/plugins/tailor/profile-tailor.xml";
+public class TailorProfile implements BuiltInQualityProfilesDefinition {
     private static final Logger LOGGER = LoggerFactory.getLogger(TailorProfile.class);
+    public static final String PROFILE_PATH = "/org/sonar/plugins/tailor/profile-tailor.xml";
 
     private final TailorProfileImporter profileImporter;
 
@@ -44,19 +44,17 @@ public class TailorProfile extends ProfileDefinition {
     }
 
     @Override
-    public RulesProfile createProfile(final ValidationMessages messages) {
+    public void define(Context context) {
         LOGGER.info("Creating Tailor Profile");
-        Reader config = null;
-
-        try {
-            config = new InputStreamReader(getClass().getResourceAsStream(PROFILE_PATH));
-            final RulesProfile profile = this.profileImporter.importProfile(config, messages);
-            profile.setName(TailorRulesDefinition.REPOSITORY_KEY);
-            profile.setLanguage(Swift.KEY);
-
-            return profile;
-        } finally {
-            Closeables.closeQuietly(config);
+        NewBuiltInQualityProfile nbiqp = context.createBuiltInQualityProfile(TailorRulesDefinition.REPOSITORY_KEY, Swift.KEY);
+        try(Reader config = new InputStreamReader(getClass().getResourceAsStream(PROFILE_PATH))) {
+            RulesProfile ocLintRulesProfile = profileImporter.importProfile(config, ValidationMessages.create());
+            for (ActiveRule rule : ocLintRulesProfile.getActiveRules()) {
+                nbiqp.activateRule(rule.getRepositoryKey(), rule.getRuleKey());
+            }
+        } catch (IOException ex){
+            LOGGER.error("Error Creating Tailor Profile",ex);
         }
+        nbiqp.done();
     }
 }

@@ -39,8 +39,7 @@ public class SwiftProfile implements BuiltInQualityProfilesDefinition {
     private final SwiftLintProfileImporter swiftLintProfileImporter;
     private final TailorProfileImporter tailorProfileImporter;
 
-    public SwiftProfile(final SwiftLintProfileImporter swiftLintProfileImporter,
-                        final TailorProfileImporter tailorProfileImporter) {
+    public SwiftProfile(final SwiftLintProfileImporter swiftLintProfileImporter, final TailorProfileImporter tailorProfileImporter) {
         this.swiftLintProfileImporter = swiftLintProfileImporter;
         this.tailorProfileImporter = tailorProfileImporter;
     }

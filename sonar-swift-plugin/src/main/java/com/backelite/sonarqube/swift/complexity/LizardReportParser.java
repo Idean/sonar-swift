@@ -51,18 +51,19 @@ public class LizardReportParser {
     private static final String CYCLOMATIC_COMPLEXITY_LABEL = "CCN";
     private static final String FUNCTION_COUNT_LABEL = "Functions";
     private final SensorContext context;
+    private final DocumentBuilderFactory dbfactory;
     private int lineCountIndex;
     private int cyclomaticComplexityIndex;
     private int functionCountIndex;
 
     public LizardReportParser(final SensorContext context) {
         this.context = context;
+        this.dbfactory = DocumentBuilderFactory.newInstance();
     }
 
     public void parseReport(final File xmlFile) {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         try {
-            DocumentBuilder builder = factory.newDocumentBuilder();
+            DocumentBuilder builder = dbfactory.newDocumentBuilder();
             Document document = builder.parse(xmlFile);
             parseFile(document);
         } catch (final FileNotFoundException e) {

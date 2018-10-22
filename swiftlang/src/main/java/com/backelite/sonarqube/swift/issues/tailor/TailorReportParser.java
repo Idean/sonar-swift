@@ -17,7 +17,6 @@
  */
 package com.backelite.sonarqube.swift.issues.tailor;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
@@ -28,8 +27,10 @@ import org.sonar.api.batch.sensor.issue.internal.DefaultIssueLocation;
 import org.sonar.api.rule.RuleKey;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Created by tzwickl on 22/11/2016.
@@ -46,21 +47,9 @@ public class TailorReportParser {
     }
 
     public void parseReport(final File reportFile) {
-        try {
+        try (Stream<String> lines = Files.lines(reportFile.toPath())) {
             // Read and parse report
-            FileReader fr = new FileReader(reportFile);
-
-            BufferedReader br = new BufferedReader(fr);
-            String line;
-            while ((line = br.readLine()) != null) {
-                recordIssue(line);
-
-            }
-            IOUtils.closeQuietly(br);
-            IOUtils.closeQuietly(fr);
-
-        } catch (FileNotFoundException e) {
-            LOGGER.error("Failed to parse SwiftLint report file", e);
+            lines.forEach(this::recordIssue);
         } catch (IOException e) {
             LOGGER.error("Failed to parse SwiftLint report file", e);
         }
@@ -78,7 +67,6 @@ public class TailorReportParser {
             String message = matcher.group(6);
 
             FilePredicate fp = context.fileSystem().predicates().hasAbsolutePath(filePath);
-
             if (!context.fileSystem().hasFiles(fp)) {
                 LOGGER.warn("file not included in sonar {}", filePath);
                 continue;

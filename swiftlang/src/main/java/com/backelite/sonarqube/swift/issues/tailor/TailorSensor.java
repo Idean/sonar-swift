@@ -44,20 +44,6 @@ public class TailorSensor implements Sensor {
         this.context = context;
     }
 
-    private void parseReportIn(final String baseDir, final TailorReportParser parser) {
-        DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setIncludes(new String[]{reportPath()});
-        scanner.setBasedir(baseDir);
-        scanner.setCaseSensitive(false);
-        scanner.scan();
-        String[] files = scanner.getIncludedFiles();
-
-        for (String filename : files) {
-            LOGGER.info("Processing Tailor report {}", filename);
-            parser.parseReport(new File(filename));
-        }
-    }
-
     private String reportPath() {
         return context.config()
             .get(REPORT_PATH_KEY)
@@ -74,9 +60,17 @@ public class TailorSensor implements Sensor {
 
     @Override
     public void execute(SensorContext context) {
-        final String projectBaseDir = context.fileSystem().baseDir().getAbsolutePath();
-
         TailorReportParser parser = new TailorReportParser(context);
-        parseReportIn(projectBaseDir, parser);
+        DirectoryScanner scanner = new DirectoryScanner();
+        scanner.setIncludes(new String[]{reportPath()});
+        scanner.setBasedir(context.fileSystem().baseDir().getAbsolutePath());
+        scanner.setCaseSensitive(false);
+        scanner.scan();
+        String[] files = scanner.getIncludedFiles();
+
+        for (String filename : files) {
+            LOGGER.info("Processing Tailor report {}", filename);
+            parser.parseReport(new File(filename));
+        }
     }
 }

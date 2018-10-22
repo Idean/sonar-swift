@@ -18,7 +18,6 @@
 package com.backelite.sonarqube.objectivec.lang.core;
 
 import com.backelite.sonarqube.objectivec.ObjectiveCConstants;
-import org.apache.commons.lang.StringUtils;
 import org.sonar.api.config.Configuration;
 import org.sonar.api.resources.AbstractLanguage;
 
@@ -37,7 +36,7 @@ public class ObjectiveC extends AbstractLanguage {
     public String[] getFileSuffixes() {
         String[] suffixes = filterEmptyStrings(config.getStringArray(ObjectiveCConstants.FILE_SUFFIXES));
         if (suffixes.length == 0) {
-            suffixes = StringUtils.split(ObjectiveCConstants.FILE_SUFFIXES, ",");
+            suffixes = ObjectiveCConstants.FILE_SUFFIXES.split( ",");
         }
         return suffixes;
     }
@@ -45,7 +44,7 @@ public class ObjectiveC extends AbstractLanguage {
     private String[] filterEmptyStrings(String[] stringArray) {
         List<String> nonEmptyStrings = new ArrayList<>();
         for (String string : stringArray) {
-            if (StringUtils.isNotBlank(string.trim())) {
+            if (string.trim().length() > 0) {
                 nonEmptyStrings.add(string.trim());
             }
         }

@@ -19,6 +19,7 @@ package com.backelite.sonarqube.swift.coverage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.coverage.NewCoverage;
@@ -31,14 +32,16 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public final class CoberturaReportParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaReportParser.class);
     private static final String PACKAGES = "packages";
     private static final String CLASSES = "class";
     private static final String FILE = "filename";
-    private static final String LINES = "lines";
+    private static final String LINE = "line";
     private static final String NUMBER = "number";
     private static final String HITS = "hits";
     private static final String BRANCH = "branch";
@@ -84,7 +87,7 @@ public final class CoberturaReportParser {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
                 String filePath = element.getAttribute(FILE);
-                NodeList nl = element.getElementsByTagName(LINES);
+                NodeList nl = element.getElementsByTagName(LINE);
                 collectFileData(filePath, nl);
             }
         }
@@ -92,6 +95,7 @@ public final class CoberturaReportParser {
 
     private void collectFileData(String filePath, NodeList nodeList) {
         InputFile resource = getFile(filePath);
+        LOGGER.info("Collect file data: {}",resource.toString());
         if (resource != null) {
             boolean lineAdded = false;
             NewCoverage coverage = context.newCoverage();
@@ -130,9 +134,11 @@ public final class CoberturaReportParser {
     }
 
     private InputFile getFile(String filePath) {
-        String path = context.fileSystem().baseDir().getAbsolutePath() + File.separator + filePath;
-        InputFile file = context.fileSystem().inputFile(context.fileSystem().predicates().hasAbsolutePath(path));
-        return file != null && file.isFile() ? file : null;
+        FilePredicate fp = context.fileSystem().predicates().hasPath(filePath);
+        if(context.fileSystem().hasFiles(fp))
+            return context.fileSystem().inputFile(fp);
+        LOGGER.warn("Can't find file {}",filePath);
+        return null;
     }
 
 }

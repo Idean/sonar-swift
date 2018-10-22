@@ -78,7 +78,7 @@ public class SwiftSquidSensor implements Sensor {
     private void save(Collection<SourceCode> squidSourceFiles) {
         for (SourceCode squidSourceFile : squidSourceFiles) {
             SourceFile squidFile = (SourceFile) squidSourceFile;
-            String relativePath = pathResolver.relativePath(context.fileSystem().baseDir(), new java.io.File(squidFile.getKey()));
+            String relativePath = pathResolver.relativePath(context.fileSystem().baseDir(), new File(squidFile.getKey()));
             InputFile inputFile = context.fileSystem().inputFile(context.fileSystem().predicates().hasRelativePath(relativePath));
 
             saveMeasures(inputFile, squidFile);
