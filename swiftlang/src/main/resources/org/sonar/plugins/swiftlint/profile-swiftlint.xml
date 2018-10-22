@@ -5,6 +5,10 @@
     <rules>
         <rule>
             <repositoryKey>SwiftLint</repositoryKey>
+            <key>anyobject_protocol</key>
+        </rule>
+        <rule>
+            <repositoryKey>SwiftLint</repositoryKey>
             <key>array_init</key>
         </rule>
         <rule>
@@ -269,6 +273,10 @@
         </rule>
         <rule>
             <repositoryKey>SwiftLint</repositoryKey>
+            <key>missing_docs</key>
+        </rule>
+        <rule>
+            <repositoryKey>SwiftLint</repositoryKey>
             <key>modifier_order</key>
         </rule>
         <rule>
@@ -402,6 +410,10 @@
         <rule>
             <repositoryKey>SwiftLint</repositoryKey>
             <key>redundant_string_enum_value</key>
+        </rule>
+        <rule>
+            <repositoryKey>SwiftLint</repositoryKey>
+            <key>redundant_type_annotation</key>
         </rule>
         <rule>
             <repositoryKey>SwiftLint</repositoryKey>
