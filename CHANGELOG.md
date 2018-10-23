@@ -1,6 +1,9 @@
 # _SonarQube Plugin for Swift_ Changelog
 
 
+##  v0.4.2
+- Added support for SonarQube 7.3
+
 ##  v0.4.1
 - Fixed NPE on SquidSensor
 
