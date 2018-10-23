@@ -24,8 +24,6 @@ import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCGrammar;
 import com.backelite.sonarqube.objectivec.lang.api.ObjectiveCMetric;
 import com.backelite.sonarqube.objectivec.lang.checks.CheckList;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
@@ -139,9 +137,9 @@ public class ObjectiveCSquidSensor implements Sensor {
             files.add(inf.file());
         }
 
-        List<SquidAstVisitor<ObjectiveCGrammar>> visitors = Lists.newArrayList(checks.all());
+        List<SquidAstVisitor<ObjectiveCGrammar>> visitors = new ArrayList<>(checks.all());
         scanner = ObjectiveCAstScanner.create(createConfiguration(), visitors.toArray(new SquidAstVisitor[visitors.size()]));
-        scanner.scanFiles(ImmutableList.copyOf(files));
+        scanner.scanFiles(files);
 
         Collection<SourceCode> squidSourceFiles = scanner.getIndex().search(new QueryByType(SourceFile.class));
         save(squidSourceFiles);

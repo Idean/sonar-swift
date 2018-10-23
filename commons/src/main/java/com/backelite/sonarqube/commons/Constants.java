@@ -21,13 +21,5 @@ package com.backelite.sonarqube.commons;
  * Created by gillesgrousset on 23/08/2018.
  */
 public final class Constants {
-
-    // Common constants
-    public static final String FALSE = "false";
-
     public static final String PROPERTY_PREFIX = "sonar.swift";
-
-    public static final String TEST_FRAMEWORK_KEY = PROPERTY_PREFIX + ".testframework";
-    public static final String TEST_FRAMEWORK_DEFAULT = "ghunit";
-
 }

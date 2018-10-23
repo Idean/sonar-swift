@@ -24,8 +24,6 @@ import com.backelite.sonarqube.swift.lang.api.SwiftGrammar;
 import com.backelite.sonarqube.swift.lang.api.SwiftMetric;
 import com.backelite.sonarqube.swift.lang.checks.CheckList;
 import com.backelite.sonarqube.swift.lang.core.Swift;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.rule.CheckFactory;
@@ -48,10 +46,7 @@ import org.sonar.squidbridge.checks.SquidCheck;
 import org.sonar.squidbridge.indexer.QueryByType;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 
 public class SwiftSquidSensor implements Sensor {
@@ -138,9 +133,9 @@ public class SwiftSquidSensor implements Sensor {
             files.add(inf.file());
         }
 
-        List<SquidAstVisitor<SwiftGrammar>> visitors = Lists.newArrayList(checks.all());
+        List<SquidAstVisitor<SwiftGrammar>> visitors = new ArrayList<>(checks.all());
         scanner = SwiftAstScanner.create(createConfiguration(), visitors.toArray(new SquidAstVisitor[visitors.size()]));
-        scanner.scanFiles(ImmutableList.copyOf(files));
+        scanner.scanFiles(files);
 
         Collection<SourceCode> squidSourceFiles = scanner.getIndex().search(new QueryByType(SourceFile.class));
         save(squidSourceFiles);

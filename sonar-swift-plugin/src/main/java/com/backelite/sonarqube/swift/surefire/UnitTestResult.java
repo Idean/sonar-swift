@@ -1,5 +1,5 @@
 /**
- * commons - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.commons.surefire;
+package com.backelite.sonarqube.swift.surefire;
 
 public final class UnitTestResult {
     public static final String STATUS_OK = "ok";
@@ -47,10 +47,6 @@ public final class UnitTestResult {
         return this;
     }
 
-    public String getStackTrace() {
-        return stackTrace;
-    }
-
     public UnitTestResult setStackTrace(String stackTrace) {
         this.stackTrace = stackTrace;
         return this;
@@ -72,10 +68,6 @@ public final class UnitTestResult {
     public UnitTestResult setDurationMilliseconds(long l) {
         this.durationMilliseconds = l;
         return this;
-    }
-
-    public boolean isErrorOrFailure() {
-        return STATUS_ERROR.equals(status) || STATUS_FAILURE.equals(status);
     }
 
     public boolean isError() {

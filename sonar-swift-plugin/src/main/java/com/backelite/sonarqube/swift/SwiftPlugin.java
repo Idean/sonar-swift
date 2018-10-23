@@ -17,8 +17,7 @@
  */
 package com.backelite.sonarqube.swift;
 
-import com.backelite.sonarqube.commons.surefire.SurefireSensor;
-import com.backelite.sonarqube.commons.surefire.TestFileFinders;
+import com.backelite.sonarqube.commons.TestFileFinders;
 import com.backelite.sonarqube.objectivec.ObjectiveCSquidSensor;
 import com.backelite.sonarqube.objectivec.issues.ObjectiveCProfile;
 import com.backelite.sonarqube.objectivec.issues.fauxpas.FauxPasProfile;
@@ -43,11 +42,13 @@ import com.backelite.sonarqube.swift.issues.tailor.TailorProfileImporter;
 import com.backelite.sonarqube.swift.issues.tailor.TailorRulesDefinition;
 import com.backelite.sonarqube.swift.issues.tailor.TailorSensor;
 import com.backelite.sonarqube.swift.lang.core.Swift;
+import com.backelite.sonarqube.swift.surefire.SurefireSensor;
 import com.backelite.sonarqube.swift.surefire.SwiftTestFileFinder;
-import com.google.common.collect.ImmutableList;
 import org.sonar.api.Plugin;
 import org.sonar.api.Properties;
 import org.sonar.api.Property;
+
+import java.util.Arrays;
 
 @Properties({
         @Property(
@@ -109,7 +110,7 @@ public class SwiftPlugin implements Plugin {
         TestFileFinders.getInstance().addFinder(new SwiftTestFileFinder());
         TestFileFinders.getInstance().addFinder(new ObjectiveCTestFileFinder());
         context.addExtensions(
-            ImmutableList.of(
+            Arrays.asList(
                 // Language support
                 Swift.class,
                 SwiftProfile.class,
