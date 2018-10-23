@@ -19,6 +19,7 @@ package com.backelite.sonarqube.objectivec.issues.oclint;
 
 import org.codehaus.staxmate.in.SMHierarchicCursor;
 import org.codehaus.staxmate.in.SMInputCursor;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
@@ -32,6 +33,7 @@ import javax.xml.stream.XMLStreamException;
 import java.io.File;
 
 final class OCLintXMLStreamHandler implements XmlStreamHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OCLintXMLStreamHandler.class);
     private static final int PMD_MINIMUM_PRIORITY = 5;
     private final ResourcePerspectives resourcePerspectives;
     private final FileSystem fileSystem;
@@ -88,7 +90,12 @@ final class OCLintXMLStreamHandler implements XmlStreamHandler {
                     .message(line.getElemStringValue())
                     .build();
 
-            issuable.addIssue(issue);
+            try {
+                issuable.addIssue(issue);
+            } catch (Exception e) {
+                // Unable to add issue : probably because does not exist in the repository
+                LOGGER.warn(e.getMessage());
+            }
 
 
         }
