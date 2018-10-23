@@ -4,6 +4,9 @@
 ##  v0.4.3
 - Added support for SonarQube 7.3
 
+##  v0.4.2
+- Fixed "rule does not exist" crash on Objective-C sensors
+
 ##  v0.4.1
 - Fixed NPE on SquidSensor
 
