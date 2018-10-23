@@ -1,5 +1,5 @@
 /**
- * commons - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,13 +15,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.commons.surefire;
+package com.backelite.sonarqube.swift.surefire;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @since 2.8
@@ -31,24 +28,15 @@ public class UnitTestIndex {
     private Map<String, UnitTestClassReport> indexByClassname;
 
     public UnitTestIndex() {
-        this.indexByClassname = Maps.newHashMap();
+        this.indexByClassname = new HashMap<>();
     }
 
     public UnitTestClassReport index(String classname) {
-        UnitTestClassReport classReport = indexByClassname.get(classname);
-        if (classReport == null) {
-            classReport = new UnitTestClassReport();
-            indexByClassname.put(classname, classReport);
-        }
-        return classReport;
+        return indexByClassname.computeIfAbsent(classname, k -> new UnitTestClassReport());
     }
 
     public UnitTestClassReport get(String classname) {
         return indexByClassname.get(classname);
-    }
-
-    public Set<String> getClassnames() {
-        return Sets.newHashSet(indexByClassname.keySet());
     }
 
     public Map<String, UnitTestClassReport> getIndexByClassname() {
@@ -58,21 +46,4 @@ public class UnitTestIndex {
     public int size() {
         return indexByClassname.size();
     }
-
-    public UnitTestClassReport merge(String classname, String intoClassname) {
-        UnitTestClassReport from = indexByClassname.get(classname);
-        if (from != null) {
-            UnitTestClassReport to = index(intoClassname);
-            to.add(from);
-            indexByClassname.remove(classname);
-            return to;
-        }
-        return null;
-    }
-
-    public void remove(String classname) {
-        indexByClassname.remove(classname);
-    }
-
-
 }

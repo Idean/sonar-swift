@@ -65,7 +65,7 @@ public class CoberturaSensor implements Sensor {
         String[] files = scanner.getIncludedFiles();
 
         for (String filename : files) {
-            LOGGER.info("Processing report report {}", filename);
+            LOGGER.info("Processing Cobertura report {}", filename);
             parser.parseReport(new File(filename));
         }
     }

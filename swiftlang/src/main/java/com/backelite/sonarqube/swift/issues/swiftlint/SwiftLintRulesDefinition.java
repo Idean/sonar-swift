@@ -18,7 +18,6 @@
 package com.backelite.sonarqube.swift.issues.swiftlint;
 
 import com.backelite.sonarqube.swift.lang.core.Swift;
-import org.apache.commons.lang.CharEncoding;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -30,6 +29,7 @@ import org.sonar.squidbridge.rules.SqaleXmlLoader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 
 /**
  * Created by gillesgrousset on 27/11/2015.
@@ -44,7 +44,7 @@ public class SwiftLintRulesDefinition implements RulesDefinition {
     public void define(Context context) {
         NewRepository repository = context.createRepository(REPOSITORY_KEY, Swift.KEY).setName(REPOSITORY_NAME);
 
-        try(Reader reader = new InputStreamReader(getClass().getResourceAsStream(RULES_FILE), CharEncoding.UTF_8)){
+        try(Reader reader = new InputStreamReader(getClass().getResourceAsStream(RULES_FILE), Charset.forName("UTF-8"))){
             JSONArray slRules = (JSONArray)JSONValue.parse(reader);
             if(slRules != null){
                 for (Object obj : slRules) {

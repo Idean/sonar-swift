@@ -22,7 +22,6 @@ import org.sonar.api.config.Configuration;
 import org.sonar.api.resources.AbstractLanguage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Swift extends AbstractLanguage {

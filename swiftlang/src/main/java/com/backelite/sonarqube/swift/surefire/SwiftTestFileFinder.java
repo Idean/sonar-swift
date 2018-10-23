@@ -17,52 +17,47 @@
  */
 package com.backelite.sonarqube.swift.surefire;
 
-import com.backelite.sonarqube.commons.surefire.TestFileFinder;
-import com.google.common.collect.ImmutableList;
+import com.backelite.sonarqube.commons.TestFileFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * Created by gillesgrousset on 28/08/2018.
  */
 public class SwiftTestFileFinder implements TestFileFinder {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftTestFileFinder.class);
 
-    @Nullable
     @Override
     public InputFile getUnitTestResource(FileSystem fileSystem, String classname) {
-
         String fileName = classname.replace('.', '/') + ".swift";
         String wildcardFileName = classname.replace(".", "/**/") + ".swift";
+        FilePredicate fp = fileSystem.predicates().hasPath(fileName);
 
-        InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasPath(fileName));
+        if(fileSystem.hasFiles(fp)){
+            return fileSystem.inputFile(fp);
+        }
 
         /*
          * Most xcodebuild JUnit parsers don't include the path to the class in the class field, so search for it if it
          * wasn't found in the root.
          */
-        if (inputFile == null) {
-            List<InputFile> files = ImmutableList.copyOf(fileSystem.inputFiles(fileSystem.predicates().and(
-                    fileSystem.predicates().hasType(InputFile.Type.TEST),
-                    fileSystem.predicates().matchesPathPattern("**/" + wildcardFileName))));
+        fp = fileSystem.predicates().and(
+            fileSystem.predicates().hasType(InputFile.Type.TEST),
+            fileSystem.predicates().matchesPathPattern("**/" + wildcardFileName));
 
-            if (files.isEmpty()) {
-                LOGGER.info("Unable to locate test source file {}", wildcardFileName);
-            } else {
-                /*
-                 * Lazily get the first file, since we wouldn't be able to determine the correct one from just the
-                 * test class name in the event that there are multiple matches.
-                 */
-                inputFile = files.get(0);
-            }
+        if(fileSystem.hasFiles(fp)){
+            /*
+             * Lazily get the first file, since we wouldn't be able to determine the correct one from just the
+             * test class name in the event that there are multiple matches.
+             */
+            return fileSystem.inputFiles(fp).iterator().next();
         }
-
-        return inputFile;
+        LOGGER.info("Unable to locate test source file {}", wildcardFileName);
+        return null;
     }
 }

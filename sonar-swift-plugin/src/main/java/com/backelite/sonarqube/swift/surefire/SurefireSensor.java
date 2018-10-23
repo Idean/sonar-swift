@@ -1,5 +1,5 @@
 /**
- * commons - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,25 +15,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.commons.surefire;
+package com.backelite.sonarqube.swift.surefire;
 
 import com.backelite.sonarqube.commons.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.config.Settings;
-import org.sonar.api.scan.filesystem.PathResolver;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-/**
- * Created by gillesgrousset on 28/08/2018.
- */
 public class SurefireSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
     public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX + ".surefire.junit.reportsPath";
@@ -61,6 +58,7 @@ public class SurefireSensor implements Sensor {
 
     @Override
     public void execute(SensorContext context) {
+        SurefireReportParser surefireParser = new SurefireReportParser(context);
         String reportFileName = context.fileSystem().baseDir().getAbsolutePath() + "/"+ reportPath();
         File reportsDir = new File(reportFileName);
 
@@ -68,8 +66,14 @@ public class SurefireSensor implements Sensor {
             LOGGER.warn("JUnit report directory not found at {}", reportsDir);
             return;
         }
-        LOGGER.info("Processing test reports in {}", reportsDir);
-        SurefireParser surefireParser = new SurefireParser(context);
-        surefireParser.collect(reportsDir);
+        try {
+            for (Path p : Files.newDirectoryStream(Paths.get(reportsDir.toURI()), name -> (name.startsWith("TEST") && name.endsWith(".xml")) || name.endsWith(".junit"))) {
+                LOGGER.info("Processing Surefire report {}", p.getFileName());
+                surefireParser.parseReport(p.toFile());
+            }
+        } catch (IOException ex){
+            LOGGER.error( "Error while finding test files.", ex);
+        }
+        surefireParser.save();
     }
 }
