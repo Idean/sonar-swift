@@ -102,6 +102,7 @@
         <sslr.version>1.23</sslr.version>
         <sslr-squid-bridge.version>2.6.1</sslr-squid-bridge.version>
         <ant.version>1.6</ant.version>
+        <json-simple.version>1.1.1</json-simple.version>
 
     </properties>
 
@@ -165,7 +166,7 @@
             <dependency>
                 <groupId>com.googlecode.json-simple</groupId>
                 <artifactId>json-simple</artifactId>
-                <version>1.1.1</version>
+                <version>${json-simple.version}</version>
             </dependency>
 
             <!-- Test dependencies -->
