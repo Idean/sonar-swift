@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
-import org.sonar.api.batch.sensor.issue.internal.DefaultIssueLocation;
 import org.sonar.api.rule.RuleKey;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -95,13 +95,17 @@ final class OCLintParser {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
-                NewIssueLocation dil = new DefaultIssueLocation()
+
+                NewIssue issue = context.newIssue();
+
+                NewIssueLocation issueLocation = issue.newLocation()
                     .on(inputFile)
                     .at(inputFile.selectLine(Integer.valueOf(element.getAttribute(LINE))))
                     .message(element.getTextContent());
-                context.newIssue()
+
+                issue
                     .forRule(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, element.getAttribute(RULE)))
-                    .at(dil)
+                    .at(issueLocation)
                     .save();
             }
         }

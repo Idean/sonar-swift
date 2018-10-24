@@ -25,8 +25,8 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
-import org.sonar.api.batch.sensor.issue.internal.DefaultIssueLocation;
 import org.sonar.api.rule.RuleKey;
 
 import java.io.File;
@@ -91,14 +91,19 @@ public class FauxPasReportParser {
             }
 
             InputFile inputFile = context.fileSystem().inputFile(fp);
-            NewIssueLocation dil = new DefaultIssueLocation()
-                .on(inputFile)
-                .at(inputFile.selectLine(lineNum))
-                .message(info);
-            context.newIssue()
-                .forRule(RuleKey.of(FauxPasRulesDefinition.REPOSITORY_KEY, (String) diagnosticJson.get("ruleShortName")))
-                .at(dil)
-                .save();
+            NewIssue issue = context.newIssue();
+
+            NewIssueLocation issueLocation = issue.newLocation()
+                    .message(info)
+                    .on(inputFile)
+                    .at(inputFile.selectLine(lineNum));
+
+            issue
+                    .forRule(RuleKey.of(FauxPasRulesDefinition.REPOSITORY_KEY, (String) diagnosticJson.get("ruleShortName")))
+                    .at(issueLocation);
+
+            issue.save();
+
         }
     }
 

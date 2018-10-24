@@ -33,7 +33,6 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
-import org.sonar.api.batch.sensor.issue.internal.DefaultIssueLocation;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.rule.RuleKey;
 import org.sonar.api.scan.filesystem.PathResolver;
@@ -99,16 +98,21 @@ public class ObjectiveCSquidSensor implements Sensor {
         if (inputFile != null) {
             for (CheckMessage message : messages) {
                 RuleKey ruleKey = checks.ruleKey((SquidCheck<ObjectiveCGrammar>) message.getCheck());
-                NewIssue issue = context.newIssue()
-                    .forRule(ruleKey);
-                NewIssueLocation dil = new DefaultIssueLocation()
-                    .on(inputFile)
-                    .at(inputFile.selectLine(message.getLine()))
-                    .message(message.getText(Locale.ENGLISH));
-                issue.at(dil);
+                NewIssue issue = context.newIssue();
+
+                NewIssueLocation issueLocation = issue.newLocation()
+                        .message(message.getText(Locale.ENGLISH))
+                        .on(inputFile)
+                        .at(inputFile.selectLine(message.getLine()));
+
+                issue
+                        .forRule(ruleKey)
+                        .at(issueLocation);
+
                 if (message.getCost() != null) {
                     issue.gap(message.getCost());
                 }
+
                 issue.save();
             }
         }

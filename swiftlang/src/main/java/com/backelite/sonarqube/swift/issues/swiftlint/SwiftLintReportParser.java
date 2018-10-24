@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.issue.NewIssue;
 import org.sonar.api.batch.sensor.issue.NewIssueLocation;
-import org.sonar.api.batch.sensor.issue.internal.DefaultIssueLocation;
 import org.sonar.api.rule.RuleKey;
 
 import java.io.*;
@@ -68,13 +68,15 @@ public class SwiftLintReportParser {
             }
 
             InputFile inputFile = context.fileSystem().inputFile(fp);
-            NewIssueLocation dil = new DefaultIssueLocation()
-                .on(inputFile)
-                .at(inputFile.selectLine(lineNum))
-                .message(message);
-            context.newIssue()
-                .forRule(RuleKey.of(SwiftLintRulesDefinition.REPOSITORY_KEY, ruleId))
-                .at(dil)
+            NewIssue issue = context.newIssue();
+
+            NewIssueLocation issueLocation = issue.newLocation()
+                    .message(message)
+                    .on(inputFile)
+                    .at(inputFile.selectLine(lineNum));
+
+            issue.forRule(RuleKey.of(SwiftLintRulesDefinition.REPOSITORY_KEY, ruleId))
+                .at(issueLocation)
                 .save();
         }
     }
