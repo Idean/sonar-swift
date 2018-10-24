@@ -26,10 +26,6 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class SurefireSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
@@ -59,20 +55,16 @@ public class SurefireSensor implements Sensor {
     @Override
     public void execute(SensorContext context) {
         SurefireReportParser surefireParser = new SurefireReportParser(context);
-        String reportFileName = context.fileSystem().baseDir().getAbsolutePath() + "/"+ reportPath();
+        String reportFileName = context.fileSystem().baseDir().getAbsolutePath()  + File.separator +  reportPath();
         File reportsDir = new File(reportFileName);
 
         if (!reportsDir.isDirectory()) {
             LOGGER.warn("JUnit report directory not found at {}", reportsDir);
             return;
         }
-        try {
-            for (Path p : Files.newDirectoryStream(Paths.get(reportsDir.toURI()), name -> (name.startsWith("TEST") && name.endsWith(".xml")) || name.endsWith(".junit"))) {
-                LOGGER.info("Processing Surefire report {}", p.getFileName());
-                surefireParser.parseReport(p.toFile());
-            }
-        } catch (IOException ex){
-            LOGGER.error( "Error while finding test files.", ex);
+        for (File file : reportsDir.listFiles((file,name) -> (name.startsWith("TEST") && name.endsWith(".xml")) || name.endsWith(".junit"))){
+            LOGGER.info("Processing Surefire report {}", file.getName());
+            surefireParser.parseReport(file);
         }
         surefireParser.save();
     }
