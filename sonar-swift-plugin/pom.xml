@@ -29,7 +29,6 @@
         <version>0.4.2</version>
     </parent>
 
-    <groupId>com.backelite.sonarqube</groupId>
     <artifactId>backelite-sonar-swift-plugin</artifactId>
     <version>0.4.2</version>
 
@@ -143,6 +142,7 @@
 
             <plugin>
                 <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
