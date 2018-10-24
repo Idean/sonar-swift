@@ -18,25 +18,36 @@
 package com.backelite.sonarqube.objectivec.lang.core;
 
 import com.backelite.sonarqube.objectivec.ObjectiveCConstants;
-import org.apache.commons.lang.StringUtils;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 import org.sonar.api.resources.AbstractLanguage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ObjectiveC extends AbstractLanguage {
-
     public static final String KEY = "objc";
+    private final Configuration config;
 
-    private Settings settings;
-
-    public ObjectiveC(Settings settings) {
-
+    public ObjectiveC(Configuration config) {
         super(KEY, "Objective-C");
-        this.settings = settings;
+        this.config = config;
     }
 
     public String[] getFileSuffixes() {
-
-        return StringUtils.split(ObjectiveCConstants.FILE_SUFFIXES, ",");
+        String[] suffixes = filterEmptyStrings(config.getStringArray(ObjectiveCConstants.FILE_SUFFIXES));
+        if (suffixes.length == 0) {
+            suffixes = ObjectiveCConstants.FILE_SUFFIXES.split( ",");
+        }
+        return suffixes;
     }
 
+    private String[] filterEmptyStrings(String[] stringArray) {
+        List<String> nonEmptyStrings = new ArrayList<>();
+        for (String string : stringArray) {
+            if (string.trim().length() > 0) {
+                nonEmptyStrings.add(string.trim());
+            }
+        }
+        return nonEmptyStrings.toArray(new String[nonEmptyStrings.size()]);
+    }
 }

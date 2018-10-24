@@ -15,11 +15,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.swift.complexity;
+package com.backelite.sonarqube.swift.surefire;
 
 import com.backelite.sonarqube.commons.Constants;
-import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
-import com.backelite.sonarqube.swift.lang.core.Swift;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.InputFile;
@@ -28,19 +26,23 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-public class LizardSensor implements Sensor {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensor.class);
-    public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX + ".lizard.report";
-    public static final String DEFAULT_REPORT_PATH = "sonar-reports/lizard-report.xml";
+public class SurefireSensor implements Sensor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
+    public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX + ".surefire.junit.reportsPath";
+    public static final String DEFAULT_REPORT_PATH = "sonar-reports/";
 
     private final SensorContext context;
 
-    public LizardSensor(final SensorContext context) {
+    public SurefireSensor(SensorContext context) {
         this.context = context;
     }
 
-    private String reportPath() {
+    protected String reportPath() {
         return context.config()
             .get(REPORT_PATH_KEY)
             .orElse(DEFAULT_REPORT_PATH);
@@ -49,17 +51,29 @@ public class LizardSensor implements Sensor {
     @Override
     public void describe(SensorDescriptor descriptor) {
         descriptor
-            .name("Lizard")
-            .onlyOnLanguages(Swift.KEY, ObjectiveC.KEY)
+            .name("Surefire")
+            .onlyOnLanguages("swift","objc")
             .onlyOnFileType(InputFile.Type.MAIN);
     }
 
     @Override
     public void execute(SensorContext context) {
-        String reportFileName = context.fileSystem().baseDir().getPath() + File.separator + reportPath();
-        LOGGER.info("Processing complexity report: {}",reportFileName);
+        SurefireReportParser surefireParser = new SurefireReportParser(context);
+        String reportFileName = context.fileSystem().baseDir().getAbsolutePath() + "/"+ reportPath();
+        File reportsDir = new File(reportFileName);
 
-        LizardReportParser parser = new LizardReportParser(context);
-        parser.parseReport(new File(reportFileName));
+        if (!reportsDir.isDirectory()) {
+            LOGGER.warn("JUnit report directory not found at {}", reportsDir);
+            return;
+        }
+        try {
+            for (Path p : Files.newDirectoryStream(Paths.get(reportsDir.toURI()), name -> (name.startsWith("TEST") && name.endsWith(".xml")) || name.endsWith(".junit"))) {
+                LOGGER.info("Processing Surefire report {}", p.getFileName());
+                surefireParser.parseReport(p.toFile());
+            }
+        } catch (IOException ex){
+            LOGGER.error( "Error while finding test files.", ex);
+        }
+        surefireParser.save();
     }
 }

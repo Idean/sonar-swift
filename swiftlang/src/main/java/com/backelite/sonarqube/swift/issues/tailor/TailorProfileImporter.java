@@ -32,9 +32,8 @@ import java.io.Reader;
  */
 
 public class TailorProfileImporter extends ProfileImporter {
-
-    private static final String UNABLE_TO_LOAD_DEFAULT_PROFILE = "Unable to load default tailor profile";
     private static final Logger LOGGER = LoggerFactory.getLogger(TailorProfileImporter.class);
+    private static final String UNABLE_TO_LOAD_DEFAULT_PROFILE = "Unable to load default tailor profile";
 
     private final XMLProfileParser profileParser;
 
@@ -45,9 +44,8 @@ public class TailorProfileImporter extends ProfileImporter {
     }
 
     @Override
-    public RulesProfile importProfile(final Reader reader, final ValidationMessages messages) {
-
-        final RulesProfile profile = this.profileParser.parse(reader, messages);
+    public RulesProfile importProfile(Reader reader, ValidationMessages messages) {
+        final RulesProfile profile = profileParser.parse(reader, messages);
 
         if (null == profile) {
             messages.addErrorText(UNABLE_TO_LOAD_DEFAULT_PROFILE);

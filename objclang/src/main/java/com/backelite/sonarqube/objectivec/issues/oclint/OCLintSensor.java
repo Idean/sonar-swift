@@ -20,67 +20,52 @@ package com.backelite.sonarqube.objectivec.issues.oclint;
 import com.backelite.sonarqube.commons.Constants;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
 import org.apache.tools.ant.DirectoryScanner;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.config.Settings;
 
 import java.io.File;
 
 public final class OCLintSensor implements Sensor {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OCLintSensor.class);
     public static final String REPORT_PATH_KEY = Constants.PROPERTY_PREFIX + ".oclint.report";
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/*oclint.xml";
+    private final SensorContext context;
 
-    private final Settings conf;
-    private final FileSystem fileSystem;
-    private final ResourcePerspectives resourcePerspectives;
-
-    public OCLintSensor(final FileSystem fileSystem, final Settings config, final ResourcePerspectives resourcePerspectives) {
-        this.conf = config;
-        this.fileSystem = fileSystem;
-        this.resourcePerspectives = resourcePerspectives;
-    }
-
-    private void parseReportIn(final String baseDir, final OCLintParser parser) {
-
-        DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setIncludes(new String[]{reportPath()});
-        scanner.setBasedir(baseDir);
-        scanner.setCaseSensitive(false);
-        scanner.scan();
-        String[] files = scanner.getIncludedFiles();
-
-        for (String filename : files) {
-            LoggerFactory.getLogger(getClass()).info("Processing OCLint report {}", filename);
-            parser.parseReport(new File(filename));
-        }
+    public OCLintSensor(SensorContext context) {
+        this.context = context;
     }
 
     private String reportPath() {
-        String reportPath = conf.getString(REPORT_PATH_KEY);
-        if (reportPath == null) {
-            reportPath = DEFAULT_REPORT_PATH;
-        }
-        return reportPath;
+        return context.config()
+            .get(REPORT_PATH_KEY)
+            .orElse(DEFAULT_REPORT_PATH);
     }
 
     @Override
     public void describe(SensorDescriptor descriptor) {
         descriptor
-                .onlyOnLanguage(ObjectiveC.KEY)
-                .name("OCLint")
-                .onlyOnFileType(InputFile.Type.MAIN);
+            .onlyOnLanguage(ObjectiveC.KEY)
+            .name("OCLint")
+            .onlyOnFileType(InputFile.Type.MAIN);
     }
 
     @Override
     public void execute(SensorContext context) {
-        final String projectBaseDir = fileSystem.baseDir().getPath();
-        final OCLintParser parser = new OCLintParser(resourcePerspectives, fileSystem);
+        OCLintParser parser = new OCLintParser(context);
+        DirectoryScanner scanner = new DirectoryScanner();
+        scanner.setIncludes(new String[]{reportPath()});
+        scanner.setBasedir(context.fileSystem().baseDir().getAbsolutePath());
+        scanner.setCaseSensitive(false);
+        scanner.scan();
+        String[] files = scanner.getIncludedFiles();
 
-        parseReportIn(projectBaseDir, parser);
+        for (String filename : files) {
+            LOGGER.info("Processing OCLint report {}", filename);
+            parser.parseReport(new File(filename));
+        }
     }
 }

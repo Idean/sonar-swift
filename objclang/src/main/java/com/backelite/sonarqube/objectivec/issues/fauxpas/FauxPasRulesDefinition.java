@@ -18,8 +18,6 @@
 package com.backelite.sonarqube.objectivec.issues.fauxpas;
 
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.CharEncoding;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -28,10 +26,10 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 
 /**
  * Created by gillesgrousset on 18/02/2016.
@@ -43,46 +41,26 @@ public class FauxPasRulesDefinition implements RulesDefinition {
     private static final Logger LOGGER = LoggerFactory.getLogger(FauxPasRulesDefinition.class);
     private static final String RULES_FILE = "/org/sonar/plugins/fauxpas/rules.json";
 
+
     @Override
-    public void define(Context context) {
+    public void define(final Context context) {
+        NewRepository repository = context.createRepository(REPOSITORY_KEY, ObjectiveC.KEY).setName(REPOSITORY_NAME);
 
-        NewRepository repository = context
-                .createRepository(REPOSITORY_KEY, ObjectiveC.KEY)
-                .setName(REPOSITORY_NAME);
-
-        try {
-            loadRules(repository);
+        try(Reader reader = new InputStreamReader(getClass().getResourceAsStream(RULES_FILE), Charset.forName("UTF-8"))){
+            JSONArray slRules = (JSONArray)JSONValue.parse(reader);
+            if(slRules != null){
+                for (Object obj : slRules) {
+                    JSONObject slRule = (JSONObject) obj;
+                    repository.createRule((String) slRule.get("key"))
+                        .setName((String) slRule.get("name"))
+                        .setSeverity((String) slRule.get("severity"))
+                        .setHtmlDescription((String) slRule.get("description"));
+                }
+            }
         } catch (IOException e) {
             LOGGER.error("Failed to load FauxPas rules", e);
         }
-
         SqaleXmlLoader.load(repository, "/com/sonar/sqale/fauxpas-model.xml");
-
         repository.done();
-
-    }
-
-    private void loadRules(NewRepository repository) throws IOException {
-
-        Reader reader = new BufferedReader(new InputStreamReader(getClass()
-                .getResourceAsStream(RULES_FILE), CharEncoding.UTF_8));
-
-        String jsonString = IOUtils.toString(reader);
-
-        Object rulesObj = JSONValue.parse(jsonString);
-
-        if (rulesObj != null) {
-            JSONArray slRules = (JSONArray) rulesObj;
-            for (Object obj : slRules) {
-                JSONObject fpRule = (JSONObject) obj;
-
-                RulesDefinition.NewRule rule = repository.createRule((String) fpRule.get("key"));
-                rule.setName((String) fpRule.get("name"));
-                rule.setSeverity((String) fpRule.get("severity"));
-                rule.setHtmlDescription((String) fpRule.get("description"));
-
-            }
-        }
-
     }
 }

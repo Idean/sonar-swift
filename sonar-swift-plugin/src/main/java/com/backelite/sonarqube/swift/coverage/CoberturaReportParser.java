@@ -17,142 +17,129 @@
  */
 package com.backelite.sonarqube.swift.coverage;
 
-
-import com.backelite.sonarqube.commons.MeasureUtil;
-import com.google.common.collect.Maps;
-import org.apache.commons.lang.StringUtils;
-import org.codehaus.staxmate.in.SMHierarchicCursor;
-import org.codehaus.staxmate.in.SMInputCursor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.InputComponent;
+import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.measures.CoverageMeasuresBuilder;
-import org.sonar.api.measures.Measure;
-import org.sonar.api.measures.Metric;
-import org.sonar.api.resources.Project;
-import org.sonar.api.utils.ParsingUtils;
-import org.sonar.api.utils.StaxParser;
-import org.sonar.api.utils.XmlParserException;
+import org.sonar.api.batch.sensor.coverage.NewCoverage;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.text.ParseException;
-import java.util.Locale;
-import java.util.Map;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public final class CoberturaReportParser {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaReportParser.class);
-
-    private final FileSystem fileSystem;
-    private final Project project;
+    private static final String PACKAGES = "packages";
+    private static final String CLASSES = "class";
+    private static final String FILE = "filename";
+    private static final String LINE = "line";
+    private static final String NUMBER = "number";
+    private static final String HITS = "hits";
+    private static final String BRANCH = "branch";
+    private static final String COVERAGE = "condition-coverage";
     private final SensorContext context;
+    private final DocumentBuilderFactory dbfactory;
 
-    private CoberturaReportParser(FileSystem fileSystem, Project project, SensorContext context) {
-        this.fileSystem = fileSystem;
-        this.project = project;
+    public CoberturaReportParser(SensorContext context) {
         this.context = context;
+        this.dbfactory = DocumentBuilderFactory.newInstance();
     }
 
-    /**
-     * Parse a Cobertura xml report and create measures accordingly
-     */
-    public static void parseReport(File xmlFile, FileSystem fileSystem, Project project, SensorContext context) {
-        new CoberturaReportParser(fileSystem, project, context).parse(xmlFile);
-    }
-
-    private static void collectFileMeasures(SMInputCursor clazz,
-                                            Map<String, CoverageMeasuresBuilder> builderByFilename) throws XMLStreamException {
-        while (clazz.getNext() != null) {
-            String fileName = clazz.getAttrValue("filename");
-            CoverageMeasuresBuilder builder = builderByFilename.get(fileName);
-            if (builder == null) {
-                builder = CoverageMeasuresBuilder.create();
-                builderByFilename.put(fileName, builder);
-            }
-            collectFileData(clazz, builder);
-        }
-    }
-
-    private static void collectFileData(SMInputCursor clazz,
-                                        CoverageMeasuresBuilder builder) throws XMLStreamException {
-        SMInputCursor line = clazz.childElementCursor("lines").advance().childElementCursor("line");
-        while (line.getNext() != null) {
-            int lineId = Integer.parseInt(line.getAttrValue("number"));
-            try {
-                builder.setHits(lineId, (int) ParsingUtils.parseNumber(line.getAttrValue("hits"), Locale.ENGLISH));
-            } catch (ParseException e) {
-                throw new XmlParserException(e);
-            }
-
-            String isBranch = line.getAttrValue("branch");
-            String text = line.getAttrValue("condition-coverage");
-            if (StringUtils.equals(isBranch, "true") && StringUtils.isNotBlank(text)) {
-                String[] conditions = StringUtils.split(StringUtils.substringBetween(text, "(", ")"), "/");
-                builder.setConditions(lineId, Integer.parseInt(conditions[1]), Integer.parseInt(conditions[0]));
-            }
-        }
-    }
-
-    private void parse(File xmlFile) {
+    public void parseReport(final File xmlFile) {
         try {
-            StaxParser parser = new StaxParser(new StaxParser.XmlStreamHandler() {
-
-                @Override
-                public void stream(SMHierarchicCursor rootCursor) throws XMLStreamException {
-                    rootCursor.advance();
-                    collectPackageMeasures(rootCursor.descendantElementCursor("package"));
-                }
-            });
-            parser.parse(xmlFile);
-        } catch (XMLStreamException e) {
-            throw new XmlParserException(e);
+            DocumentBuilder builder = dbfactory.newDocumentBuilder();
+            Document document = builder.parse(xmlFile);
+            collectPackageMeasures(document.getElementsByTagName(PACKAGES));
+        } catch (final FileNotFoundException e) {
+            LOGGER.error("Cobertura Report not found {}", xmlFile, e);
+        } catch (final IOException e) {
+            LOGGER.error("Error processing file named {}", xmlFile, e);
+        } catch (final ParserConfigurationException e) {
+            LOGGER.error("Error in parser config {}", e);
+        } catch (final SAXException e) {
+            LOGGER.error("Error processing file named {}", xmlFile, e);
         }
     }
 
-    private void collectPackageMeasures(SMInputCursor pack) throws XMLStreamException {
-        while (pack.getNext() != null) {
-            Map<String, CoverageMeasuresBuilder> builderByFilename = Maps.newHashMap();
-            collectFileMeasures(pack.descendantElementCursor("class"), builderByFilename);
-            for (Map.Entry<String, CoverageMeasuresBuilder> entry : builderByFilename.entrySet()) {
-                String filePath = entry.getKey();
-                filePath = getAdjustedPathIfProjectIsModule(filePath);
-                if (filePath == null) {
-                    continue;
-                }
-                File file = new File(fileSystem.baseDir(), filePath);
-                InputFile inputFile = fileSystem.inputFile(fileSystem.predicates().hasAbsolutePath(file.getAbsolutePath()));
-
-                if (inputFile == null) {
-                    LOGGER.warn("file not included in sonar {}", filePath);
-                    continue;
-                } else {
-
-                    for (Measure measure : entry.getValue().createMeasures()) {
-                        if (measure.getValue() != null && measure.getMetric() != null) {
-                            MeasureUtil.saveMeasure(context, inputFile, (Metric<Integer>) measure.getMetric(), measure.getValue().intValue());
-                        }
-                    }
-                }
-
-                LOGGER.info("Successfully collected measures for file {}", file.getPath());
+    private void collectPackageMeasures(NodeList nodeList) {
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) node;
+                NodeList nl = element.getElementsByTagName(CLASSES);
+                collectClassMeasures(nl);
             }
         }
     }
 
-
-    private String getAdjustedPathIfProjectIsModule(String filePath) {
-        if (project.isModule()) {
-            // the file doesn't belong to the module we're analyzing
-            if (!filePath.startsWith(project.path())) {
-                return null;
+    private void collectClassMeasures(NodeList nodeList) {
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) node;
+                String filePath = element.getAttribute(FILE);
+                NodeList nl = element.getElementsByTagName(LINE);
+                collectFileData(filePath, nl);
             }
-            // fileSystem.baseDir() will include the module path, so we need to get rid of it here
-            return filePath.substring(project.path().length());
         }
-        return filePath;
     }
+
+    private void collectFileData(String filePath, NodeList nodeList) {
+        InputFile resource = getFile(filePath);
+        LOGGER.info("Collect file data: {}",resource.toString());
+        if (resource != null) {
+            boolean lineAdded = false;
+            NewCoverage coverage = context.newCoverage();
+            coverage.onFile(resource);
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) node;
+
+                    int lineId = Integer.parseInt(element.getAttribute(NUMBER));
+                    coverage.lineHits(lineId, Integer.parseInt(element.getAttribute(HITS)));
+                    lineAdded = true;
+
+                    String isBranch = element.getAttribute(BRANCH);
+                    String text = element.getAttribute(COVERAGE);
+                    if ("true".equalsIgnoreCase(isBranch) && text != null && !text.isEmpty())
+                        addCoverageConditions(coverage,lineId,text);
+                }
+            }
+            // If there was no lines covered or uncovered (e.g. everything is ignored), but the file exists then Sonar would report the file as uncovered
+            // so adding a fake one to line number 1
+            if (!lineAdded) {
+                coverage.lineHits(1, 1);
+            }
+            coverage.save();
+        }
+    }
+
+    private void addCoverageConditions(NewCoverage coverage, int line, String text) {
+        int start = text.indexOf("(");
+        int end = text.indexOf(")");
+        if(start != -1 && end != -1){
+            String[] conditions = text.substring(start + 1, end).split("/");
+            coverage.conditions(line, Integer.parseInt(conditions[1]), Integer.parseInt(conditions[0]));
+        }
+    }
+
+    private InputFile getFile(String filePath) {
+        FilePredicate fp = context.fileSystem().predicates().hasPath(filePath);
+        if(context.fileSystem().hasFiles(fp))
+            return context.fileSystem().inputFile(fp);
+        LOGGER.warn("Can't find file {}",filePath);
+        return null;
+    }
+
 }
+

@@ -19,8 +19,5 @@ package com.backelite.sonarqube.objectivec;
 
 
 public final class ObjectiveCConstants {
-
     public static final String FILE_SUFFIXES = "h,m,mm";
-
-
 }

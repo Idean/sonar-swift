@@ -47,7 +47,6 @@ public class SwiftAstScanner {
      * Helper method for testing checks without having to deploy them on a Sonar instance.
      */
     public static SourceFile scanSingleFile(File file, SquidAstVisitor<SwiftGrammar>... visitors) {
-
         if (!file.isFile()) {
             throw new IllegalArgumentException("File '" + file + "' not found.");
         }
@@ -62,7 +61,6 @@ public class SwiftAstScanner {
     }
 
     public static AstScanner<SwiftGrammar> create(SwiftConfiguration conf, SquidAstVisitor<SwiftGrammar>... visitors) {
-
         final SquidAstVisitorContextImpl<SwiftGrammar> context = new SquidAstVisitorContextImpl<SwiftGrammar>(new SourceProject("Objective-C Project"));
         final Parser<SwiftGrammar> parser = SwiftParser.create(conf);
 
@@ -92,15 +90,19 @@ public class SwiftAstScanner {
 
         /* Files */
         builder.setFilesMetric(SwiftMetric.FILES);
-
-        /* Metrics */
-        builder.withSquidAstVisitor(new LinesVisitor<SwiftGrammar>(SwiftMetric.LINES));
-        builder.withSquidAstVisitor(new LinesOfCodeVisitor<SwiftGrammar>(SwiftMetric.LINES_OF_CODE));
-        builder.withSquidAstVisitor(CommentsVisitor.<SwiftGrammar>builder().withCommentMetric(SwiftMetric.COMMENT_LINES)
+        if(visitors != null && visitors.length > 0) {
+            for (SquidAstVisitor<SwiftGrammar> sv : visitors) {
+                builder.withSquidAstVisitor(sv);
+            }
+        } else {
+            /* Metrics */
+            builder.withSquidAstVisitor(new LinesVisitor(SwiftMetric.LINES));
+            builder.withSquidAstVisitor(new LinesOfCodeVisitor(SwiftMetric.LINES_OF_CODE));
+            builder.withSquidAstVisitor(CommentsVisitor.<SwiftGrammar>builder().withCommentMetric(SwiftMetric.COMMENT_LINES)
                 .withNoSonar(true)
                 .withIgnoreHeaderComment(conf.getIgnoreHeaderComments())
                 .build());
-
+        }
         return builder.build();
     }
 }

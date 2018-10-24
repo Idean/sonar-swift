@@ -1,5 +1,5 @@
 /**
- * Swift SonarQube Plugin - Objective-C module - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * commons - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,22 +15,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.objectivec.lang.checks;
+package com.backelite.sonarqube.commons;
 
-import java.util.Collections;
-import java.util.List;
+import org.sonar.api.batch.fs.FileSystem;
+import org.sonar.api.batch.fs.InputFile;
 
-public final class CheckList {
-
-    public static final String REPOSITORY_KEY = "objectivec";
-
-    public static final String SONAR_WAY_PROFILE = "Sonar way";
-
-    private CheckList() {
-    }
-
-    public static List<Class> getChecks() {
-        return Collections.emptyList();
-    }
-
+public interface TestFileFinder {
+    InputFile getUnitTestResource(FileSystem fileSystem, String classname);
 }
