@@ -36,7 +36,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public final class CoberturaReportParser {
+final class CoberturaReportParser {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(CoberturaReportParser.class);
     private static final String PACKAGES = "packages";
     private static final String CLASSES = "class";
