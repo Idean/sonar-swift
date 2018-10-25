@@ -96,11 +96,11 @@ public class LizardReportParser {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 Element element = (Element) node;
                 String label = element.getTextContent();
-                if(LINE_COUNT_LABEL.equalsIgnoreCase(label))
+                if (LINE_COUNT_LABEL.equalsIgnoreCase(label))
                     lineCountIndex = i;
-                else if(CYCLOMATIC_COMPLEXITY_LABEL.equalsIgnoreCase(label))
+                else if (CYCLOMATIC_COMPLEXITY_LABEL.equalsIgnoreCase(label))
                     cyclomaticComplexityIndex = i;
-                else if(FUNCTION_COUNT_LABEL.equalsIgnoreCase(label))
+                else if (FUNCTION_COUNT_LABEL.equalsIgnoreCase(label))
                     functionCountIndex = i;
             }
         }
@@ -115,17 +115,18 @@ public class LizardReportParser {
 
                 NodeList values = itemElement.getElementsByTagName(VALUE);
                 if (FILE_MEASURE.equalsIgnoreCase(type)) {
-                    addComplexityFileMeasures(name,values);
+                    addComplexityFileMeasures(name, values);
                 } else if (FUNCTION_MEASURE.equalsIgnoreCase(type)) {
-                    addComplexityFunctionMeasures(new SwiftFunction(name),values);
+                    addComplexityFunctionMeasures(new SwiftFunction(name), values);
                 }
             }
         }
     }
 
     private void addComplexityFileMeasures(String fileName, NodeList values) {
+        LOGGER.debug("File measures for {}",fileName);
         FilePredicate fp = context.fileSystem().predicates().hasRelativePath(fileName);
-        if(!context.fileSystem().hasFiles(fp)){
+        if (!context.fileSystem().hasFiles(fp)) {
             LOGGER.warn("file not included in sonar {}", fileName);
             return;
         }
@@ -153,6 +154,7 @@ public class LizardReportParser {
     }
 
     private void addComplexityFunctionMeasures(SwiftFunction component, NodeList values) {
+        LOGGER.debug("Function measures for {}",component.key);
         int complexity = Integer.parseInt(values.item(cyclomaticComplexityIndex).getTextContent());
         context.<Integer>newMeasure()
             .on(component)
@@ -175,13 +177,21 @@ public class LizardReportParser {
         private int lineNumber;
 
         public SwiftFunction(String name) {
-            String[] vals = name.split(" ");
-            if(vals.length >= 3){
-                this.name = vals[0].substring(0,vals[0].indexOf("("));
-                this.file = vals[2].substring(0,vals[2].lastIndexOf(":"));
-                this.lineNumber = Integer.parseInt(vals[2].substring(vals[2].lastIndexOf(":")+1));
-                this.key = file.substring(0,file.lastIndexOf('.')+1)+name;
-            }else{
+            String[] vals = name.split(" at ");
+            if (vals.length == 2) {
+                this.name = vals[0].replaceAll("\\W","");
+
+                if (vals[1].contains(":")) {
+                    String[] sp = vals[1].split(":");
+                    this.file = sp[0].substring(0,sp[0].lastIndexOf("."));
+                    this.lineNumber = Integer.parseInt(sp[1]);
+                } else {
+                    this.file = vals[1];
+                    this.lineNumber = 0;
+                }
+
+                this.key = String.format("%s.%s:%d", this.file, this.name, this.lineNumber);
+            } else {
                 this.key = name;
             }
         }
@@ -191,15 +201,15 @@ public class LizardReportParser {
             return key;
         }
 
-        public String getName(){
+        public String getName() {
             return name;
         }
 
-        public String getFile(){
+        public String getFile() {
             return file;
         }
 
-        public int getLineNumber(){
+        public int getLineNumber() {
             return lineNumber;
         }
 
