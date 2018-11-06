@@ -54,6 +54,30 @@ Category: OCLint
 constant conditional operator
 ----------
 
+Summary: Name: compiler error
+
+Severity: 2
+Category: OCLint
+
+compiler error
+----------
+
+Summary: Name: compiler warning
+
+Severity: 3
+Category: OCLint
+
+compiler warning
+----------
+
+Summary: Name: clang static analyzer
+
+Severity: 3
+Category: OCLint
+
+clang static analyzer
+----------
+
 Summary: Name: constant conditional operator
 
 Severity: 3
