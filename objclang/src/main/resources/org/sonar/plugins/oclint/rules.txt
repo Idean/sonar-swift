@@ -54,6 +54,30 @@ Category: OCLint
 constant conditional operator
 ----------
 
+Summary: Name: compiler error
+
+Severity: 2
+Category: OCLint
+
+compiler error
+----------
+
+Summary: Name: compiler warning
+
+Severity: 3
+Category: OCLint
+
+compiler warning
+----------
+
+Summary: Name: clang static analyzer
+
+Severity: 3
+Category: OCLint
+
+clang static analyzer
+----------
+
 Summary: Name: constant conditional operator
 
 Severity: 3
@@ -70,7 +94,7 @@ Category: OCLint
 high cyclomatic complexity
 ----------
 
-Summary: 
+Summary:
 
 Severity: 2
 Category: OCLint
@@ -158,7 +182,7 @@ Category: OCLint
 empty while statement
 ----------
 
-Summary: 
+Summary:
 
 Severity: 3
 Category: OCLint
@@ -166,7 +190,7 @@ Category: OCLint
 feature envy
 ----------
 
-Summary: 
+Summary:
 
 Severity: 3
 Category: OCLint
@@ -182,7 +206,7 @@ Category: OCLint
 goto statement
 ----------
 
-Summary: 
+Summary:
 
 Severity: 3
 Category: OCLint
@@ -246,7 +270,7 @@ Category: OCLint
 misplaced nil check
 ----------
 
-Summary: 
+Summary:
 
 Severity: 4
 Category: OCLint
@@ -270,7 +294,7 @@ Category: OCLint
 must override hash with isEqual
 ----------
 
-Summary: 
+Summary:
 
 Severity: 1
 Category: OCLint
@@ -302,7 +326,7 @@ Category: OCLint
 high npath complexity
 ----------
 
-Summary: 
+Summary:
 
 Severity: 2
 Category: OCLint
@@ -358,7 +382,7 @@ Category: OCLint
 short variable name
 ----------
 
-Summary: 
+Summary:
 
 Severity: 2
 Category: OCLint
@@ -366,7 +390,7 @@ Category: OCLint
 switch statements don't need default when fully covered
 ----------
 
-Summary: 
+Summary:
 
 Severity: 3
 Category: OCLint
@@ -374,7 +398,7 @@ Category: OCLint
 throw exception from finally block
 ----------
 
-Summary: 
+Summary:
 
 Severity: 3
 Category: OCLint
@@ -382,7 +406,7 @@ Category: OCLint
 too few branches in switch statement
 ----------
 
-Summary: 
+Summary:
 
 Severity: 2
 Category: OCLint
@@ -406,7 +430,7 @@ Category: OCLint
 too many parameters
 ----------
 
-Summary: 
+Summary:
 
 Severity: 3
 Category: OCLint
@@ -430,7 +454,7 @@ Category: OCLint
 unused method parameter
 ----------
 
-Summary: 
+Summary:
 
 Severity: 0
 Category: OCLint
@@ -438,7 +462,7 @@ Category: OCLint
 useless parentheses
 ----------
 
-Summary: 
+Summary:
 
 Severity: 1
 Category: OCLint
@@ -526,7 +550,7 @@ Category: OCLint
 use object subscripting
 ----------
 
-Summary: 
+Summary:
 
 Severity: 1
 Category: OCLint
@@ -562,4 +586,3 @@ Summary: Name: missing abstract method implementation
 
 Severity: 1
 Category: OCLint
-

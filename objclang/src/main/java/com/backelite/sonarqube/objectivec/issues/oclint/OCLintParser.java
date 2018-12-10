@@ -88,6 +88,7 @@ final class OCLintParser {
         FilePredicate fp = context.fileSystem().predicates().hasAbsolutePath(file.getAbsolutePath());
         if(!context.fileSystem().hasFiles(fp)){
             LOGGER.warn("file not included in sonar {}", filePath);
+            return;
         }
         InputFile inputFile = context.fileSystem().inputFile(fp);
         for (int i = 0; i < nodeList.getLength(); i++) {

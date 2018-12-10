@@ -95,8 +95,8 @@ public final class CoberturaReportParser {
 
     private void collectFileData(String filePath, NodeList nodeList) {
         InputFile resource = getFile(filePath);
-        LOGGER.info("Collect file data: {}",resource.toString());
         if (resource != null) {
+            LOGGER.info("Collect file data: {}",resource.toString());
             boolean lineAdded = false;
             NewCoverage coverage = context.newCoverage();
             coverage.onFile(resource);
