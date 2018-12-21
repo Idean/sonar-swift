@@ -54,7 +54,7 @@ public final class CoberturaReportParser {
         this.dbfactory = DocumentBuilderFactory.newInstance();
     }
     public testSonar(){
-	LOGGER.error("random log to test if adds bug", e);
+
     }
     public void parseReport(final File xmlFile) {
         try {
@@ -72,7 +72,7 @@ public final class CoberturaReportParser {
         }
     }
 
-    private void collectPackageMeasures(NodeList nodeList) {
+    public void collectPackageMeasures(NodeList nodeList) {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
