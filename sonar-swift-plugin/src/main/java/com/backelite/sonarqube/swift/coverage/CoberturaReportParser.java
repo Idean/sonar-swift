@@ -70,8 +70,8 @@ public final class CoberturaReportParser {
     }
 	
     public int testsonar(){
-	int x = 5
-	int y = 0
+	int x = 5;
+	int y = 0;
 	return (x/y);
     }
 
