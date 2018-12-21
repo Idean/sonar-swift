@@ -7,4 +7,5 @@ addons:
     organization: "keyurp1987-github" # the key of the org you chose at step #3
     token:
       secure: "e+z5lduE2oZq9u50tpKLEzYfNDIKhFoYE5U3ZY5zomvt2DwVB4Qgb1i723txcC/szEIqLwwNeYhkKnIAwpBszPhDImdEWegjW9J7iyCfzJs4nBMe7nl2HKnaWpZPzdiON4TGS1RLOeMYrHcF7ACgJ/mPAJY6MirwAHO/oJOTayxZsUR4NSItqRyayGj5fJUaar4O03G2aIFsPoCu6444qN3xyt/tI6roAX8SV6nl3hndyWT0QXJ0hZ0rPBietCdST9aBTmcXBSrB5m+dlMkzazLw3RJtf9GvxYFX8bd9A7wuilsB2pkeOCpVxRbqQxUzzmh2+yAyWKBC5Nl5ZKauiVjZ15WcyJeiU7xphDbWIkgDlBRboJkBnT2GbZvmpuOM5bJQpyoNPQsjSZrMdxZUBK0zTU44dHvm71SgNmRtD23CX/TPBAqemCPslJ1WS+Uw63pNwD8a0/JWr+VozXQjvJsppByf2Wn5inno1Ptwmn2wGiZYWOBX+5xpt3asS0siOEeBuZQkXAI2ecBaP48OagO32YoMO86/cznrITXL9J3o3qPrqzE2NY9HxW1goeAZ48FypbqOg/sejyavuGhqvwAca+bXHsGOm3D4Jmk9nX28F2bp/8VMQPUDMUZNW/dThNsuOGnedhnRYe1WaAKOxte1RvhI0E1wFWf8IrU9zJw="  # encrypted value of your token
-
+script:
+  - mvn sonar:sonar
