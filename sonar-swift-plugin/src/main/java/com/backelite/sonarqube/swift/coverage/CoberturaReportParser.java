@@ -53,7 +53,9 @@ public final class CoberturaReportParser {
         this.context = context;
         this.dbfactory = DocumentBuilderFactory.newInstance();
     }
-
+    public testSonar(){
+	LOGGER.error("random log to test if adds bug", e);
+    }
     public void parseReport(final File xmlFile) {
         try {
             DocumentBuilder builder = dbfactory.newDocumentBuilder();
