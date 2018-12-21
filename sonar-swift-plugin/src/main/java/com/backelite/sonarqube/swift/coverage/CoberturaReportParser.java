@@ -66,7 +66,7 @@ public final class CoberturaReportParser {
         } catch (final ParserConfigurationException e) {
             LOGGER.error("Error in parser config {}", e);
         } catch (final SAXException e) {
-            LOGGER.error("Error processing file named {}", xmlFile, e);
+            LOGGER.error("error processing file named {}", xmlFile, e);
         }
     }
 
