@@ -69,11 +69,6 @@ public final class CoberturaReportParser {
         }
     }
 	
-    public int testsonar(){
-	int x = 5;
-	int y = 0;
-	return (x/y);
-    }
 
     private void collectPackageMeasures(NodeList nodeList) {
         for (int i = 0; i < nodeList.getLength(); i++) {
