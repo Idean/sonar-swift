@@ -68,8 +68,14 @@ public final class CoberturaReportParser {
             LOGGER.error("Error processing file named {}", xmlFile, e);
         }
     }
+	
+    public int testsonar(){
+	int x = 5
+	int y = 0
+	return (x/y);
+    }
 
-    public void collectPackageMeasures(NodeList nodeList) {
+    private void collectPackageMeasures(NodeList nodeList) {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
             if (node.getNodeType() == Node.ELEMENT_NODE) {
