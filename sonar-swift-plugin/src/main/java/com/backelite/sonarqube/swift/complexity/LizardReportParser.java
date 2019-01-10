@@ -178,7 +178,7 @@ public class LizardReportParser {
 
         public SwiftFunction(String name) {
             String[] vals = name.split(" at ");
-            if (vals.length == 2) {
+            if (vals.length >= 2) {
                 this.name = vals[0].replaceAll("\\W","");
 
                 if (vals[1].contains(":")) {

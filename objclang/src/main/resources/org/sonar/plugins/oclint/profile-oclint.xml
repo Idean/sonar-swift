@@ -29,6 +29,18 @@
         </rule>
         <rule>
             <repositoryKey>OCLint</repositoryKey>
+            <key>compiler error</key>
+        </rule>
+        <rule>
+            <repositoryKey>OCLint</repositoryKey>
+            <key>compiler warning</key>
+        </rule>
+        <rule>
+            <repositoryKey>OCLint</repositoryKey>
+            <key>clang static analyzer</key>
+        </rule>
+        <rule>
+            <repositoryKey>OCLint</repositoryKey>
             <key>constant conditional operator</key>
         </rule>
         <rule>
