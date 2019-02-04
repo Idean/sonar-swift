@@ -39,7 +39,7 @@
 
     <groupId>com.backelite.sonarqube</groupId>
     <artifactId>backelite-swift</artifactId>
-    <version>0.4.3-develop1</version>
+    <version>0.4.3-develop2</version>
 
     <packaging>pom</packaging>
 
