@@ -529,6 +529,10 @@
         </rule>
         <rule>
             <repositoryKey>SwiftLint</repositoryKey>
+            <key>unused_setter_value</key>
+        </rule>
+        <rule>
+            <repositoryKey>SwiftLint</repositoryKey>
             <key>valid_ibinspectable</key>
         </rule>
         <rule>
