@@ -24,7 +24,7 @@
     <parent>
         <artifactId>backelite-swift</artifactId>
         <groupId>com.backelite.sonarqube</groupId>
-        <version>0.4.3</version>
+        <version>0.4.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -55,10 +55,6 @@
         <dependency>
             <groupId>ant</groupId>
             <artifactId>ant</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
