@@ -39,7 +39,7 @@
 
     <groupId>com.backelite.sonarqube</groupId>
     <artifactId>backelite-swift</artifactId>
-    <version>0.4.3</version>
+    <version>0.4.4</version>
 
     <packaging>pom</packaging>
 
@@ -88,15 +88,14 @@
 
         <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
 
-        <sonarQubeMinVersion>6.7</sonarQubeMinVersion>
+        <sonarQubeMinVersion>7.0</sonarQubeMinVersion>
 
         <assertj.version>3.5.2</assertj.version>
-        <guava.version>17.0</guava.version>
         <junit.version>4.10</junit.version>
         <logback.version>1.0.13</logback.version>
         <mockito.version>1.9.0</mockito.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <sonar.version>6.7</sonar.version>
+        <sonar.version>7.5</sonar.version>
         <sonar-orchestrator.version>3.22.0.1791</sonar-orchestrator.version>
         <sonarlint.version>4.0.0.2052</sonarlint.version>
         <sslr.version>1.23</sslr.version>
@@ -157,11 +156,6 @@
                 <version>${ant.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.googlecode.json-simple</groupId>
                 <artifactId>json-simple</artifactId>
