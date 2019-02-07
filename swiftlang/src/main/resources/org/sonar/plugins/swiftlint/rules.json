@@ -917,6 +917,13 @@
     "severity": "MINOR"
   },
   {
+    "key": "unused_setter_value",
+    "category": "SwiftLint",
+    "name": "Unused Setter Value",
+    "description": "Setter value (i.e. newValue) is not used.",
+    "severity": "MINOR"
+  },
+  {
     "key": "valid_ibinspectable",
     "category": "SwiftLint",
     "name": "Valid IBInspectable",
