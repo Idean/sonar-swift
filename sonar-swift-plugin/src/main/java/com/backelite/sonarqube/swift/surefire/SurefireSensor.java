@@ -27,6 +27,7 @@ import org.sonar.api.batch.sensor.SensorDescriptor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -52,8 +53,7 @@ public class SurefireSensor implements Sensor {
     public void describe(SensorDescriptor descriptor) {
         descriptor
             .name("Surefire")
-            .onlyOnLanguages("swift","objc")
-            .onlyOnFileType(InputFile.Type.MAIN);
+            .onlyOnLanguages("swift","objc");
     }
 
     @Override
@@ -66,14 +66,16 @@ public class SurefireSensor implements Sensor {
             LOGGER.warn("JUnit report directory not found at {}", reportsDir);
             return;
         }
-        try {
-            for (Path p : Files.newDirectoryStream(Paths.get(reportsDir.toURI()), name -> (name.startsWith("TEST") && name.endsWith(".xml")) || name.endsWith(".junit"))) {
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(reportsDir.toPath(), "{TEST}*.{xml}")) {
+            for (Path p: stream) {
                 LOGGER.info("Processing Surefire report {}", p.getFileName());
                 surefireParser.parseReport(p.toFile());
             }
-        } catch (IOException ex){
-            LOGGER.error( "Error while finding test files.", ex);
+        } catch (IOException e) {
+            LOGGER.error( "Error while finding test files.", e);
         }
+
         surefireParser.save();
     }
 }
