@@ -1,5 +1,12 @@
 [
   {
+    "key": "anyobject_protocol",
+    "category": "SwiftLint",
+    "name": "AnyObject Protocol",
+    "description": "Prefer using `AnyObject` over `class` for class-only protocols.",
+    "severity": "MINOR"
+  },
+  {
     "key": "array_init",
     "category": "SwiftLint",
     "name": "Array Init",
@@ -94,7 +101,7 @@
     "key": "control_statement",
     "category": "SwiftLint",
     "name": "Control Statement",
-    "description": "if,for,while,do,catch statements shouldn't wrap their conditionals or arguments in parentheses.",
+    "description": "`if`, `for`, `guard`, `switch`, `while`, and `catch` statements shouldn't unnecessarily wrap their conditionals or arguments in parentheses.",
     "severity": "MINOR"
   },
   {
@@ -462,6 +469,13 @@
     "severity": "MINOR"
   },
   {
+    "key": "missing_docs",
+    "category": "SwiftLint",
+    "name": "Missing Docs",
+    "description": "Declarations should be documented.",
+    "severity": "MINOR"
+  },
+  {
     "key": "modifier_order",
     "category": "SwiftLint",
     "name": "Modifier Order",
@@ -697,6 +711,13 @@
     "category": "SwiftLint",
     "name": "Redundant String Enum Value",
     "description": "String enum values can be omitted when they are equal to the enumcase name.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "redundant_type_annotation",
+    "category": "SwiftLint",
+    "name": "Redundant Type Annotation",
+    "description": "Variables should not have redundant type annotation",
     "severity": "MINOR"
   },
   {

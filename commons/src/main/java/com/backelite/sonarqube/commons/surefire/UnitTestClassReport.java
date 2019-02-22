@@ -29,15 +29,13 @@ public final class UnitTestClassReport {
     private int tests = 0;
     private long durationMilliseconds = 0L;
 
-
     private long negativeTimeTestNumber = 0L;
     private List<UnitTestResult> results = null;
 
-    public UnitTestClassReport add(UnitTestClassReport other) {
-        for (UnitTestResult otherResult : other.getResults()) {
-            add(otherResult);
+    private void initResults() {
+        if (results == null) {
+            results = Lists.newArrayList();
         }
-        return this;
     }
 
     public UnitTestClassReport add(UnitTestResult result) {
@@ -61,12 +59,6 @@ public final class UnitTestClassReport {
         return this;
     }
 
-    private void initResults() {
-        if (results == null) {
-            results = Lists.newArrayList();
-        }
-    }
-
     public int getErrors() {
         return errors;
     }
@@ -83,10 +75,6 @@ public final class UnitTestClassReport {
         return tests;
     }
 
-    public long getDurationMilliseconds() {
-        return durationMilliseconds;
-    }
-
     public long getNegativeTimeTestNumber() {
         return negativeTimeTestNumber;
     }
@@ -97,4 +85,9 @@ public final class UnitTestClassReport {
         }
         return results;
     }
+
+    public long getDurationMilliseconds() {
+        return durationMilliseconds;
+    }
+
 }

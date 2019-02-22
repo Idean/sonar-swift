@@ -18,8 +18,6 @@
 package com.backelite.sonarqube.swift.issues.tailor;
 
 import com.backelite.sonarqube.swift.lang.core.Swift;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.CharEncoding;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -28,59 +26,41 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.server.rule.RulesDefinition;
 import org.sonar.squidbridge.rules.SqaleXmlLoader;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 
 /**
  * Created by tzwickl on 22/11/2016.
  */
 
 public class TailorRulesDefinition implements RulesDefinition {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(TailorRulesDefinition.class);
     public static final String REPOSITORY_KEY = "Tailor";
     public static final String REPOSITORY_NAME = REPOSITORY_KEY;
-    private static final Logger LOGGER = LoggerFactory.getLogger(TailorRulesDefinition.class);
     private static final String RULES_FILE = "/org/sonar/plugins/tailor/rules.json";
 
     @Override
     public void define(final Context context) {
-
         NewRepository repository = context.createRepository(REPOSITORY_KEY, Swift.KEY).setName(REPOSITORY_NAME);
 
-        try {
-            loadRules(repository);
+        try(Reader reader = new InputStreamReader(getClass().getResourceAsStream(RULES_FILE), Charset.forName("UTF-8"))){
+            JSONArray slRules = (JSONArray)JSONValue.parse(reader);
+            if(slRules != null){
+                for (Object obj : slRules) {
+                    JSONObject slRule = (JSONObject) obj;
+                    repository.createRule((String) slRule.get("key"))
+                        .setName((String) slRule.get("name"))
+                        .setSeverity((String) slRule.get("severity"))
+                        .setHtmlDescription(slRule.get("description") +
+                            " (<a href=" + slRule.get("styleguide") + ">" + slRule.get("styleguide") + "</a>)");
+                }
+            }
         } catch (IOException e) {
             LOGGER.error("Failed to load tailor rules", e);
         }
-
         SqaleXmlLoader.load(repository, "/com/sonar/sqale/tailor-model.xml");
-
         repository.done();
-
-    }
-
-    private void loadRules(final NewRepository repository) throws IOException {
-
-        Reader reader = new BufferedReader(
-                new InputStreamReader(getClass().getResourceAsStream(RULES_FILE), CharEncoding.UTF_8));
-
-        String jsonString = IOUtils.toString(reader);
-
-        Object rulesObj = JSONValue.parse(jsonString);
-
-        if (rulesObj != null) {
-            JSONArray slRules = (JSONArray) rulesObj;
-            for (Object obj : slRules) {
-                JSONObject slRule = (JSONObject) obj;
-
-                RulesDefinition.NewRule rule = repository.createRule((String) slRule.get("key"));
-                rule.setName((String) slRule.get("name"));
-                rule.setSeverity((String) slRule.get("severity"));
-                rule.setHtmlDescription((String) slRule.get("description")
-                        + " (<a href=" + (String) slRule.get("styleguide") + ">" + (String) slRule.get("styleguide") + "</a>)");
-            }
-        }
     }
 }

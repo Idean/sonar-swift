@@ -22,21 +22,19 @@ import com.backelite.sonarqube.objectivec.issues.fauxpas.FauxPasProfileImporter;
 import com.backelite.sonarqube.objectivec.issues.oclint.OCLintProfile;
 import com.backelite.sonarqube.objectivec.issues.oclint.OCLintProfileImporter;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
-import com.google.common.io.Closeables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
 import org.sonar.api.rules.ActiveRule;
+import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
 import org.sonar.api.utils.ValidationMessages;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-public class ObjectiveCProfile extends ProfileDefinition {
-
+public class ObjectiveCProfile implements BuiltInQualityProfilesDefinition {
     private static final Logger LOGGER = LoggerFactory.getLogger(ObjectiveCProfile.class);
-
     private final OCLintProfileImporter ocLintProfileImporter;
     private final FauxPasProfileImporter fauxPasProfileImporter;
 
@@ -46,34 +44,29 @@ public class ObjectiveCProfile extends ProfileDefinition {
     }
 
     @Override
-    public RulesProfile createProfile(ValidationMessages messages) {
-
-
+    public void define(Context context) {
         LOGGER.info("Creating Objective-C Profile");
 
-        Reader config = null;
-        final RulesProfile profile = RulesProfile.create("Objective-C", ObjectiveC.KEY);
-        profile.setDefaultProfile(true);
+        NewBuiltInQualityProfile nbiqp = context.createBuiltInQualityProfile("Objective-C", ObjectiveC.KEY);
+        nbiqp.setDefault(true);
 
-        try {
-            config = new InputStreamReader(getClass().getResourceAsStream(OCLintProfile.PROFILE_PATH));
-            RulesProfile ocLintRulesProfile = ocLintProfileImporter.importProfile(config, messages);
+        try(Reader config = new InputStreamReader(getClass().getResourceAsStream(OCLintProfile.PROFILE_PATH))) {
+            RulesProfile ocLintRulesProfile = ocLintProfileImporter.importProfile(config, ValidationMessages.create());
             for (ActiveRule rule : ocLintRulesProfile.getActiveRules()) {
-                profile.addActiveRule(rule);
+                nbiqp.activateRule(rule.getRepositoryKey(), rule.getRuleKey());
             }
-
-            config = new InputStreamReader(getClass().getResourceAsStream(FauxPasProfile.PROFILE_PATH));
-            RulesProfile fauxPasRulesProfile = fauxPasProfileImporter.importProfile(config, messages);
-            for (ActiveRule rule : fauxPasRulesProfile.getActiveRules()) {
-                profile.addActiveRule(rule);
-            }
-
-
-            return profile;
-        } finally {
-
-            Closeables.closeQuietly(config);
+        } catch (IOException ex){
+            LOGGER.error("Error Creating Objective-C Profile",ex);
         }
-    }
 
+        try(Reader config = new InputStreamReader(getClass().getResourceAsStream(FauxPasProfile.PROFILE_PATH))){
+            RulesProfile fauxPasRulesProfile = fauxPasProfileImporter.importProfile(config, ValidationMessages.create());
+            for (ActiveRule rule : fauxPasRulesProfile.getActiveRules()) {
+                nbiqp.activateRule(rule.getRepositoryKey(),rule.getRuleKey());
+            }
+        } catch (IOException ex){
+            LOGGER.error("Error Creating Objective-C Profile",ex);
+        }
+        nbiqp.done();
+    }
 }

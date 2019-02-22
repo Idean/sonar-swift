@@ -15,28 +15,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.commons.surefire;
+package com.backelite.sonarqube.commons;
 
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestFileFinders {
-
     private static TestFileFinders instance;
-
-
     private final List<TestFileFinder> finders = new ArrayList<>();
-
-    private TestFileFinders() {
-
-    }
+    private TestFileFinders() {}
 
     public static synchronized TestFileFinders getInstance() {
-
         if (instance == null) {
             instance = new TestFileFinders();
         }
@@ -47,9 +39,7 @@ public class TestFileFinders {
         finders.add(finder);
     }
 
-    @Nullable
-    InputFile getUnitTestResource(FileSystem fileSystem, String classname) {
-
+    public InputFile getUnitTestResource(FileSystem fileSystem, String classname) {
         for (TestFileFinder finder : finders) {
             InputFile result = finder.getUnitTestResource(fileSystem, classname);
             if (result != null) {

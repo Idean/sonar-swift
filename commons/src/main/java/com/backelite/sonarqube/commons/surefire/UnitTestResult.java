@@ -24,6 +24,7 @@ public final class UnitTestResult {
     public static final String STATUS_SKIPPED = "skipped";
 
     private String name;
+    private String testSuiteClassName;
     private String status;
     private String stackTrace;
     private String message;
@@ -80,5 +81,14 @@ public final class UnitTestResult {
 
     public boolean isError() {
         return STATUS_ERROR.equals(status);
+    }
+
+    public UnitTestResult setTestSuiteClassName(String testSuiteClassName) {
+        this.testSuiteClassName = testSuiteClassName;
+        return this;
+    }
+
+    public String getTestSuiteClassName() {
+        return testSuiteClassName;
     }
 }

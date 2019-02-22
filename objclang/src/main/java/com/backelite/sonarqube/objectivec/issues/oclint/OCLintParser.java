@@ -17,49 +17,92 @@
  */
 package com.backelite.sonarqube.objectivec.issues.oclint;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.component.ResourcePerspectives;
-import org.sonar.api.utils.StaxParser;
+import org.sonar.api.batch.fs.FilePredicate;
+import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.sensor.SensorContext;
+import org.sonar.api.batch.sensor.issue.NewIssueLocation;
+import org.sonar.api.batch.sensor.issue.internal.DefaultIssueLocation;
+import org.sonar.api.rule.RuleKey;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
-import javax.xml.stream.XMLStreamException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 final class OCLintParser {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OCLintParser.class);
+    private static final String FILE = "file";
+    private static final String FILENAME = "name";
+    private static final String VIOLATION = "violation";
+    private static final String LINE = "beginline";
+    private static final String RULE = "rule";
+    private final SensorContext context;
+    private final DocumentBuilderFactory dbfactory;
 
-    private final ResourcePerspectives resourcePerspectives;
-    private final FileSystem fileSystem;
-
-    public OCLintParser(final ResourcePerspectives resourcePerspectives, final FileSystem fileSystem) {
-        this.resourcePerspectives = resourcePerspectives;
-        this.fileSystem = fileSystem;
+    public OCLintParser(SensorContext context) {
+        this.context = context;
+        this.dbfactory = DocumentBuilderFactory.newInstance();
     }
 
-    public void parseReport(final File file) {
-
+    public void parseReport(final File xmlFile) {
         try {
-            final InputStream reportStream = new FileInputStream(file);
-            parseReport(reportStream);
-            reportStream.close();
+            DocumentBuilder builder = dbfactory.newDocumentBuilder();
+            Document document = builder.parse(xmlFile);
+            parseFiles(document.getElementsByTagName(FILE));
+        } catch (final FileNotFoundException e) {
+            LOGGER.error("Cobertura Report not found {}", xmlFile, e);
         } catch (final IOException e) {
-            LoggerFactory.getLogger(getClass()).error("Error processing file named {}", file, e);
+            LOGGER.error("Error processing file named {}", xmlFile, e);
+        } catch (final ParserConfigurationException e) {
+            LOGGER.error("Error in parser config {}", e);
+        } catch (final SAXException e) {
+            LOGGER.error("Error processing file named {}", xmlFile, e);
         }
 
     }
 
-    public void parseReport(final InputStream inputStream) {
+    private void parseFiles(NodeList nodeList) {
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) node;
 
-        try {
-            final StaxParser parser = new StaxParser(
-                    new OCLintXMLStreamHandler(resourcePerspectives, fileSystem));
-            parser.parse(inputStream);
-        } catch (final XMLStreamException e) {
-            LoggerFactory.getLogger(getClass()).error(
-                    "Error while parsing XML stream.", e);
+                String filePath = element.getAttribute(FILENAME);
+                NodeList nl = element.getElementsByTagName(VIOLATION);
+                collectFileViolations(filePath,nl);
+            }
         }
     }
 
+    private void collectFileViolations(String filePath, NodeList nodeList) {
+        File file = new File(filePath);
+        FilePredicate fp = context.fileSystem().predicates().hasAbsolutePath(file.getAbsolutePath());
+        if(!context.fileSystem().hasFiles(fp)){
+            LOGGER.warn("file not included in sonar {}", filePath);
+        }
+        InputFile inputFile = context.fileSystem().inputFile(fp);
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) node;
+                NewIssueLocation dil = new DefaultIssueLocation()
+                    .on(inputFile)
+                    .at(inputFile.selectLine(Integer.valueOf(element.getAttribute(LINE))))
+                    .message(element.getTextContent());
+                context.newIssue()
+                    .forRule(RuleKey.of(OCLintRulesDefinition.REPOSITORY_KEY, element.getAttribute(RULE)))
+                    .at(dil)
+                    .save();
+            }
+        }
+    }
 }

@@ -15,18 +15,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.commons.surefire;
+package com.backelite.sonarqube.commons;
 
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 
-import javax.annotation.Nullable;
-
-/**
- * Created by gillesgrousset on 28/08/2018.
- */
 public interface TestFileFinder {
-
-    @Nullable
     InputFile getUnitTestResource(FileSystem fileSystem, String classname);
 }

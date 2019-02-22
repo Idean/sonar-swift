@@ -18,13 +18,14 @@
 package com.backelite.sonarqube.swift.issues.swiftlint;
 
 import com.backelite.sonarqube.swift.lang.core.Swift;
-import com.google.common.io.Closeables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
+import org.sonar.api.rules.ActiveRule;
+import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
 import org.sonar.api.utils.ValidationMessages;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
@@ -32,8 +33,7 @@ import java.io.Reader;
  * Created by gillesgrousset on 03/11/2015.
  */
 
-public class SwiftLintProfile extends ProfileDefinition {
-
+public class SwiftLintProfile implements BuiltInQualityProfilesDefinition {
     public static final String PROFILE_PATH = "/org/sonar/plugins/swiftlint/profile-swiftlint.xml";
     private static final Logger LOGGER = LoggerFactory.getLogger(SwiftLintProfile.class);
 
@@ -44,20 +44,18 @@ public class SwiftLintProfile extends ProfileDefinition {
     }
 
     @Override
-    public RulesProfile createProfile(ValidationMessages messages) {
+    public void define(Context context) {
         LOGGER.info("Creating SwiftLint Profile");
-        Reader config = null;
+        NewBuiltInQualityProfile nbiqp = context.createBuiltInQualityProfile(SwiftLintRulesDefinition.REPOSITORY_KEY, Swift.KEY);
 
-        try {
-            config = new InputStreamReader(getClass().getResourceAsStream(
-                    PROFILE_PATH));
-            final RulesProfile profile = profileImporter.importProfile(config, messages);
-            profile.setName(SwiftLintRulesDefinition.REPOSITORY_KEY);
-            profile.setLanguage(Swift.KEY);
-
-            return profile;
-        } finally {
-            Closeables.closeQuietly(config);
+        try(Reader config = new InputStreamReader(getClass().getResourceAsStream(SwiftLintProfile.PROFILE_PATH))) {
+            RulesProfile ocLintRulesProfile = profileImporter.importProfile(config, ValidationMessages.create());
+            for (ActiveRule rule : ocLintRulesProfile.getActiveRules()) {
+                nbiqp.activateRule(rule.getRepositoryKey(), rule.getRuleKey());
+            }
+        } catch (IOException ex){
+            LOGGER.error("Error Creating SwiftLint Profile",ex);
         }
+        nbiqp.done();
     }
 }

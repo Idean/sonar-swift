@@ -28,9 +28,8 @@ import org.sonar.api.utils.ValidationMessages;
 import java.io.Reader;
 
 public class FauxPasProfileImporter extends ProfileImporter {
-
-    private static final String UNABLE_TO_LOAD_DEFAULT_PROFILE = "Unable to load default FauxPas profile";
     private static final Logger LOGGER = LoggerFactory.getLogger(FauxPasProfileImporter.class);
+    private static final String UNABLE_TO_LOAD_DEFAULT_PROFILE = "Unable to load default FauxPas profile";
 
     private final XMLProfileParser profileParser;
 
@@ -42,14 +41,12 @@ public class FauxPasProfileImporter extends ProfileImporter {
 
     @Override
     public RulesProfile importProfile(Reader reader, ValidationMessages messages) {
-
         final RulesProfile profile = profileParser.parse(reader, messages);
 
         if (null == profile) {
             messages.addErrorText(UNABLE_TO_LOAD_DEFAULT_PROFILE);
             LOGGER.error(UNABLE_TO_LOAD_DEFAULT_PROFILE);
         }
-
         return profile;
     }
 }

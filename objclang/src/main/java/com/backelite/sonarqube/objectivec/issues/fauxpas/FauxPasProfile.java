@@ -17,21 +17,22 @@
  */
 package com.backelite.sonarqube.objectivec.issues.fauxpas;
 
+import com.backelite.sonarqube.objectivec.issues.oclint.OCLintProfile;
 import com.backelite.sonarqube.objectivec.lang.core.ObjectiveC;
-import com.google.common.io.Closeables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sonar.api.profiles.ProfileDefinition;
 import org.sonar.api.profiles.RulesProfile;
+import org.sonar.api.rules.ActiveRule;
+import org.sonar.api.server.profile.BuiltInQualityProfilesDefinition;
 import org.sonar.api.utils.ValidationMessages;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-public class FauxPasProfile extends ProfileDefinition {
-
-    public static final String PROFILE_PATH = "/org/sonar/plugins/fauxpas/profile-fauxpas.xml";
+public class FauxPasProfile implements BuiltInQualityProfilesDefinition {
     private static final Logger LOGGER = LoggerFactory.getLogger(FauxPasProfile.class);
+    public static final String PROFILE_PATH = "/org/sonar/plugins/fauxpas/profile-fauxpas.xml";
 
     private final FauxPasProfileImporter profileImporter;
 
@@ -40,20 +41,18 @@ public class FauxPasProfile extends ProfileDefinition {
     }
 
     @Override
-    public RulesProfile createProfile(ValidationMessages messages) {
+    public void define(Context context) {
         LOGGER.info("Creating FauxPas Profile");
-        Reader config = null;
+        NewBuiltInQualityProfile nbiqp = context.createBuiltInQualityProfile(FauxPasRulesDefinition.REPOSITORY_KEY, ObjectiveC.KEY);
 
-        try {
-            config = new InputStreamReader(getClass().getResourceAsStream(
-                    PROFILE_PATH));
-            final RulesProfile profile = profileImporter.importProfile(config, messages);
-            profile.setName(FauxPasRulesDefinition.REPOSITORY_KEY);
-            profile.setLanguage(ObjectiveC.KEY);
-
-            return profile;
-        } finally {
-            Closeables.closeQuietly(config);
+        try(Reader config = new InputStreamReader(getClass().getResourceAsStream(OCLintProfile.PROFILE_PATH))) {
+            RulesProfile ocLintRulesProfile = profileImporter.importProfile(config, ValidationMessages.create());
+            for (ActiveRule rule : ocLintRulesProfile.getActiveRules()) {
+                nbiqp.activateRule(rule.getRepositoryKey(), rule.getRuleKey());
+            }
+        } catch (IOException ex){
+            LOGGER.error("Error Creating FauxPas Profile",ex);
         }
+        nbiqp.done();
     }
 }

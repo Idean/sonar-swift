@@ -28,9 +28,8 @@ import org.sonar.api.utils.ValidationMessages;
 import java.io.Reader;
 
 public final class OCLintProfileImporter extends ProfileImporter {
-
-    private static final String UNABLE_TO_LOAD_DEFAULT_PROFILE = "Unable to load default OCLint profile";
     private static final Logger LOGGER = LoggerFactory.getLogger(OCLintProfileImporter.class);
+    private static final String UNABLE_TO_LOAD_DEFAULT_PROFILE = "Unable to load default OCLint profile";
 
     private final XMLProfileParser profileParser;
 
@@ -41,15 +40,13 @@ public final class OCLintProfileImporter extends ProfileImporter {
     }
 
     @Override
-    public RulesProfile importProfile(final Reader reader,
-                                      final ValidationMessages messages) {
+    public RulesProfile importProfile(Reader reader, ValidationMessages messages) {
         final RulesProfile profile = profileParser.parse(reader, messages);
 
         if (null == profile) {
             messages.addErrorText(UNABLE_TO_LOAD_DEFAULT_PROFILE);
             LOGGER.error(UNABLE_TO_LOAD_DEFAULT_PROFILE);
         }
-
         return profile;
     }
 }

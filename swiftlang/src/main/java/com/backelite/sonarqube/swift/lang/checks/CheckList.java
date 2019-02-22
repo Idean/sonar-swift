@@ -17,8 +17,7 @@
  */
 package com.backelite.sonarqube.swift.lang.checks;
 
-import com.google.common.collect.ImmutableList;
-
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,8 +33,6 @@ public final class CheckList {
     }
 
     public static List<Class> getChecks() {
-        return ImmutableList.of(
-
-        );
+        return Collections.emptyList();
     }
 }
