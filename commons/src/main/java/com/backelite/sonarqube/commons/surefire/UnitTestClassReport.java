@@ -1,5 +1,5 @@
 /**
- * backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
+ * commons - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,9 +15,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.swift.surefire;
+package com.backelite.sonarqube.commons.surefire;
 
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
+
+import java.util.Collections;
 import java.util.List;
 
 public final class UnitTestClassReport {
@@ -25,14 +27,19 @@ public final class UnitTestClassReport {
     private int failures = 0;
     private int skipped = 0;
     private int tests = 0;
+    private long durationMilliseconds = 0L;
 
     private long negativeTimeTestNumber = 0L;
     private List<UnitTestResult> results = null;
 
-    public UnitTestClassReport add(UnitTestResult result) {
+    private void initResults() {
         if (results == null) {
-            results = new ArrayList<>();
+            results = Lists.newArrayList();
         }
+    }
+
+    public UnitTestClassReport add(UnitTestResult result) {
+        initResults();
         results.add(result);
         if (result.getStatus().equals(UnitTestResult.STATUS_SKIPPED)) {
             skipped += 1;
@@ -46,6 +53,8 @@ public final class UnitTestClassReport {
         tests += 1;
         if (result.getDurationMilliseconds() < 0) {
             negativeTimeTestNumber += 1;
+        } else {
+            durationMilliseconds += result.getDurationMilliseconds();
         }
         return this;
     }
@@ -68,6 +77,17 @@ public final class UnitTestClassReport {
 
     public long getNegativeTimeTestNumber() {
         return negativeTimeTestNumber;
+    }
+
+    public List<UnitTestResult> getResults() {
+        if (results == null) {
+            return Collections.emptyList();
+        }
+        return results;
+    }
+
+    public long getDurationMilliseconds() {
+        return durationMilliseconds;
     }
 
 }

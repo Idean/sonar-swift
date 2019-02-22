@@ -39,7 +39,7 @@ public class TestFileFinders {
         finders.add(finder);
     }
 
-    InputFile getUnitTestResource(FileSystem fileSystem, String classname) {
+    public InputFile getUnitTestResource(FileSystem fileSystem, String classname) {
         for (TestFileFinder finder : finders) {
             InputFile result = finder.getUnitTestResource(fileSystem, classname);
             if (result != null) {
