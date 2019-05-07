@@ -30,7 +30,7 @@ In SonarQube under Quality Profiles the used Linter can be specified by selectin
 | Complexity	|YES		|Uses [Lizard](https://github.com/terryyin/lizard)| Uses [Lizard](https://github.com/terryyin/lizard)|
 | Design		|NO			|			  |             |
 | Documentation	|YES		|			  |             |
-| Duplications	|YES		|			  |             |
+| Duplications	|Only on Sonarqube < 7.3		|			  |             |
 | Issues		|YES		| Uses [SwiftLint](https://github.com/realm/SwiftLint) and/or [Tailor](https://github.com/sleekbyte/tailor) for Swift. [OCLint](http://oclint-docs.readthedocs.io/en/stable/) and [Faux Pas](http://fauxpasapp.com/) for Objective-C| Uses [Tailor](https://github.com/sleekbyte/tailor)|
 | Size			|YES		|			  |             |
 | Tests			|YES		| Uses xcodebuild + xcpretty [xcpretty](https://github.com/supermarin/xcpretty)	| Not Supported |

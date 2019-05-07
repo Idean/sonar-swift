@@ -42,6 +42,13 @@
     "severity": "MINOR"
   },
   {
+    "key": "closure_body_length",
+    "category": "SwiftLint",
+    "name": "Closure Body Length",
+    "description": "Closure bodies should not span too many lines.",
+    "severity": "MAJOR"
+  },
+  {
     "key": "closure_end_indentation",
     "category": "SwiftLint",
     "name": "Closure End Indentation",
@@ -60,6 +67,13 @@
     "category": "SwiftLint",
     "name": "Closure Spacing",
     "description": "Closure expressions should have a single space inside each brace.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "collection_alignment",
+    "category": "SwiftLint",
+    "name": "Collection Element Alignment",
+    "description": "All elements in a collection literal should be vertically aligned",
     "severity": "MINOR"
   },
   {
@@ -126,6 +140,13 @@
     "severity": "CRITICAL"
   },
   {
+    "key": "deployment_target",
+    "category": "SwiftLint",
+    "name": "Deployment Target",
+    "description": "Availability checks or attributes shouldn't be using older versions that are satisfied by the deployment target.",
+    "severity": "MINOR"
+  },
+  {
     "key": "discarded_notification_center_observer",
     "category": "SwiftLint",
     "name": "Discarded Notification Center Observer",
@@ -158,6 +179,13 @@
     "category": "SwiftLint",
     "name": "Discouraged Optional Collection",
     "description": "Prefer empty collection over optional collection.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "duplicate_imports",
+    "category": "SwiftLint",
+    "name": "Duplicate Imports",
+    "description": "Imports should be unique.",
     "severity": "MINOR"
   },
   {
@@ -228,6 +256,13 @@
     "category": "SwiftLint",
     "name": "Explicit Init",
     "description": "Explicitly calling .init() should be avoided.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "explicit_self",
+    "category": "SwiftLint",
+    "name": "Explicit Self",
+    "description": "Instance variables and functions should be explicitly accessed with 'self.'.",
     "severity": "MINOR"
   },
   {
@@ -350,6 +385,13 @@
     "severity": "MINOR"
   },
   {
+    "key": "identical_operands",
+    "category": "SwiftLint",
+    "name": "Identical Operands",
+    "description": "Comparing two identical operands is likely a mistake.",
+    "severity": "MINOR"
+  },
+  {
     "key": "identifier_name",
     "category": "SwiftLint",
     "name": "Identifier Name",
@@ -378,6 +420,13 @@
     "severity": "MINOR"
   },
   {
+    "key": "inert_defer",
+    "category": "SwiftLint",
+    "name": "Inert Defer",
+    "description": "If defer is at the end of its parent scope, it will be executed right where it is anyway.",
+    "severity": "MINOR"
+  },
+  {
     "key": "is_disjoint",
     "category": "SwiftLint",
     "name": "Is Disjoint",
@@ -396,6 +445,13 @@
     "category": "SwiftLint",
     "name": "Large Tuple",
     "description": "Tuples shouldn't have too many members. Create a custom type instead.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "last_where",
+    "category": "SwiftLint",
+    "name": "Last Where",
+    "description": "Prefer using `.last(where:)` over `.filter { }.last` in collections.",
     "severity": "MINOR"
   },
   {
@@ -427,10 +483,24 @@
     "severity": "MINOR"
   },
   {
+    "key": "legacy_hashing",
+    "category": "SwiftLint",
+    "name": "Legacy Hashing",
+    "description": "Prefer using the `hash(into:)` function instead of overriding `hashValue`",
+    "severity": "MINOR"
+  },
+  {
     "key": "legacy_nsgeometry_functions",
     "category": "SwiftLint",
     "name": "Legacy NSGeometry Functions",
     "description": "Struct extension properties and methods are preferred over legacy functions",
+    "severity": "MINOR"
+  },
+  {
+    "key": "legacy_random",
+    "category": "SwiftLint",
+    "name": "Legacy Random",
+    "description": "Prefer using `type.random(in:)` over legacy functions.",
     "severity": "MINOR"
   },
   {
@@ -490,6 +560,13 @@
     "severity": "MINOR"
   },
   {
+    "key": "multiline_arguments_brackets",
+    "category": "SwiftLint",
+    "name": "Multiline Arguments Brackets",
+    "description": "Multiline arguments should have their surrounding brackets in a new line.",
+    "severity": "MINOR"
+  },
+  {
     "key": "multiline_function_chains",
     "category": "SwiftLint",
     "name": "Multiline Function Chains",
@@ -497,10 +574,24 @@
     "severity": "MINOR"
   },
   {
+    "key": "multiline_literal_brackets",
+    "category": "SwiftLint",
+    "name": "Multiline Literal Brackets",
+    "description": "Multiline literals should have their surrounding brackets in a new line.",
+    "severity": "MINOR"
+  },
+  {
     "key": "multiline_parameters",
     "category": "SwiftLint",
     "name": "Multiline Parameters",
     "description": "Functions and methods parameters should be either on the same line, or one per line.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "multiline_parameters_brackets",
+    "category": "SwiftLint",
+    "name": "Multiline Parameters Brackets",
+    "description": "Multiline parameters should have their surrounding brackets in a new line.",
     "severity": "MINOR"
   },
   {
@@ -550,6 +641,13 @@
     "category": "SwiftLint",
     "name": "Notification Center Detachment",
     "description": "An object should only remove itself as an observer in `deinit`.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "nslocalizedstring_key",
+    "category": "SwiftLint",
+    "name": "NSLocalizedString Key",
+    "description": "Static strings should be used as key in NSLocalizedString in order to genstrings work.",
     "severity": "MINOR"
   },
   {
@@ -644,6 +742,13 @@
     "severity": "MINOR"
   },
   {
+    "key": "prohibited_interface_builder",
+    "category": "SwiftLint",
+    "name": "Prohibited Interface Builder",
+    "description": "Creating views using Interface Builder should be avoided.",
+    "severity": "MINOR"
+  },
+  {
     "key": "prohibited_super_call",
     "category": "SwiftLint",
     "name": "Prohibited calls to super",
@@ -693,6 +798,13 @@
     "severity": "MINOR"
   },
   {
+    "key": "redundant_objc_attribute",
+    "category": "SwiftLint",
+    "name": "Redundant @objc Attribute",
+    "description": "Objective-C attribute (@objc) is redundant in declaration.",
+    "severity": "MINOR"
+  },
+  {
     "key": "redundant_optional_initialization",
     "category": "SwiftLint",
     "name": "Redundant Optional Initialization",
@@ -725,6 +837,13 @@
     "category": "SwiftLint",
     "name": "Redundant Void Return",
     "description": "Returning Void in a function declaration is redundant.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "required_deinit",
+    "category": "SwiftLint",
+    "name": "Required Deinit",
+    "description": "Classes should have an explicit deinit method.",
     "severity": "MINOR"
   },
   {
@@ -777,10 +896,24 @@
     "severity": "MINOR"
   },
   {
+    "key": "static_operator",
+    "category": "SwiftLint",
+    "name": "Static Operator",
+    "description": "Operators should be declared as static functions, not free functions.",
+    "severity": "MINOR"
+  },
+  {
     "key": "strict_fileprivate",
     "category": "SwiftLint",
     "name": "Strict fileprivate",
     "description": "`fileprivate` should be avoided.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "strong_iboutlet",
+    "category": "SwiftLint",
+    "name": "Strong IBOutlet",
+    "description": "@IBOutlets shouldn't be declared as weak.",
     "severity": "MINOR"
   },
   {
@@ -816,6 +949,13 @@
     "category": "SwiftLint",
     "name": "Todo",
     "description": "TODOs and FIXMEs should be resolved.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "toggle_bool",
+    "category": "SwiftLint",
+    "name": "Toggle Bool",
+    "description": "Prefer `someBool.toggle()` over `someBool = !someBool`.",
     "severity": "MINOR"
   },
   {
@@ -903,10 +1043,24 @@
     "severity": "MINOR"
   },
   {
+    "key": "unused_control_flow_label",
+    "category": "SwiftLint",
+    "name": "Unused Control Flow Label",
+    "description": "Unused control flow label should be removed.",
+    "severity": "MINOR"
+  },
+  {
     "key": "unused_enumerated",
     "category": "SwiftLint",
     "name": "Unused Enumerated",
     "description": "When the index or the item is not used, `.enumerated()` can be removed.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "unused_import",
+    "category": "SwiftLint",
+    "name": "Unused Import",
+    "description": "All imported modules should be required to make the file compile.",
     "severity": "MINOR"
   },
   {
@@ -917,10 +1071,17 @@
     "severity": "MINOR"
   },
   {
+    "key": "unused_private_declaration",
+    "category": "SwiftLint",
+    "name": "Unused Private Declaration",
+    "description": "Private declarations should be referenced in that file.",
+    "severity": "MINOR"
+  },
+  {
     "key": "unused_setter_value",
     "category": "SwiftLint",
     "name": "Unused Setter Value",
-    "description": "Setter value (i.e. newValue) is not used.",
+    "description": "Setter value is not used.",
     "severity": "MINOR"
   },
   {
@@ -952,6 +1113,27 @@
     "severity": "MINOR"
   },
   {
+    "key": "vertical_whitespace_between_cases",
+    "category": "SwiftLint",
+    "name": "Vertical Whitespace Between Cases",
+    "description": "Include a single empty line between switch cases.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "vertical_whitespace_closing_braces",
+    "category": "SwiftLint",
+    "name": "Vertical Whitespace before Closing Braces",
+    "description": "Don't include vertical whitespace (empty line) before closing braces.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "vertical_whitespace_opening_braces",
+    "category": "SwiftLint",
+    "name": "Vertical Whitespace after Opening Braces",
+    "description": "Don't include vertical whitespace (empty line) after opening braces.",
+    "severity": "MINOR"
+  },
+  {
     "key": "void_return",
     "category": "SwiftLint",
     "name": "Void Return",
@@ -959,10 +1141,24 @@
     "severity": "MINOR"
   },
   {
+    "key": "weak_computed_property",
+    "category": "SwiftLint",
+    "name": "Weak Computed Property",
+    "description": "Adding weak to a computed property has no effect.",
+    "severity": "MINOR"
+  },
+  {
     "key": "weak_delegate",
     "category": "SwiftLint",
     "name": "Weak Delegate",
     "description": "Delegates should be weak to avoid reference cycles.",
+    "severity": "MINOR"
+  },
+  {
+    "key": "xct_specific_matcher",
+    "category": "SwiftLint",
+    "name": "XCTest Specific Matcher",
+    "description": "Prefer specific XCTest matchers over `XCTAssertEqual` and `XCTAssertNotEqual`",
     "severity": "MINOR"
   },
   {
