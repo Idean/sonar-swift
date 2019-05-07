@@ -1,17 +1,17 @@
 /**
  * Swift SonarQube Plugin - Objective-C module - Enables analysis of Swift and Objective-C projects into SonarQube.
  * Copyright © 2015 Backelite (${email})
- *
+ * <p>
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -67,7 +67,7 @@ public class ObjectiveCSquidSensor implements Sensor {
     public ObjectiveCSquidSensor(SensorContext context, PathResolver pathResolver, CheckFactory checkFactory) {
         this.context = context;
         this.pathResolver = pathResolver;
-        this.checks = checkFactory.<SquidCheck<ObjectiveCGrammar>>create(CheckList.REPOSITORY_KEY).addAnnotatedChecks((Iterable<Class>)CheckList.getChecks());
+        this.checks = checkFactory.<SquidCheck<ObjectiveCGrammar>>create(CheckList.REPOSITORY_KEY).addAnnotatedChecks((Iterable<Class>) CheckList.getChecks());
     }
 
     private ObjectiveCConfiguration createConfiguration() {
@@ -86,7 +86,6 @@ public class ObjectiveCSquidSensor implements Sensor {
     }
 
     private void saveMeasures(InputFile inputFile, SourceFile squidFile) {
-        MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.FILES, squidFile.getInt(ObjectiveCMetric.FILES));
         MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.LINES, squidFile.getInt(ObjectiveCMetric.LINES));
         MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.NCLOC, squidFile.getInt(ObjectiveCMetric.LINES_OF_CODE));
         MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.STATEMENTS, squidFile.getInt(ObjectiveCMetric.STATEMENTS));
@@ -133,7 +132,7 @@ public class ObjectiveCSquidSensor implements Sensor {
         FilePredicate isMain = context.fileSystem().predicates().hasType(InputFile.Type.MAIN);
         FilePredicate and = context.fileSystem().predicates().and(hasObjC, isMain);
         List<File> files = new ArrayList<>();
-        for(InputFile inf : context.fileSystem().inputFiles(and)){
+        for (InputFile inf : context.fileSystem().inputFiles(and)) {
             files.add(inf.file());
         }
 
