@@ -18,17 +18,16 @@
 package com.backelite.sonarqube.swift.lang;
 
 import com.backelite.sonarqube.swift.lang.core.Swift;
-import org.sonar.api.batch.ScannerSide;
 import org.sonar.api.batch.fs.FilePredicate;
 import org.sonar.api.batch.fs.FilePredicates;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.scanner.ScannerSide;
 
 import javax.annotation.CheckForNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @ScannerSide
 public class SwiftFileSystem {
@@ -49,10 +48,10 @@ public class SwiftFileSystem {
         return fileSystem.hasFiles(isSwiftLanguage);
     }
 
-    public List<File> sourceFiles() {
-        Iterable<File> files = fileSystem.files(predicates.and(isSwiftLanguage, isMainTypeFile));
-        List<File> list = new ArrayList<>();
-        files.iterator().forEachRemaining(list::add);
+    public List<InputFile> sourceFiles() {
+        Iterable<InputFile> inputFiles = fileSystem.inputFiles(predicates.and(isSwiftLanguage, isMainTypeFile));
+        List<InputFile> list = new ArrayList<>();
+        inputFiles.iterator().forEachRemaining(list::add);
         return list;
     }
 
