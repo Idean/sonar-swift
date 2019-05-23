@@ -37,6 +37,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Optional;
 
 public class LizardReportParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardReportParser.class);
@@ -116,8 +117,7 @@ public class LizardReportParser {
 
                 NodeList values = itemElement.getElementsByTagName(VALUE);
                 if (FILE_MEASURE.equalsIgnoreCase(type)) {
-                    InputFile inputFile = getFile(name);
-                    addComplexityFileMeasures(inputFile, values);
+                    Optional.ofNullable(getFile(name)).ifPresent(inputFile -> addComplexityFileMeasures(inputFile, values));
                 } else if (FUNCTION_MEASURE.equalsIgnoreCase(type)) {
                     addComplexityFunctionMeasures(new SwiftFunction(0,name), values);
                 }
