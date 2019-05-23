@@ -1,5 +1,8 @@
 # _SonarQube Plugin for Swift_ Changelog
 
+##  v0.4.4
+- Fixed [java.lang.IllegalArgumentException: Component can't be null](https://github.com/Backelite/sonar-swift/issues/202)
+- Fixed [NPE on CoberturaReportParser line 98](https://github.com/Backelite/sonar-swift/issues/200)
 
 ##  v0.4.3
 - Added support for SonarQube 7.3

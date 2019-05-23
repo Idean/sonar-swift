@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.backelite.sonarqube.swift.surefire;
+package com.backelite.sonarqube.commons.surefire;
 
 import com.backelite.sonarqube.commons.MeasureUtil;
 import org.slf4j.Logger;
