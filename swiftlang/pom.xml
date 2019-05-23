@@ -24,7 +24,7 @@
     <parent>
         <artifactId>backelite-swift</artifactId>
         <groupId>com.backelite.sonarqube</groupId>
-        <version>0.4.3-develop2</version>
+        <version>0.4.5-develop1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.backelite.sonarqube</groupId>
             <artifactId>commons</artifactId>
-            <version>0.4.3-develop2</version>
+            <version>0.4.5-develop1</version>
         </dependency>
 
         <dependency>
