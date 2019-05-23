@@ -1,41 +1,40 @@
 <?xml version="1.0" ?>
 <?xml-stylesheet type="text/xsl" href="https://raw.githubusercontent.com/terryyin/lizard/master/lizard.xsl"?>
 <cppncss>
-	<measure type="Function">
-		<labels>
-			<label>Nr.</label>
-			<label>NCSS</label>
-			<label>CCN</label>
-		</labels>
-		<item name="methodName(...) at ./Folder With Space/File With Space.swift:14">
-			<value>1</value>
-			<value>4</value>
-			<value>1</value>
-		</item>
-		<average label="NCSS" value="8"/>
-		<average label="CCN" value="1"/>
-	</measure>
-	<measure type="File">
-		<labels>
-			<label>Nr.</label>
-			<label>NCSS</label>
-			<label>CCN</label>
-			<label>Functions</label>
-		</labels>
-		<item name="./Folder With Space/File With Space.swift">
-			<value>1</value>
-			<value>46</value>
-			<value>8</value>
-			<value>5</value>
-		</item>
-		<average label="NCSS" value="80"/>
-		<average label="CCN" value="13"/>
-		<average label="Functions" value="5"/>
-		<sum label="NCSS" value="19537"/>
-		<sum label="CCN" value="3194"/>
-		<sum label="Functions" value="1420"/>
-		<average label="NCSS" value="13"/>
-		<average label="CCN" value="2"/>
-	</measure>
+    <measure type="Function">
+        <labels>
+            <label>Nr.</label>
+            <label>NCSS</label>
+            <label>CCN</label>
+        </labels>
+        <item name="methodName(...) at ./Folder With Space/File With Space.swift:14">
+            <value>1</value>
+            <value>4</value>
+            <value>1</value>
+        </item>
+        <average label="NCSS" value="8"/>
+        <average label="CCN" value="1"/>
+    </measure>
+    <measure type="File">
+        <labels>
+            <label>Nr.</label>
+            <label>NCSS</label>
+            <label>CCN</label>
+            <label>Functions</label>
+        </labels>
+        <item name="./Folder With Space/File With Space.swift">
+            <value>1</value>
+            <value>46</value>
+            <value>8</value>
+            <value>5</value>
+        </item>
+        <average label="NCSS" value="80"/>
+        <average label="CCN" value="13"/>
+        <average label="Functions" value="5"/>
+        <sum label="NCSS" value="19537"/>
+        <sum label="CCN" value="3194"/>
+        <sum label="Functions" value="1420"/>
+        <average label="NCSS" value="13"/>
+        <average label="CCN" value="2"/>
+    </measure>
 </cppncss>
-

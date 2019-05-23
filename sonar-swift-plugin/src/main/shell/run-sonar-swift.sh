@@ -283,7 +283,7 @@ if [[ "$workspaceFile" != "" ]] ; then
 else
     buildCmdPrefix="-project $projectFile"
 fi
-buildCmd=($XCODEBUILD_CMD clean build $buildCmdPrefix -scheme $appScheme)
+buildCmd=($XCODEBUILD_CMD clean build $buildCmdPrefix -scheme "$appScheme")
 if [[ ! -z "$destinationSimulator" ]]; then
     buildCmd+=(-destination "$destinationSimulator" -destination-timeout 360 COMPILER_INDEX_STORE_ENABLE=NO)
 fi
@@ -445,7 +445,7 @@ if [ "$fauxpas" = "on" ] && [ "$hasObjC" = "yes" ]; then
         if [ "$projectCount" = "1" ]
         then
 
-            fauxpas -o json check $projectFile --workspace $workspaceFile --scheme $appScheme > sonar-reports/fauxpas.json
+            fauxpas -o json check $projectFile --workspace $workspaceFile --scheme "$appScheme" > sonar-reports/fauxpas.json
 
 
         else

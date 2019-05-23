@@ -88,17 +88,16 @@
 
         <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
 
-        <sonarQubeMinVersion>6.7</sonarQubeMinVersion>
+        <sonarQubeMinVersion>7.0</sonarQubeMinVersion>
 
         <assertj.version>3.5.2</assertj.version>
-        <guava.version>17.0</guava.version>
         <junit.version>4.10</junit.version>
         <logback.version>1.0.13</logback.version>
         <mockito.version>1.9.0</mockito.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <sonar.version>7.3</sonar.version>
-        <sonar-orchestrator.version>3.22.0.1791</sonar-orchestrator.version>
-        <sonarlint.version>4.0.0.2052</sonarlint.version>
+        <sonar.version>7.7</sonar.version>
+        <sonar-orchestrator.version>3.24.0.1993</sonar-orchestrator.version>
+        <sonarlint.version>4.1.0.2218</sonarlint.version>
         <sslr.version>1.23</sslr.version>
         <sslr-squid-bridge.version>2.6.1</sslr-squid-bridge.version>
         <ant.version>1.6</ant.version>
@@ -158,11 +157,6 @@
                 <version>${ant.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.googlecode.json-simple</groupId>
                 <artifactId>json-simple</artifactId>

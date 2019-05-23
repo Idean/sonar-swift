@@ -66,7 +66,7 @@ public class ObjectiveCSquidSensor implements Sensor {
     public ObjectiveCSquidSensor(SensorContext context, PathResolver pathResolver, CheckFactory checkFactory) {
         this.context = context;
         this.pathResolver = pathResolver;
-        this.checks = checkFactory.<SquidCheck<ObjectiveCGrammar>>create(CheckList.REPOSITORY_KEY).addAnnotatedChecks((Iterable<Class>)CheckList.getChecks());
+        this.checks = checkFactory.<SquidCheck<ObjectiveCGrammar>>create(CheckList.REPOSITORY_KEY).addAnnotatedChecks((Iterable<Class>) CheckList.getChecks());
     }
 
     private ObjectiveCConfiguration createConfiguration() {
@@ -85,7 +85,6 @@ public class ObjectiveCSquidSensor implements Sensor {
     }
 
     private void saveMeasures(InputFile inputFile, SourceFile squidFile) {
-        MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.FILES, squidFile.getInt(ObjectiveCMetric.FILES));
         MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.LINES, squidFile.getInt(ObjectiveCMetric.LINES));
         MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.NCLOC, squidFile.getInt(ObjectiveCMetric.LINES_OF_CODE));
         MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.STATEMENTS, squidFile.getInt(ObjectiveCMetric.STATEMENTS));
@@ -137,7 +136,7 @@ public class ObjectiveCSquidSensor implements Sensor {
         FilePredicate isMain = context.fileSystem().predicates().hasType(InputFile.Type.MAIN);
         FilePredicate and = context.fileSystem().predicates().and(hasObjC, isMain);
         List<File> files = new ArrayList<>();
-        for(InputFile inf : context.fileSystem().inputFiles(and)){
+        for (InputFile inf : context.fileSystem().inputFiles(and)) {
             files.add(inf.file());
         }
 
