@@ -287,5 +287,9 @@
             <repositoryKey>OCLint</repositoryKey>
             <key>compiler warning</key>
         </rule>
+        <rule>
+            <repositoryKey>OCLint</repositoryKey>
+            <key>compiler error</key>
+        </rule>
     </rules>
 </profile>

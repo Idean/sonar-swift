@@ -570,3 +570,11 @@ Summary: Name: compiler warning
 
 Severity: 1
 Category: OCLint
+
+compiler error
+----------
+
+Summary: Name: compiler error
+
+Severity: 3
+Category: OCLint
