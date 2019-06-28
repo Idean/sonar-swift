@@ -63,7 +63,7 @@ function readParameter() {
 	parameter=$1
 	shift
 
-	eval $variable="\"$(sed '/^\#/d' sonar-project.properties | grep $parameter | tail -n 1 | cut -d '=' -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')\""
+	eval $variable=$(printf %q "$(sed '/^\#/d' sonar-project.properties | grep $parameter | tail -n 1 | cut -d '=' -f2-)")
 }
 
 # Run a set of commands with logging and error handling
@@ -277,13 +277,14 @@ rm -rf sonar-reports
 mkdir sonar-reports
 
 # Extracting project information needed later
+buildCmd=($XCODEBUILD_CMD clean build)
 echo -n 'Extracting Xcode project information'
 if [[ "$workspaceFile" != "" ]] ; then
-    buildCmdPrefix="-workspace $workspaceFile"
+    buildCmd+=(-workspace "$workspaceFile")
 else
-    buildCmdPrefix="-project $projectFile"
+    buildCmd+=(-project "$projectFile")
 fi
-buildCmd=($XCODEBUILD_CMD clean build $buildCmdPrefix -scheme $appScheme)
+buildCmd+=(-scheme $appScheme)
 if [[ ! -z "$destinationSimulator" ]]; then
     buildCmd+=(-destination "$destinationSimulator" -destination-timeout 360 COMPILER_INDEX_STORE_ENABLE=NO)
 fi
