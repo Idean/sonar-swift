@@ -35,7 +35,6 @@ public class SwiftTestFileFinder implements TestFileFinder {
     @Override
     public InputFile getUnitTestResource(FileSystem fileSystem, String classname) {
         String fileName = classname.replace('.', '/') + ".swift";
-        String wildcardFileName = classname.replace(".", "/**/") + ".swift";
         FilePredicate fp = fileSystem.predicates().hasPath(fileName);
 
         if(fileSystem.hasFiles(fp)){
@@ -46,9 +45,11 @@ public class SwiftTestFileFinder implements TestFileFinder {
          * Most xcodebuild JUnit parsers don't include the path to the class in the class field, so search for it if it
          * wasn't found in the root.
          */
+        String[] fileNameComponents = fileName.split("/");
+        String lastFileNameComponents = fileNameComponents[fileNameComponents.length - 1];
         fp = fileSystem.predicates().and(
             fileSystem.predicates().hasType(InputFile.Type.TEST),
-            fileSystem.predicates().matchesPathPattern("**/" + wildcardFileName));
+            fileSystem.predicates().matchesPathPattern("**/" + lastFileNameComponents));
 
         if(fileSystem.hasFiles(fp)){
             /*
@@ -57,7 +58,8 @@ public class SwiftTestFileFinder implements TestFileFinder {
              */
             return fileSystem.inputFiles(fp).iterator().next();
         }
-        LOGGER.info("Unable to locate test source file {}", wildcardFileName);
+
+        LOGGER.info("Unable to locate test source file {}", fileName);
         return null;
     }
 }
