@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Swift SonarQube Plugin - Enables analysis of Swift projects into SonarQube.
+# Swift SonarQube Plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
 # Copyright © 2015 Backelite (${email})
 #
 # This program is free software: you can redistribute it and/or modify
@@ -36,7 +36,7 @@ fi
 # Deploy new version of plugin in Sonar dir
 rm sonar-swift-plugin/target/*sources.jar
 rm $SONARQUBE_HOME/extensions/plugins/backelite-sonar-swift*
-cp sonar-swift-plugin/target/*.jar $SONARQUBE_HOME/extensions/plugins
+cp sonar-swift-plugin/target/backelite*.jar $SONARQUBE_HOME/extensions/plugins
 rm $SONARQUBE_HOME/extensions/plugins/*sources.jar
 
 # Stop/start Sonar

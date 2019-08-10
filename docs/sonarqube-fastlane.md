@@ -1,12 +1,15 @@
-# Using with Fastlane 🚀
+# Using with fastlane 🚀
 
-If you already use Fastlane, you can simply setup a new lane performing the analysis as follows:
+If you already use fastlane, you can simply setup a new lane performing the analysis as follows:
 
+Add `fastlane-plugin-lizard` gem into `Gemfile`, run `bundle install`
+
+Then add the following lane.
 ```ruby
 lane :metrics do
     scan(scheme: "[SCHEME]", code_coverage: true, derived_data_path: "./DerivedData", output_directory: "./reports")
     slather(cobertura_xml: true, jenkins: true, scheme: "[SCHEME]", build_directory: "./DerivedData", output_directory: "./reports", proj: "./[PROJECT].xcodeproj")
-    sh("cd .. && lizard ./[SOURCE_FOLDER] -l swift --xml > ./reports/lizard-report.xml")
+    lizard(source_folder: "[SOURCE_FOLDER]", language: "swift", export_type: "xml", report_file: "report/lizard-report.xml")
     swiftlint(output_file: "./reports/swiftlint.txt", ignore_exit_status: true)
     sonar
 end
@@ -15,7 +18,7 @@ end
 
 ## Options
 
-Fastlane's `sonar` action allows you to define or override a number of SonarQube properties, such as `sonar.project-version`.
+fastlane's `sonar` action allows you to define or override a number of SonarQube properties, such as `sonar.project-version`.
 
 For instance:
 
@@ -23,7 +26,7 @@ For instance:
   sonar(project_version: "1.0b")
 ```
 
-You can read the complete documentation of Fastlane's `sonar` action on your terminal via:
+You can read the complete documentation of fastlane's `sonar` action on your terminal via:
 
 ```bash
   fastlane action sonar
