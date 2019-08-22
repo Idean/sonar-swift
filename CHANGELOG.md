@@ -16,7 +16,8 @@
 
 #### Bug Fixes
 
-* None.
+* Fixed parameters with spaces in `sonar-project.properties` reading.
+  [David Yang](https://github.com/davidy4ng) [#234](https://github.com/Backelite/sonar-swift/pull/234)
 
 ##  v0.4.4
 
