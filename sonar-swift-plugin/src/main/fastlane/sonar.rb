@@ -122,8 +122,5 @@ end
 
 desc "Run sonar-scanner"
 private_lane :sonar_run_scanner do |options|
-	sonar(
-		project_configuration_path: "sonar-project.properties",
-		sonar_url: "http://localhost:9000"
-	)
+	sonar(project_configuration_path: "sonar-project.properties")
 end
