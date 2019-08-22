@@ -12,7 +12,8 @@
 
 #### Enhancements
 
-* None.
+* Add SwiftLint 0.31.0 support.
+  [Allan Vialatte](https://github.com/PoissonBallon) [#218](https://github.com/Backelite/sonar-swift/pull/218)
 
 #### Bug Fixes
 
