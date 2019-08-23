@@ -20,8 +20,9 @@ package com.backelite.sonarqube.swift.complexity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FilePredicate;
+import org.sonar.api.batch.fs.InputComponent;
 import org.sonar.api.batch.fs.InputFile;
-import org.sonar.api.batch.fs.InputModule;
+import org.sonar.api.batch.fs.internal.DefaultInputComponent;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.measures.CoreMetrics;
 import org.w3c.dom.Document;
@@ -115,22 +116,63 @@ public class LizardReportParser {
 
                 NodeList values = itemElement.getElementsByTagName(VALUE);
                 if (FILE_MEASURE.equalsIgnoreCase(type)) {
-                    addComplexityFileMeasures(name,values);
+                    InputFile inputFile = getFile(name);
+                    addComplexityFileMeasures(inputFile, values);
                 } else if (FUNCTION_MEASURE.equalsIgnoreCase(type)) {
-                    addComplexityFunctionMeasures(new SwiftFunction(name),values);
+                    addComplexityFunctionMeasures(new SwiftFunction(0,name), values);
                 }
             }
         }
     }
 
-    private void addComplexityFileMeasures(String fileName, NodeList values) {
+    private InputFile getFile(String fileName){
         FilePredicate fp = context.fileSystem().predicates().hasRelativePath(fileName);
         if(!context.fileSystem().hasFiles(fp)){
             LOGGER.warn("file not included in sonar {}", fileName);
-            return;
+            return null;
         }
-        InputFile component = context.fileSystem().inputFile(fp);
+        return context.fileSystem().inputFile(fp);
+    }
+
+    static class SwiftFunction extends DefaultInputComponent implements InputComponent {
+        private String name;
+        private String key;
+        private String file;
+        private int lineNumber;
+        SwiftFunction(int scannerId, String name) {
+            super(scannerId);
+            String[] vals = name.split(" at ");
+            if (vals.length >= 2) {
+                this.name = vals[0].replaceAll("\\W","");
+
+                if (vals[1].contains(":")) {
+                    String[] sp = vals[1].split(":");
+                    this.file = sp[0].substring(0,sp[0].lastIndexOf("."));
+                    this.lineNumber = Integer.parseInt(sp[1]);
+                } else {
+                    this.file = vals[1];
+                    this.lineNumber = 0;
+                }
+
+                this.key = String.format("%s.%s:%d", this.file, this.name, this.lineNumber);
+            } else {
+                this.key = name;
+            }
+        }
+        @Override
+        public String key() {
+            return key;
+        }
+        @Override
+        public boolean isFile() {
+            return false;
+        }
+    }
+
+    private void addComplexityFileMeasures(InputFile component, NodeList values) {
+        LOGGER.debug("File measures for {}",component.toString());
         int complexity = Integer.parseInt(values.item(cyclomaticComplexityIndex).getTextContent());
+
         context.<Integer>newMeasure()
             .on(component)
             .forMetric(CoreMetrics.COMPLEXITY)
@@ -152,7 +194,8 @@ public class LizardReportParser {
             .save();
     }
 
-    private void addComplexityFunctionMeasures(SwiftFunction component, NodeList values) {
+    private void addComplexityFunctionMeasures(InputComponent component, NodeList values) {
+        LOGGER.debug("Function measures for {}",component.key());
         int complexity = Integer.parseInt(values.item(cyclomaticComplexityIndex).getTextContent());
         context.<Integer>newMeasure()
             .on(component)
@@ -166,46 +209,5 @@ public class LizardReportParser {
             .forMetric(CoreMetrics.LINES)
             .withValue(numberOfLines)
             .save();
-    }
-
-    private static class SwiftFunction implements InputModule {
-        private String name;
-        private String key;
-        private String file;
-        private int lineNumber;
-
-        public SwiftFunction(String name) {
-            String[] vals = name.split(" ");
-            if(vals.length >= 3){
-                this.name = vals[0].substring(0,vals[0].indexOf("("));
-                this.file = vals[2].substring(0,vals[2].lastIndexOf(":"));
-                this.lineNumber = Integer.parseInt(vals[2].substring(vals[2].lastIndexOf(":")+1));
-                this.key = file.substring(0,file.lastIndexOf('.')+1)+name;
-            }else{
-                this.key = name;
-            }
-        }
-
-        @Override
-        public String key() {
-            return key;
-        }
-
-        public String getName(){
-            return name;
-        }
-
-        public String getFile(){
-            return file;
-        }
-
-        public int getLineNumber(){
-            return lineNumber;
-        }
-
-        @Override
-        public boolean isFile() {
-            return false;
-        }
     }
 }
