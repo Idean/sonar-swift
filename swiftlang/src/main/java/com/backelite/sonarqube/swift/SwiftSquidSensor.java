@@ -82,7 +82,6 @@ public class SwiftSquidSensor implements Sensor {
     }
 
     private void saveMeasures(InputFile inputFile, SourceFile squidFile) {
-        MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.FILES, squidFile.getInt(SwiftMetric.FILES));
         MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.LINES, squidFile.getInt(SwiftMetric.LINES));
         MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.NCLOC, squidFile.getInt(SwiftMetric.LINES_OF_CODE));
         MeasureUtil.saveMeasure(context, inputFile, CoreMetrics.STATEMENTS, squidFile.getInt(SwiftMetric.STATEMENTS));
