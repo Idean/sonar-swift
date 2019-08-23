@@ -12,13 +12,19 @@
 
 #### Enhancements
 
-* Add SwiftLint 0.31.0 support.
+- Add SwiftLint 0.31.0 support.
   [Allan Vialatte](https://github.com/PoissonBallon) [#218](https://github.com/Backelite/sonar-swift/pull/218)
+- Ability to skip tests
+  [Petr Jandak](https://github.com/PetrJandak) [#98](https://github.com/Backelite/sonar-swift/pull/98)
+- Skip oclint analysis on source directories without objc
+  [David Yang](https://github.com/davidy4ng) [#236](https://github.com/Backelite/sonar-swift/pull/236)
 
 #### Bug Fixes
 
-* Fixed parameters with spaces in `sonar-project.properties` reading.
+- Fixed parameters with spaces in `sonar-project.properties` reading.
   [David Yang](https://github.com/davidy4ng) [#234](https://github.com/Backelite/sonar-swift/pull/234)
+- Remove measure CoreMetric.FILES
+  [David Yang](https://github.com/davidy4ng) [#238](https://github.com/Backelite/sonar-swift/pull/238)
 
 ##  v0.4.4
 
