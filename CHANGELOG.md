@@ -25,6 +25,8 @@
   [David Yang](https://github.com/davidy4ng) [#234](https://github.com/Backelite/sonar-swift/pull/234)
 - Remove measure CoreMetric.FILES
   [David Yang](https://github.com/davidy4ng) [#238](https://github.com/Backelite/sonar-swift/pull/238)
+- Fixed "LizardReportParser$SwiftFunction cannot be cast to DefaultInputComponent" error
+  [Brian Colvin](https://github.com/bcolvin) [#243](https://github.com/Backelite/sonar-swift/pull/243)
 
 ##  v0.4.4
 
