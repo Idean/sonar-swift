@@ -201,10 +201,8 @@ appScheme=''; readParameter appScheme 'sonar.swift.appScheme'
 appConfiguration=''; readParameter appConfiguration 'sonar.swift.appConfiguration'
 # The name of your test scheme in Xcode
 testScheme=''; readParameter testScheme 'sonar.swift.testScheme'
-# The name of your binary file (application)
-binaryName=''; readParameter binaryName 'sonar.swift.appName'
 # The name of your other binary files (frameworks)
-otherBinaryNames=''; readParameter otherBinaryNames 'sonar.coverage.otherBinaryNames'
+binaryNames=''; readParameter binaryNames 'sonar.coverage.binaryNames'
 # Get the path of plist file
 plistFile=`xcodebuild -showBuildSettings -project "${projectFile}" | grep -i 'PRODUCT_SETTINGS_PATH' -m 1 | sed 's/[ ]*PRODUCT_SETTINGS_PATH = //'`
 # Number version from plist if no sonar.projectVersion
@@ -336,39 +334,34 @@ if [ "$unittests" = "on" ]; then
 
     echo '\nComputing coverage report\n'
 
-    # Build the --exclude flags
-    excludedCommandLineFlags=""
-    if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
-	      echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
-	      while read word; do
-		        excludedCommandLineFlags+=" -i $word"
-	      done < tmpFileRunSonarSh2
-	      rm -rf tmpFileRunSonarSh2
-    fi
-    if [ "$vflag" = "on" ]; then
-	      echo "Command line exclusion flags for slather is:$excludedCommandLineFlags"
-    fi
-
 	firstProject=$(echo $projectFile | sed -n 1'p' | tr ',' '\n' | head -n 1)
 
     slatherCmd=($SLATHER_CMD coverage)
-    if [[ ! -z "$binaryName" ]]; then
-    	slatherCmd+=( --binary-basename "$binaryName")
-    fi
-    if [[ ! -z "$otherBinaryNames" ]]; then
-      echo $otherBinaryNames | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh3
+
+    # Build the --binary-basename
+    if [[ ! -z "$binaryNames" ]]; then
+      echo $binaryNames | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh3
       while read word; do
-        slatherCmd+=( --binary-basename "$word")
+        slatherCmd+=(--binary-basename "$word")
       done < tmpFileRunSonarSh3
       rm -rf tmpFileRunSonarSh3
     fi
 
-    slatherCmd+=( --input-format profdata $excludedCommandLineFlags --cobertura-xml --output-directory sonar-reports)
+    # Build the --exclude flags
+    if [ ! -z "$excludedPathsFromCoverage" -a "$excludedPathsFromCoverage" != " " ]; then
+	      echo $excludedPathsFromCoverage | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh2
+	      while read word; do
+		        slatherCmd+=(-i "$word")
+	      done < tmpFileRunSonarSh2
+	      rm -rf tmpFileRunSonarSh2
+    fi
+
+    slatherCmd+=(--input-format profdata --cobertura-xml --output-directory sonar-reports)
 
     if [[ ! -z "$workspaceFile" ]]; then
-        slatherCmd+=( --workspace "$workspaceFile")
+        slatherCmd+=(--workspace "$workspaceFile")
     fi
-    slatherCmd+=( --scheme "$appScheme" "$firstProject")
+    slatherCmd+=(--scheme "$appScheme" "$firstProject")
 
     echo "${slatherCmd[@]}"
 
