@@ -63,7 +63,7 @@ function readParameter() {
 	parameter=$1
 	shift
 
-	eval $variable="\"$(sed '/^\#/d' sonar-project.properties | grep $parameter | tail -n 1 | cut -d '=' -f2- | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')\""
+	eval $variable=$(printf %q "$(sed '/^\#/d' sonar-project.properties | grep $parameter | tail -n 1 | cut -d '=' -f2-)")
 }
 
 # Run a set of commands with logging and error handling
@@ -217,6 +217,9 @@ tailorConfiguration=''; readParameter tailorConfiguration 'sonar.swift.tailor.co
 # The file patterns to exclude from coverage report
 excludedPathsFromCoverage=''; readParameter excludedPathsFromCoverage 'sonar.swift.excludedPathsFromCoverage'
 
+# Skipping tests
+skipTests=''; readParameter skipTests 'sonar.swift.skipTests'
+
 # Check for mandatory parameters
 if [ -z "$projectFile" -o "$projectFile" = " " ] && [ -z "$workspaceFile" -o "$workspaceFile" = " " ]; then
 	echo >&2 "ERROR - sonar.swift.project or/and sonar.swift.workspace parameter is missing in sonar-project.properties. You must specify which projects (comma-separated list) are application code or which workspace and project to use."
@@ -277,13 +280,14 @@ rm -rf sonar-reports
 mkdir sonar-reports
 
 # Extracting project information needed later
+buildCmd=($XCODEBUILD_CMD clean build)
 echo -n 'Extracting Xcode project information'
 if [[ "$workspaceFile" != "" ]] ; then
-    buildCmdPrefix="-workspace $workspaceFile"
+    buildCmd+=(-workspace "$workspaceFile")
 else
-    buildCmdPrefix="-project $projectFile"
+    buildCmd+=(-project "$projectFile")
 fi
-buildCmd=($XCODEBUILD_CMD clean build $buildCmdPrefix -scheme $appScheme)
+buildCmd+=(-scheme $appScheme)
 if [[ ! -z "$destinationSimulator" ]]; then
     buildCmd+=(-destination "$destinationSimulator" -destination-timeout 360 COMPILER_INDEX_STORE_ENABLE=NO)
 fi
@@ -318,6 +322,9 @@ if [ "$unittests" = "on" ]; then
     buildCmd+=( -scheme "$appScheme" -configuration "$appConfiguration" -enableCodeCoverage YES)
     if [[ ! -z "$destinationSimulator" ]]; then
         buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
+    fi
+    if [[ ! -z "$skipTests" ]]; then
+    	buildCmd+=(-skip-testing:"$skipTests")
     fi
 
     runCommand  sonar-reports/xcodebuild.log "${buildCmd[@]}"
@@ -418,15 +425,18 @@ if [ "$oclint" = "on" ] && [ "$hasObjC" = "yes" ]; then
 	currentDirectory=${PWD##*/}
 	echo "$srcDirs" | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
 	while read word; do
-
-		includedCommandLineFlags=" --include .*/${currentDirectory}/${word}"
-		if [ "$vflag" = "on" ]; then
-            echo
-            echo -n "Path included in oclint analysis is:$includedCommandLineFlags"
-        fi
-		# Run OCLint with the right set of compiler options
-	    runCommand no oclint-json-compilation-database -v $includedCommandLineFlags -- -rc LONG_LINE=$longLineThreshold -max-priority-1 $maxPriority -max-priority-2 $maxPriority -max-priority-3 $maxPriority -report-type pmd -o sonar-reports/$(echo $word | sed 's/\//_/g')-oclint.xml
-
+		numberOfObjcFiles=$(find "${word}/" -name '*.m' | wc -l | tr -d ' ')
+		if [ $numberOfObjcFiles -gt 0 ]; then
+			includedCommandLineFlags=" --include .*/${currentDirectory}/${word}"
+			if [ "$vflag" = "on" ]; then
+            	echo
+            	echo -n "Path included in oclint analysis is:$includedCommandLineFlags"
+        	fi
+			# Run OCLint with the right set of compiler options
+	    	runCommand no oclint-json-compilation-database -v $includedCommandLineFlags -- -rc LONG_LINE=$longLineThreshold -max-priority-1 $maxPriority -max-priority-2 $maxPriority -max-priority-3 $maxPriority -report-type pmd -o sonar-reports/$(echo $word | sed 's/\//_/g')-oclint.xml
+		else
+			echo "$word has no Objective-C, skipping..."
+		fi
 	done < tmpFileRunSonarSh
 	rm -rf tmpFileRunSonarSh
 
