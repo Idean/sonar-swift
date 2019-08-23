@@ -425,15 +425,18 @@ if [ "$oclint" = "on" ] && [ "$hasObjC" = "yes" ]; then
 	currentDirectory=${PWD##*/}
 	echo "$srcDirs" | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
 	while read word; do
-
-		includedCommandLineFlags=" --include .*/${currentDirectory}/${word}"
-		if [ "$vflag" = "on" ]; then
-            echo
-            echo -n "Path included in oclint analysis is:$includedCommandLineFlags"
-        fi
-		# Run OCLint with the right set of compiler options
-	    runCommand no oclint-json-compilation-database -v $includedCommandLineFlags -- -rc LONG_LINE=$longLineThreshold -max-priority-1 $maxPriority -max-priority-2 $maxPriority -max-priority-3 $maxPriority -report-type pmd -o sonar-reports/$(echo $word | sed 's/\//_/g')-oclint.xml
-
+		numberOfObjcFiles=$(find "${word}/" -name '*.m' | wc -l | tr -d ' ')
+		if [ $numberOfObjcFiles -gt 0 ]; then
+			includedCommandLineFlags=" --include .*/${currentDirectory}/${word}"
+			if [ "$vflag" = "on" ]; then
+            	echo
+            	echo -n "Path included in oclint analysis is:$includedCommandLineFlags"
+        	fi
+			# Run OCLint with the right set of compiler options
+	    	runCommand no oclint-json-compilation-database -v $includedCommandLineFlags -- -rc LONG_LINE=$longLineThreshold -max-priority-1 $maxPriority -max-priority-2 $maxPriority -max-priority-3 $maxPriority -report-type pmd -o sonar-reports/$(echo $word | sed 's/\//_/g')-oclint.xml
+		else
+			echo "$word has no Objective-C, skipping..."
+		fi
 	done < tmpFileRunSonarSh
 	rm -rf tmpFileRunSonarSh
 
