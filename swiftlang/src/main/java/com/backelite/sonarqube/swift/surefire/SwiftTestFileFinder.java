@@ -17,6 +17,7 @@
  */
 package com.backelite.sonarqube.swift.surefire;
 
+import org.apache.commons.lang.StringUtils;
 import com.backelite.sonarqube.commons.TestFileFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,10 +36,9 @@ public class SwiftTestFileFinder implements TestFileFinder {
     @Override
     public InputFile getUnitTestResource(FileSystem fileSystem, String classname) {
         String fileName = classname.replace('.', '/') + ".swift";
-        String wildcardFileName = classname.replace(".", "/**/") + ".swift";
         FilePredicate fp = fileSystem.predicates().hasPath(fileName);
 
-        if(fileSystem.hasFiles(fp)){
+        if(fileSystem.hasFiles(fp)) {
             return fileSystem.inputFile(fp);
         }
 
@@ -46,18 +46,23 @@ public class SwiftTestFileFinder implements TestFileFinder {
          * Most xcodebuild JUnit parsers don't include the path to the class in the class field, so search for it if it
          * wasn't found in the root.
          */
-        fp = fileSystem.predicates().and(
-            fileSystem.predicates().hasType(InputFile.Type.TEST),
-            fileSystem.predicates().matchesPathPattern("**/" + wildcardFileName));
+        String lastFileNameComponents = StringUtils.substringAfterLast(fileName, "/");
+        if(!StringUtils.isEmpty(lastFileNameComponents)) {
+            fp = fileSystem.predicates().and(
+                fileSystem.predicates().hasType(InputFile.Type.TEST),
+                fileSystem.predicates().matchesPathPattern("**/" + lastFileNameComponents)
+            );
 
-        if(fileSystem.hasFiles(fp)){
-            /*
-             * Lazily get the first file, since we wouldn't be able to determine the correct one from just the
-             * test class name in the event that there are multiple matches.
-             */
-            return fileSystem.inputFiles(fp).iterator().next();
+            if(fileSystem.hasFiles(fp)) {
+                /*
+                 * Lazily get the first file, since we wouldn't be able to determine the correct one from just the
+                 * test class name in the event that there are multiple matches.
+                 */
+                return fileSystem.inputFiles(fp).iterator().next();
+            }
         }
-        LOGGER.info("Unable to locate test source file {}", wildcardFileName);
+
+        LOGGER.info("Unable to locate Swift test source file for classname {}. Make sure your test class name matches its filename.", classname);
         return null;
     }
 }
