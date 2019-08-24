@@ -31,6 +31,8 @@
   [Brian Colvin](https://github.com/bcolvin) [#243](https://github.com/Backelite/sonar-swift/pull/243)
 - Fixed location of the test source file
   [David Yang](https://github.com/davidy4ng) [#239](https://github.com/Backelite/sonar-swift/pull/239)
+- Fixed LizardSensor logs if report file not exists
+  [Nikolas Falco](https://github.com/nfalco79) [#183](https://github.com/Backelite/sonar-swift/pull/183)
 
 ##  v0.4.4
 
