@@ -1,6 +1,6 @@
 # _SonarQube Plugin for Swift_ Changelog
 
-## Develop
+## v0.4.5
 
 #### Breaking
 
