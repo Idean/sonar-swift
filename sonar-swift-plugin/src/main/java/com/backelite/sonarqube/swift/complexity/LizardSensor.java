@@ -28,6 +28,10 @@ import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class LizardSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(LizardSensor.class);
@@ -56,10 +60,14 @@ public class LizardSensor implements Sensor {
 
     @Override
     public void execute(SensorContext context) {
-        String reportFileName = context.fileSystem().baseDir().getPath() + File.separator + reportPath();
-        LOGGER.info("Processing complexity report: {}",reportFileName);
+        File reportFile = new File(context.fileSystem().baseDir(), reportPath());
+        if (!reportFile.isFile()) {
+            LOGGER.warn("Lizard report file not found at {}", reportFile.getAbsolutePath());
+            return;
+        }
 
+        LOGGER.info("Processing complexity report: {}", reportFile.getAbsolutePath());
         LizardReportParser parser = new LizardReportParser(context);
-        parser.parseReport(new File(reportFileName));
+        parser.parseReport(reportFile);
     }
 }
