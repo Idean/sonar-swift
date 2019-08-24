@@ -27,6 +27,8 @@
   [David Yang](https://github.com/davidy4ng) [#238](https://github.com/Backelite/sonar-swift/pull/238)
 - Fixed "LizardReportParser$SwiftFunction cannot be cast to DefaultInputComponent" error
   [Brian Colvin](https://github.com/bcolvin) [#243](https://github.com/Backelite/sonar-swift/pull/243)
+- Fixed location of the test source file
+  [David Yang](https://github.com/davidy4ng) [#239](https://github.com/Backelite/sonar-swift/pull/239)
 
 ##  v0.4.4
 
