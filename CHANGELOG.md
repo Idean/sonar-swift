@@ -18,6 +18,8 @@
   [Petr Jandak](https://github.com/PetrJandak) [#98](https://github.com/Backelite/sonar-swift/pull/98)
 - Skip oclint analysis on source directories without objc
   [David Yang](https://github.com/davidy4ng) [#236](https://github.com/Backelite/sonar-swift/pull/236)
+- Add the ability to specify other binaries (Slather only at the moment)
+  [David Yang](https://github.com/davidy4ng) [#165](https://github.com/Backelite/sonar-swift/pull/165)
 
 #### Bug Fixes
 
