@@ -1,3 +1,21 @@
+#
+# backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
+# Copyright © 2019 David Yang (david.tcha.yang@gmail.com)
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
 require "java-properties"
 require 'shellwords'
 
@@ -12,8 +30,7 @@ lane :metrics do
 	sonar_run_slather(properties: properties, output_directory: default_output_directory, derived_data_path: derived_data_path)
 	sonar_run_oclint(properties: properties, output_directory: default_output_directory)
 	sonar_run_swiftlint(properties: properties, output_directory: default_output_directory)
-	# TODO : Uncomment once Lizard Parser is fixed
-	# sonar_run_lizard(properties: properties, output_directory: default_output_directory)
+	sonar_run_lizard(properties: properties, output_directory: default_output_directory)
 	sonar_run_scanner()
 end
 
@@ -54,24 +71,17 @@ end
 desc "Run Slather coverage"
 private_lane :sonar_run_slather do |options|
 	# Extract sonar property values
-	app_name 						= options[:properties][:"sonar.swift.appName"]
-	other_binary_names 				= options[:properties][:"sonar.coverage.otherBinaryNames"]
+	binary_basename 				= options[:properties][:"sonar.coverage.binaryNames"]
 	app_scheme 						= options[:properties][:"sonar.swift.appScheme"]
 	excluded_paths_from_coverage 	= options[:properties][:"sonar.swift.excludedPathsFromCoverage"]
 	project 						= options[:properties][:"sonar.swift.project"]
 
-	binary_basename = [app_name]
-	unless other_binary_names.nil?
-		binary_basename.push(*other_binary_names.split(","))
-	end
-	puts "Binary basename : #{binary_basename}"
-
 	slather(
 	   	cobertura_xml: true, 
-    	scheme: app_scheme,
+	   	scheme: app_scheme,
 	   	input_format: "profdata", 
 	   	ignore: excluded_paths_from_coverage.split(","), 
-	   	binary_basename: binary_basename,
+	   	binary_basename: binary_basename.split(","),
 	   	build_directory: options[:derived_data_path], 
 	   	output_directory: options[:output_directory],
 	   	proj: project
