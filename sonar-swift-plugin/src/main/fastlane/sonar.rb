@@ -76,16 +76,28 @@ private_lane :sonar_run_slather do |options|
 	excluded_paths_from_coverage 	= options[:properties][:"sonar.swift.excludedPathsFromCoverage"]
 	project 						= options[:properties][:"sonar.swift.project"]
 
-	slather(
-	   	cobertura_xml: true, 
-	   	scheme: app_scheme,
-	   	input_format: "profdata", 
-	   	ignore: excluded_paths_from_coverage.split(","), 
-	   	binary_basename: binary_basename.split(","),
-	   	build_directory: options[:derived_data_path], 
-	   	output_directory: options[:output_directory],
-	   	proj: project
-	)
+	if binary_basename.nil? || binary_basename.empty?
+		slather(
+		   	cobertura_xml: true, 
+		   	scheme: app_scheme,
+		   	input_format: "profdata", 
+		   	ignore: excluded_paths_from_coverage.split(","), 
+		   	build_directory: options[:derived_data_path], 
+		   	output_directory: options[:output_directory],
+		   	proj: project
+		)
+	else
+		slather(
+		   	cobertura_xml: true, 
+		   	scheme: app_scheme,
+		   	input_format: "profdata", 
+		   	ignore: excluded_paths_from_coverage.split(","), 
+		   	binary_basename: binary_basename.split(","),
+		   	build_directory: options[:derived_data_path], 
+		   	output_directory: options[:output_directory],
+		   	proj: project
+		)
+	end
     # Rename the file
     sh "cd ../#{options[:output_directory]} && mv cobertura.xml coverage-swift.xml"
 end
