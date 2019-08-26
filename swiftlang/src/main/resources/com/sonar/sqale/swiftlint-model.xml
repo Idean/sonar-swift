@@ -890,6 +890,71 @@
                     <txt>min</txt>
                 </prop>
             </chc>
+			<chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>file_types_order</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+			<chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>legacy_multiple</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+			<chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>type_contents_order</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+			<chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>unused_capture_list</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+			<chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>unused_declaration</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
         </chc>
         <chc>
             <key>UNDERSTANDABILITY</key>
@@ -1505,6 +1570,19 @@
                     <txt>min</txt>
                 </prop>
             </chc>
+			<chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>duplicate_enum_cases</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
         </chc>
     </chc>
     <chc>
@@ -1624,6 +1702,32 @@
         <chc>
             <key>MEMORY_EFFICIENCY</key>
             <name>Memory use</name>
+			<chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>reduce_into</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+			<chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>unowned_variable_capture</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
         </chc>
         <chc>
             <key>CPU_EFFICIENCY</key>
@@ -1644,6 +1748,19 @@
             <chc>
                 <rule-repo>SwiftLint</rule-repo>
                 <rule-key>sorted_first_last</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+			<chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>reduce_boolean</rule-key>
                 <prop>
                     <key>remediationFunction</key>
                     <txt>CONSTANT_ISSUE</txt>
@@ -1886,6 +2003,32 @@
                 <prop>
                     <key>offset</key>
                     <val>10</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+			<chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>nslocalizedstring_require_bundle</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
+                    <txt>min</txt>
+                </prop>
+            </chc>
+			<chc>
+                <rule-repo>SwiftLint</rule-repo>
+                <rule-key>nsobject_prefer_isequal</rule-key>
+                <prop>
+                    <key>remediationFunction</key>
+                    <txt>CONSTANT_ISSUE</txt>
+                </prop>
+                <prop>
+                    <key>offset</key>
+                    <val>5</val>
                     <txt>min</txt>
                 </prop>
             </chc>
