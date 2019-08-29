@@ -501,7 +501,15 @@ fi
 if [ "$lizard" = "on" ]; then
 	if hash $LIZARD_CMD 2>/dev/null; then
 		echo -n 'Running Lizard...'
-  		$LIZARD_CMD --xml "$srcDirs" > sonar-reports/lizard-report.xml
+		lizardCmd=($LIZARD_CMD --xml)
+
+		echo "$srcDirs" | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
+		while read word; do
+			lizardCmd+=( "$word")
+		done < tmpFileRunSonarSh
+		rm -rf tmpFileRunSonarSh
+
+		runCommand  sonar-reports/lizard-report.xml "${lizardCmd[@]}"
   	else
   		echo 'Skipping Lizard (not installed!)'
   	fi
