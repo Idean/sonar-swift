@@ -113,10 +113,13 @@ public class LizardReportParser {
             if (item.getNodeType() == Node.ELEMENT_NODE) {
                 Element itemElement = (Element) item;
                 String name = itemElement.getAttribute(NAME);
-
                 NodeList values = itemElement.getElementsByTagName(VALUE);
+                
                 if (FILE_MEASURE.equalsIgnoreCase(type)) {
                     InputFile inputFile = getFile(name);
+                    // the file could be excluded from Sonar analysis
+                    // hence not found in the filesystem
+                    if (inputFile == null) { continue; }
                     addComplexityFileMeasures(inputFile, values);
                 } else if (FUNCTION_MEASURE.equalsIgnoreCase(type)) {
                     addComplexityFunctionMeasures(new SwiftFunction(0,name), values);
