@@ -30,6 +30,6 @@ class SwiftLint < Tool
   private
 
   def validate_settings!
-    fatal_error('Sources must be set.') if @sources.nil?
+    fatal_error('Sources must be set in order to lint') if @sources.nil?
   end
 end
