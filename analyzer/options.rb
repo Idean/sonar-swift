@@ -22,57 +22,61 @@ class Options
 			end
 			
 			# Optional
-			opts.on("-r", "--reporter [REPORTER]", REPORTER_ALIASES.keys,
-				"Select Sonar reporter (scanner, runner)") do |r|
-					options.reporter = REPORTER_ALIASES[r]
-				end
-				
-				opts.separator ""
-				opts.separator "Disable tools:"
-				
-				# Optional
-				opts.on("--disable-swiftlint", "Disable SwiftLint") do |_|
-					options.tools.delete_at(options.tools.index(SwiftLint))
-				end
-				
-				# Optional
-				opts.on("--disable-oclint", "Disable OCLint") do |_|
-					options.tools.delete_at(options.tools.index(JSONCompilationDatabase))
-					options.tools.delete_at(options.tools.index(OCLint))
-				end
-				
-				# Optional
-				opts.on("--disable-slather", "Disable Slather") do |_|
-					options.tools.delete_at(options.tools.index(Slather))
-				end
-				
-				# Optional
-				opts.on("--disable-lizard", "Disable Lizard") do |_|
-					options.tools.delete_at(options.tools.index(Lizard))
-				end
-				
-				# Optional
-				opts.on("--disable-fauxpas", "Disable FauxPas") do |_|
-					options.tools.delete_at(options.tools.index(FauxPas))
-				end
-				
-				opts.separator ""
-				opts.separator "Common options:"
-				
-				opts.on("-v", "--verbose", "Run verbosely") do |_|
-					Logging.logger_level = Logger::DEBUG
-				end
-				
-				# No argument, shows at tail.  This will print an options summary.
-				# Try it and see!
-				opts.on_tail("-h", "--help", "Show this message") do
-					puts opts
-					exit
-				end
+			opts.on("-r", "--reporter [REPORTER]", REPORTER_ALIASES.keys, "Select Sonar reporter (scanner, runner)") do |r|
+				options.reporter = REPORTER_ALIASES[r]
 			end
 			
-			opt_parser.parse!(args)
+			opts.separator ""
+			opts.separator "Disable tools:"
 			
+			# Optional
+			opts.on("--disable-swiftlint", "Disable SwiftLint") do |_|
+				options.tools.delete_at(options.tools.index(SwiftLint))
+			end
+			
+			# Optional
+			opts.on("--disable-oclint", "Disable OCLint") do |_|
+				options.tools.delete_at(options.tools.index(JSONCompilationDatabase))
+				options.tools.delete_at(options.tools.index(OCLint))
+			end
+			
+			# Optional
+			opts.on("--disable-slather", "Disable Slather") do |_|
+				options.tools.delete_at(options.tools.index(Slather))
+			end
+			
+			# Optional
+			opts.on("--disable-lizard", "Disable Lizard") do |_|
+				options.tools.delete_at(options.tools.index(Lizard))
+			end
+			
+			# Optional
+			opts.on("--disable-fauxpas", "Disable FauxPas") do |_|
+				options.tools.delete_at(options.tools.index(FauxPas))
+			end
+
+			# Optional
+			opts.on("--disable-upload", "Disable upload to SonarQube server") do |_|
+				options.upload = false
+			end
+			
+			opts.separator ""
+			opts.separator "Common options:"
+			
+			opts.on("-v", "--verbose", "Run verbosely") do |_|
+				Logging.logger_level = Logger::DEBUG
+			end
+			
+			# No argument, shows at tail.  This will print an options summary.
+			# Try it and see!
+			opts.on_tail("-h", "--help", "Show this message") do
+				puts opts
+				exit
+			end
 		end
 		
+		opt_parser.parse!(args)
+		
 	end
+	
+end

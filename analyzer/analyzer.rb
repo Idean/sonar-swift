@@ -48,7 +48,7 @@ class Analyzer
 		@properties = SonarPropertiesReader.new(@options.path).read
 		
 		tools
-		# reporter
+		reporter if upload
 		
 	end
 	
