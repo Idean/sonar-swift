@@ -22,7 +22,7 @@ class SwiftLint < Tool
     @sources.each do |source|
       report_name = "#{source.tr(' ', '_')}-swiftlint.txt"
       cmd = "#{self.class.command} lint --path #{source} > sonar-reports/#{report_name}"
-      logger.info("Will run `#{cmd}`")
+      logger.debug("Will run `#{cmd}`")
       system(cmd)
     end
   end
