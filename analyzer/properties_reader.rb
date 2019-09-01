@@ -30,7 +30,7 @@ class SonarPropertiesReader
     options[:project] = properties[:'sonar.swift.project']
     options[:workspace] = properties[:'sonar.swift.workspace']
 	options[:sources] = properties[:'sonar.sources']
-	options[:sources] = options[:'sonar.sources'].split(',') unless options[:'sonar.sources'].nil?
+	options[:sources] = options[:sources].split(',') unless options[:sources].nil?
 	options[:scheme] = properties[:'sonar.swift.appScheme']
     options[:configuration] = properties[:'sonar.swift.appConfiguration']
     options[:simulator] = properties[:'sonar.swift.simulator']
