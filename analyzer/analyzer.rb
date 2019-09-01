@@ -9,6 +9,7 @@ require_relative 'tools/unit_tests'
 require_relative 'tools/slather'
 require_relative 'tools/oclint'
 require_relative 'tools/fauxpas'
+require_relative 'tools/json_compilation_database'
 require_relative 'options'
 require_relative 'properties_reader'
 require_relative 'helper'
@@ -23,7 +24,7 @@ class Analyzer
 	def initialize
 		@options = OpenStruct.new 
 		# list of tools by default
-		@options.tools = [UnitTests, Slather, SwiftLint, Lizard, OCLint, FauxPas]
+		@options.tools = [JSONCompilationDatabase, UnitTests, Slather, SwiftLint, Lizard, OCLint, FauxPas]
 		# reporter by default
 		@options.reporter = SonarScanner
 		# upload results to SonarQube by default
