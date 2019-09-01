@@ -20,6 +20,9 @@ class OCLint < Tool
 	def run()
 		logger.info('Running...')
 		@sources.each do |source|
+
+			next unless `find \"#{source}/\" -name '*.m' | wc -l | tr -d ' ' 2>&1` != 0
+
 			report_name = "#{source.tr(' ', '_')}-oclint.xml"
 			
 			cmd = "#{self.class.command[:oclint]}"
