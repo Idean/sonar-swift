@@ -3,7 +3,7 @@ require_relative 'tool'
 class SonarRunner < Tool
 	def self.command
 		{
-			:runner: 'sonar-runner'
+			runner: 'sonar-runner'
 		}
 	end
 	

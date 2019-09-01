@@ -10,7 +10,7 @@ require_relative 'tool'
 class SwiftLint < Tool
 	def self.command
 		{
-			:swiftlint: 'swiftlint'
+			swiftlint: 'swiftlint'
 		}
 	end
 	

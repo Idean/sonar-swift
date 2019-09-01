@@ -3,7 +3,7 @@ require_relative 'tool'
 class SonarScanner < Tool
 	def self.command
 		{
-			:scanner: 'sonar-scanner'
+			scanner: 'sonar-scanner'
 		}
 	end
 	
