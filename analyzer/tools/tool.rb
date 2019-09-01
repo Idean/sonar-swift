@@ -1,5 +1,5 @@
-require_relative 'logging'
-require_relative 'canfail'
+require_relative '../logging'
+require_relative '../canfail'
 
 # A base class for tool wrappers.
 #

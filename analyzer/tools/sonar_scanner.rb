@@ -2,7 +2,7 @@ require_relative 'tool'
 
 class SonarScanner < Tool
   def self.command
-    'sonar-scannerr'
+    'sonar-scanner'
   end
 
   def initialize(options)
@@ -10,7 +10,7 @@ class SonarScanner < Tool
   end
 
   def run()
-    logger.info('Running SonarScanner...')
+    logger.info('Running...')
     cmd = "#{self.class.command}"
     logger.debug("Will run `#{cmd}`")
     system(cmd)

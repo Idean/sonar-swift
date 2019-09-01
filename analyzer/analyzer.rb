@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
 require 'ostruct'
 require_relative 'logging'
-require_relative 'swiftlint'
-require_relative 'sonar_scanner'
+require_relative 'tools/swiftlint'
+require_relative 'tools/lizard'
+require_relative 'tools/sonar_scanner'
 require_relative 'options'
 require_relative 'properties_reader'
 require_relative 'helper'
@@ -17,7 +18,7 @@ class Analyzer
 	def initialize
 		@options = OpenStruct.new 
 		# list of tools by default
-		@options.tools = [SwiftLint]
+		@options.tools = [SwiftLint, Lizard]
 		# reporter by default
 		@options.reporter = SonarScanner
 		# upload results to SonarQube by default

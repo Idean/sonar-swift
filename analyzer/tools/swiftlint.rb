@@ -18,10 +18,10 @@ class SwiftLint < Tool
   end
 
   def run()
-    logger.info('Running SwiftLint...')
+    logger.info('Running...')
     @sources.each do |source|
       report_name = "#{source.tr(' ', '_')}-swiftlint.txt"
-      cmd = "#{self.class.command} lint --path #{source} > sonar-reports/#{report_name}"
+      cmd = "#{self.class.command} lint --path \"#{source}\" > sonar-reports/#{report_name}"
       logger.debug("Will run `#{cmd}`")
       system(cmd)
     end
@@ -30,6 +30,6 @@ class SwiftLint < Tool
   private
 
   def validate_settings!
-    fatal_error('SwiftLint: Sources must be set.') if @sources.nil?
+    fatal_error('Sources must be set.') if @sources.nil?
   end
 end
