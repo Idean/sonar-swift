@@ -20,7 +20,7 @@ class UnitTests < Tool
 	end
 	
 	def run
-		logger.info('Running ...')
+		logger.info('Running...')
 		cmd = "#{self.class.command[:xcodebuild]} clean build-for-testing test"
 		cmd += " -workspace \"#{@workspace}\"" unless @workspace.nil?
 		cmd += " -project \"#{@project}\"" unless !@workspace.nil?

@@ -27,11 +27,13 @@ class Helper
 	# Check program is available and return an updated list.
 	private
 	def _available(program)
-		program.command.values.reduce(true) { |available, tool| 
+		availability = program.command.values.reduce(true) { |available, tool| 
 			toolAvailable = system("which #{tool} 2>&1 > /dev/null")
-			logger.warn("#{tool} is not found in PATH.") if !toolAvailable
+			logger.warn("#{tool} is not found in PATH") if !toolAvailable
 			available &= toolAvailable
 		}
+		logger.warn("Skipping #{program}.") if !availability
+		availability
 	end
 	
 	private
