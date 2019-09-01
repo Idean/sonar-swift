@@ -29,22 +29,38 @@ class SonarPropertiesReader
     options = {}
     options[:project] = properties[:'sonar.swift.project']
     options[:workspace] = properties[:'sonar.swift.workspace']
-    options[:sources] = properties[:'sonar.sources'].split(',')
+	options[:sources] = properties[:'sonar.sources']
+	options[:sources] = options[:'sonar.sources'].split(',') unless options[:'sonar.sources'].nil?
 	options[:scheme] = properties[:'sonar.swift.appScheme']
     options[:configuration] = properties[:'sonar.swift.appConfiguration']
     options[:simulator] = properties[:'sonar.swift.simulator']
-    options[:exclude_from_coverage] = properties[:'sonar.swift.excludedPathsFromCoverage'].split(',')
+	options[:exclude_from_coverage] = properties[:'sonar.swift.excludedPathsFromCoverage']
+	options[:exclude_from_coverage] = options[:exclude_from_coverage].split(',') unless options[:exclude_from_coverage].nil?
+	options[:binary_names] = properties[:'sonar.coverage.binaryNames']
+	options[:binary_names] = options[:binary_names].split(',') unless options[:binary_names].nil?
     options
   end
 
   def validate_settings!(options)
-    fatal_error('No project or workspace specified.') if (options[:workspace].nil? && options[:project].nil?)
-    fatal_error('No sources folder specified.') if options[:sources].nil?
-    fatal_error('No scheme specified.') if options[:scheme].nil?
+	fatal_error("No project or workspace specified in #{@file}") if (options[:workspace].nil? && options[:project].nil?)
+	check_file(options[:workspace])
+	check_file(options[:project])
+	fatal_error("No sources folder specified in #{@file}") if options[:sources].nil?
+	options[:sources].each do |source|
+		check_file(source)
+	end
+    fatal_error("No scheme specified in #{@file}") if options[:scheme].nil?
     if options[:configuration].nil?
       logger.warn('No build configuration set, defaulting to Debug')
       options[:configuration] = 'Debug'
     end
     options
   end
+
+  def check_file(file)
+	unless file.nil?
+		# fatal_error("#{file} not found") unless File.exist?("file")
+	end
+  end
+
 end
