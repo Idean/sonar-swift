@@ -6,7 +6,6 @@ require_relative 'tools/lizard'
 require_relative 'tools/sonar_scanner'
 require_relative 'tools/sonar_runner'
 require_relative 'tools/unit_tests'
-require_relative 'tools/xcpretty'
 require_relative 'tools/slather'
 require_relative 'tools/oclint'
 require_relative 'tools/fauxpas'
@@ -20,18 +19,18 @@ require_relative 'helper'
 # to Sonar.
 class Analyzer
 	include Logging
-
+	
 	def initialize
 		@options = OpenStruct.new 
 		# list of tools by default
-		@options.tools = [UnitTests, XCPretty, Slather, SwiftLint, Lizard, OCLint, FauxPas]
+		@options.tools = [UnitTests, Slather, SwiftLint, Lizard, OCLint, FauxPas]
 		# reporter by default
 		@options.reporter = SonarScanner
 		# upload results to SonarQube by default
 		@options.upload = true
 		# upload results to SonarQube by default
 		@options.path = 'sonar-project.properties'
-
+		
 		@helper = Helper.new
 		
 	end
@@ -40,18 +39,18 @@ class Analyzer
 		
 		# read CLI arguments and update configuration
 		Options.new.parse(ARGV, @options)
-
+		
 		# Initiate reports
 		@helper.bootstrap_reports
-
+		
 		# Read Sonar project properties
-    	@properties = SonarPropertiesReader.new(@options.path).read
-
+		@properties = SonarPropertiesReader.new(@options.path).read
+		
 		tools
 		# reporter
-
+		
 	end
-
+	
 	private
 	def tools
 		# Filter tools by availability
@@ -62,7 +61,7 @@ class Analyzer
 			tool.new(@properties).run
 		end
 	end
-
+	
 	private
 	def reporter
 		# Filter reporters by availability
@@ -70,7 +69,7 @@ class Analyzer
 		
 		# Send reports
 		@options.reporter.new([]).run unless @options.reporter.nil?
-			
+		
 	end
 	
 end

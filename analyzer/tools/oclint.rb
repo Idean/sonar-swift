@@ -4,10 +4,12 @@ require 'fileutils'
 class OCLint < Tool
 	
 	MAX_PRIORITY = 10000
-    LONG_LINE_THRESHOLD = 250
+	LONG_LINE_THRESHOLD = 250
 	
 	def self.command
-		'oclint-json-compilation-database'
+		{ 
+			oclint: 'oclint-json-compilation-database'
+		}
 	end
 	
 	def initialize(options)
@@ -19,18 +21,18 @@ class OCLint < Tool
 		logger.info('Running...')
 		@sources.each do |source|
 			report_name = "#{source.tr(' ', '_')}-oclint.xml"
-
-			cmd = "#{self.class.command}"
+			
+			cmd = "#{self.class.command[:oclint]}"
 			cmd += " --include \"#{source}\""
 			cmd += " -- -rc LONG_LINE=#{LONG_LINE_THRESHOLD}"
 			cmd += " -max-priority-1 #{MAX_PRIORITY} -max-priority-2 #{MAX_PRIORITY} -max-priority-3 #{MAX_PRIORITY}"
 			cmd += " -report-type pmd"
 			cmd += " -o sonar-reports/#{report_name}"
-			  
+			
 			logger.debug("Will run `#{cmd}`")
 			system(cmd)
 		end
-	  	
+		
 	end
 	
 	private

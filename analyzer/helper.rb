@@ -17,7 +17,7 @@ class Helper
 		case programs
 			when Array
 				programs.select do |program|
-					_available(program) unless nil
+					_available(program)
 				end
 			else 
 				_available(programs)
@@ -27,12 +27,11 @@ class Helper
 	# Check program is available and return an updated list.
 	private
 	def _available(program)
-		if program.availability
-			program
-		else
-			logger.warn("#{program.command} is not found in PATH.")
-			nil
-		end
+		program.command.values.reduce(true) { |available, tool| 
+			toolAvailable = system("which #{tool} 2>&1 > /dev/null")
+			logger.warn("#{tool} is not found in PATH.") if !toolAvailable
+			available &= toolAvailable
+		}
 	end
 	
 	private
