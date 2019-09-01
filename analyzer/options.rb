@@ -2,6 +2,8 @@ require 'optparse'
 
 class Options
 
+	REPORTER_ALIASES = { :scanner => "SonarScanner", :runner => "SonarRunner" }
+
   #
   # Return a structure describing the options.
   #
@@ -26,6 +28,12 @@ class Options
 	  # Optional
 	  opts.on("-p", "--path PATH", String, "Path to properties file.") do |p|
 		options.path = p
+	  end
+	  
+	  # Optional
+	  opts.on("-r", "--reporter [REPORTER]", REPORTER_ALIASES.keys,
+				"Select Sonar reporter (scanner, runner)") do |r|
+		options.reporter = REPORTER_ALIASES[r]
       end
 
       opts.separator ""
@@ -41,6 +49,6 @@ class Options
 
     opt_parser.parse!(args)
 
-  end  # parse()
+  end
 
-end  # class OptparseExample
+end
