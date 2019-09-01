@@ -59,7 +59,7 @@ class SonarPropertiesReader
 
   def check_file(file)
 	unless file.nil?
-		# fatal_error("#{file} not found") unless File.exist?("file")
+		fatal_error("#{file} not found") unless File.exist?("file")
 	end
   end
 

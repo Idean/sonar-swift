@@ -5,6 +5,10 @@ require_relative 'tools/swiftlint'
 require_relative 'tools/lizard'
 require_relative 'tools/sonar_scanner'
 require_relative 'tools/sonar_runner'
+require_relative 'tools/unit_tests'
+require_relative 'tools/xcpretty'
+require_relative 'tools/slather'
+require_relative 'tools/oclint'
 require_relative 'options'
 require_relative 'properties_reader'
 require_relative 'helper'
@@ -19,7 +23,7 @@ class Analyzer
 	def initialize
 		@options = OpenStruct.new 
 		# list of tools by default
-		@options.tools = [SwiftLint, Lizard]
+		@options.tools = [UnitTests, XCPretty, Slather, SwiftLint, Lizard, OCLint]
 		# reporter by default
 		@options.reporter = SonarScanner
 		# upload results to SonarQube by default
