@@ -16,7 +16,8 @@
 
 #### Bug Fixes
 
-- None.
+- Fixed "The domain/default pair of (xxx, yyy) does not exist"
+  [Gaël Foppolo](https://github.com/gaelfoppolo) [#246](https://github.com/Backelite/sonar-swift/pull/246)
 
 ## v0.4.5
 
