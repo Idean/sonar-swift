@@ -7,8 +7,8 @@ class SonarRunner < Tool
 		}
 	end
 	
-	def initialize(options)
-		super(options)
+	def initialize(properties, options)
+		super(properties, options)
 	end
 	
 	def run()

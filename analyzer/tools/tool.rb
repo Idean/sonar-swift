@@ -11,7 +11,7 @@ class Tool
 	def self.command
 	end
 	
-	def initialize(_options)
+	def initialize(properties, options)
 		validate_settings!
 	end
 	

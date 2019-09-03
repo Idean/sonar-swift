@@ -7,9 +7,9 @@ class Helper
 	# Put default xml files with no tests and no coverage. This is needed to
 	# ensure a file is present, either the Xcode build test step worked or
 	# not. Without this, Sonar Scanner will fail uploading results.
-	def bootstrap_reports
-		reports_folder
-		mandatory_reports
+	def bootstrap_reports(folder)
+		reports_folder(folder)
+		mandatory_reports(folder)
 	end
 
 	# Check each program is available and return an updated list.
@@ -20,7 +20,8 @@ class Helper
 					_available(program)
 				end
 			else 
-				_available(programs)
+				if _available(programs) then programs else nil end
+					
 			end
 	end
 
@@ -37,20 +38,20 @@ class Helper
 	end
 	
 	private
-	def mandatory_reports
+	def mandatory_reports(folder)
 		logger.info('Creating default reports')
 		empty_test_report = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='AllTestUnits'></testsuites>"
-		File.write('sonar-reports/TEST-report.xml', empty_test_report)
+		File.write("#{folder}/TEST-report.xml", empty_test_report)
 		
 		empty_coverage_report = "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>"
-		File.write('sonar-reports/coverage.xml', empty_coverage_report)
+		File.write("#{folder}/coverage.xml", empty_coverage_report)
 	end
 	
 	private
-	def reports_folder
-		logger.info('Deleting and creating directory sonar-reports/')
-		FileUtils.rm_rf('sonar-reports')
-		Dir.mkdir('sonar-reports')
+	def reports_folder(folder)
+		logger.info("Deleting and creating directory #{folder}")
+		FileUtils.rm_rf(folder)
+		Dir.mkdir(folder)
 	end
 	
 end

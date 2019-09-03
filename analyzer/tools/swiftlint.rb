@@ -8,22 +8,28 @@ require_relative 'tool'
 #
 # https://github.com/realm/SwiftLint
 class SwiftLint < Tool
+
+	@@REPORT_FILE = '-swiftlint.txt'.freeze
+
 	def self.command
 		{
 			swiftlint: 'swiftlint'
 		}
 	end
 	
-	def initialize(options)
-		@sources = options[:sources]
-		super(options)
+	def initialize(properties, options)
+		@sources = properties[:sources]
+		@report_folder = options.report_folder
+		super(properties, options)
 	end
 	
 	def run()
 		logger.info('Running...')
 		@sources.each do |source|
-			report_name = "#{source.tr(' ', '_')}-swiftlint.txt"
-			cmd = "#{self.class.command[:swiftlint]} lint --path \"#{source}\" > sonar-reports/#{report_name}"
+			report_name = "#{source.tr(' ', '_')}#{@@REPORT_FILE}"
+			cmd = "#{self.class.command[:swiftlint]} lint --path \"#{source}\""
+			cmd += " --quiet" unless logger.level == Logger::DEBUG 
+			cmd += " > #{report_folder}/#{report_name}"
 			logger.debug("Will run `#{cmd}`")
 			system(cmd)
 		end

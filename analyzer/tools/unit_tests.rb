@@ -2,6 +2,10 @@ require_relative 'tool'
 
 # Runs unit tests using Xcode with `xcodebuild`
 class UnitTests < Tool
+
+	@@TIMEOUT = '60'.freeze
+	@@REPORT_FILE = 'TEST-report.xml'
+
 	def self.command
 		{ 
 			xcodebuild: 'xcodebuild', 
@@ -9,14 +13,15 @@ class UnitTests < Tool
 		}
 	end
 	
-	def initialize(options)
-		@workspace = options[:workspace]
-		@project = options[:project]
-		@scheme = options[:scheme]
-		@configuration = options[:configuration]
-		@simulator = options[:simulator]
-		@exclude_from_coverage = options[:exclude_from_coverage]
-		super(options)
+	def initialize(properties, options)
+		@workspace = properties[:workspace]
+		@project = properties[:project]
+		@scheme = properties[:scheme]
+		@configuration = properties[:configuration]
+		@simulator = properties[:simulator]
+		@exclude_from_coverage = properties[:exclude_from_coverage]
+		@report_folder = options.report_folder
+		super(properties, options)
 	end
 	
 	def run
@@ -27,9 +32,10 @@ class UnitTests < Tool
 		cmd += " -scheme \"#{@scheme}\""
 		cmd += " -configuration \"#{@configuration}\""
 		cmd += " -enableCodeCoverage YES"
-		cmd += " -destination '#{@simulator}' -destination-timeout 60" unless @simulator.nil?
+		cmd += " -destination '#{@simulator}' -destination-timeout #{@@TIMEOUT}" unless @simulator.nil?
+		cmd += " -quiet" unless logger.level == Logger::DEBUG
 		cmd += " | tee xcodebuild.log"
-		cmd += " | #{self.class.command[:xcpretty]} -t --report junit -o sonar-reports/TEST-report.xml"
+		cmd += " | #{self.class.command[:xcpretty]} -t --report junit -o #{report_folder}/#{@@REPORT_FILE}"
 		logger.debug("Will run `#{cmd}`")
 		system(cmd)
 	end
@@ -38,7 +44,7 @@ class UnitTests < Tool
 	
 	def validate_settings!
 		# @workspace is optional
-		fatal_error('A project must be set in order to compute coverage') if @project.nil?
+		fatal_error('A project must be set in order to run test') if @project.nil?
 		fatal_error('A scheme must be set in order to build and test the app') if @scheme.nil?
 		fatal_error('A configuration must be set in order to build and test the app') if @configuration.nil?
 		logger.warn('No simulator specified') if @simulator.nil?

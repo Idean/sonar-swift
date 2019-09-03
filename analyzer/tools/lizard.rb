@@ -4,15 +4,19 @@ require_relative 'tool'
 #
 # @see http://www.lizard.ws
 class Lizard < Tool
+
+	@@REPORT_FILE = 'lizard-reports.xml'.freeze
+
 	def self.command
 		{ 
 			lizard: 'lizard'
 		}
 	end
 	
-	def initialize(options)
-		@sources = options[:sources]
-		super(options)
+	def initialize(properties, options)
+		@sources = properties[:sources]
+		@report_folder = options.report_folder
+		super(properties, options)
 	end
 	
 	def run()
@@ -21,7 +25,8 @@ class Lizard < Tool
 		@sources.each do |source|
 			cmd += " \"#{source}\""
 		end
-		cmd += " > sonar-reports/lizard-reports.xml"
+		cmd += " --verbose"
+		cmd += " > #{report_folder}/#{@@REPORT_FILE}"
 		logger.debug("Will run `#{cmd}`")
 		system(cmd)
 	end
@@ -29,6 +34,6 @@ class Lizard < Tool
 	private
 	
 	def validate_settings!
-		fatal_error('Sources must be set in order to compute complexity') if @sources.nil?
+		fatal_error('Sources must be set in order to compute Lizard complexity') if @sources.nil?
 	end
 end

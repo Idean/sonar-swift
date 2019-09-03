@@ -31,6 +31,8 @@ class Analyzer
 		@options.upload = true
 		# upload results to SonarQube by default
 		@options.path = 'sonar-project.properties'
+		# report folder
+		@options.report_folder = 'sonar-reports'
 		
 		@helper = Helper.new
 		
@@ -42,13 +44,13 @@ class Analyzer
 		Options.new.parse(ARGV, @options)
 		
 		# Initiate reports
-		@helper.bootstrap_reports
+		@helper.bootstrap_reports(@options.report_folder)
 		
 		# Read Sonar project properties
 		@properties = SonarPropertiesReader.new(@options.path).read
 		
 		tools
-		reporter if upload
+		reporter if @options.upload
 		
 	end
 	
@@ -59,7 +61,7 @@ class Analyzer
 		
 		# Run tools
 		@options.tools.each do |tool|
-			tool.new(@properties).run
+			tool.new(@properties, @options).run
 		end
 	end
 	
