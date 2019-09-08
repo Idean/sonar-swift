@@ -1,4 +1,4 @@
-require 'tool'
+require 'tools/tool'
 
 # SwiftLint checks code style and conventions.
 #

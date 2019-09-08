@@ -1,4 +1,4 @@
-require 'tool'
+require 'tools/tool'
 
 class SonarRunner < Tool
 	def self.command

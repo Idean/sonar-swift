@@ -1,4 +1,4 @@
-require 'tool'
+require 'tools/tool'
 
 # Lizard computes the code complexity.
 #

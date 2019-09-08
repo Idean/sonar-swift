@@ -1,4 +1,4 @@
-require 'tool'
+require 'tools/tool'
 
 # Runs unit tests using Xcode with `xcodebuild`
 class UnitTests < Tool

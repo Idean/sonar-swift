@@ -1,4 +1,4 @@
-require 'tool'
+require 'tools/tool'
 require 'fileutils'
 
 class OCLint < Tool

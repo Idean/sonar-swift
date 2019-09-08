@@ -1,5 +1,5 @@
-require '../logging'
-require '../canfail'
+require 'logging'
+require 'canfail'
 
 # A base class for tool wrappers.
 #
