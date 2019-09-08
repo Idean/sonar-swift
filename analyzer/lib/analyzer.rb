@@ -76,5 +76,3 @@ class Analyzer
 	end
 	
 end
-
-Analyzer.new.run

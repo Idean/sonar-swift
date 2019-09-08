@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.0.0'
 
   s.files = `git ls-files`.split($/)
-  #s.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  s.executables = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
   s.require_paths = ["lib"]
   
   #s.add_runtime_dependency 'java-properties', "= 0.2.0"
