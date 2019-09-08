@@ -29,7 +29,7 @@ class SwiftLint < Tool
 			report_name = "#{source.tr(' ', '_')}#{@@REPORT_FILE}"
 			cmd = "#{self.class.command[:swiftlint]} lint --path \"#{source}\""
 			cmd += " --quiet" unless logger.level == Logger::DEBUG 
-			cmd += " > #{report_folder}/#{report_name}"
+			cmd += " > #{@report_folder}/#{report_name}"
 			logger.debug("Will run `#{cmd}`")
 			system(cmd)
 		end

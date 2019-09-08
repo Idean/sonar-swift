@@ -37,13 +37,13 @@ class Slather < Tool
 				cmd += " -i \"#{exclusion}\""
 			end
 		end
-		cmd += " --input-format profdata --cobertura-xml --output-directory #{report_folder}"
+		cmd += " --input-format profdata --cobertura-xml --output-directory #{@report_folder}"
 		cmd += " --workspace #{@workspace}" unless @workspace.nil?
 		cmd += " --scheme #{@scheme} #{@project}"
 		logger.debug("Will run `#{cmd}`")
 		system(cmd)
 		
-		FileUtils.mv("#{report_folder}/#{@@REPORT_FILE_DEFAULT}", "#{report_folder}/#{@@REPORT_FILE}")
+		FileUtils.mv("#{@report_folder}/#{@@REPORT_FILE_DEFAULT}", "#{@report_folder}/#{@@REPORT_FILE}")
 		
 	end
 	

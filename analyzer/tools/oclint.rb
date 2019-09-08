@@ -33,7 +33,7 @@ class OCLint < Tool
 			cmd += " -- -rc LONG_LINE=#{@@LONG_LINE_THRESHOLD}"
 			cmd += " -max-priority-1 #{@@MAX_PRIORITY} -max-priority-2 #{@@MAX_PRIORITY} -max-priority-3 #{@@MAX_PRIORITY}"
 			cmd += " -report-type pmd"
-			cmd += " -o #{report_folder}/#{report_name}"
+			cmd += " -o #{@report_folder}/#{report_name}"
 			
 			logger.debug("Will run `#{cmd}`")
 			system(cmd)

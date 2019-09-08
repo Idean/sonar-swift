@@ -71,7 +71,7 @@ class Analyzer
 		@options.reporter = @helper.available(@options.reporter)
 		
 		# Send reports
-		@options.reporter.new([]).run unless @options.reporter.nil?
+		@options.reporter.new(@properties, @options).run unless @options.reporter.nil?
 		
 	end
 	

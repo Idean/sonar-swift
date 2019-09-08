@@ -35,7 +35,7 @@ class UnitTests < Tool
 		cmd += " -destination '#{@simulator}' -destination-timeout #{@@TIMEOUT}" unless @simulator.nil?
 		cmd += " -quiet" unless logger.level == Logger::DEBUG
 		cmd += " | tee xcodebuild.log"
-		cmd += " | #{self.class.command[:xcpretty]} -t --report junit -o #{report_folder}/#{@@REPORT_FILE}"
+		cmd += " | #{self.class.command[:xcpretty]} -t --report junit -o #{@report_folder}/#{@@REPORT_FILE}"
 		logger.debug("Will run `#{cmd}`")
 		system(cmd)
 	end

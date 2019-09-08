@@ -5,7 +5,7 @@ require_relative 'tool'
 # @see http://www.lizard.ws
 class Lizard < Tool
 
-	@@REPORT_FILE = 'lizard-reports.xml'.freeze
+	@@REPORT_FILE = 'lizard-report.xml'.freeze
 
 	def self.command
 		{ 
@@ -25,8 +25,7 @@ class Lizard < Tool
 		@sources.each do |source|
 			cmd += " \"#{source}\""
 		end
-		cmd += " --verbose"
-		cmd += " > #{report_folder}/#{@@REPORT_FILE}"
+		cmd += " > #{@report_folder}/#{@@REPORT_FILE}"
 		logger.debug("Will run `#{cmd}`")
 		system(cmd)
 	end

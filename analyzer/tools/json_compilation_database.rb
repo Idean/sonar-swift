@@ -28,7 +28,6 @@ class JSONCompilationDatabase < Tool
 		cmd += " -project \"#{@project}\"" unless !@workspace.nil?
 		cmd += " -scheme \"#{@scheme}\""
 		cmd += " -destination '#{@simulator}' -destination-timeout #{@@TIMEOUT} COMPILER_INDEX_STORE_ENABLE=NO" unless @simulator.nil?
-		cmd += " -quiet" unless logger.level == Logger::DEBUG
 		cmd += " | tee #{@@XCODEBUILD_FILE}"
 		cmd += " | #{self.class.command[:xcpretty]} -r json-compilation-database -o #{@@COMPILE_COMMANDS_FILE}"
 		logger.debug("Will run `#{cmd}`")
