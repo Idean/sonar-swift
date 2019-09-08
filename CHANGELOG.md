@@ -18,6 +18,8 @@
 
 - Fixed "The domain/default pair of (xxx, yyy) does not exist"
   [Gaël Foppolo](https://github.com/gaelfoppolo) [#246](https://github.com/Backelite/sonar-swift/pull/246)
+- Add SwiftLint 0.35.0 support
+  [Gaël Foppolo](https://github.com/gaelfoppolo) [#247](https://github.com/Backelite/sonar-swift/pull/247)
 
 ## v0.4.5
 
