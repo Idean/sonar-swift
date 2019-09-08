@@ -3,10 +3,10 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'version'
 
 Gem::Specification.new do |s|
-  s.name = "analyzer"
+  s.name = "sonar-swift-analyzer"
   s.version = AnalyzerV::VERSION
   s.summary = "SonarSwift plugin analyzer"
-  s.authors = ["Gaël FOppolo"]
+  s.authors = ["Gaël Foppolo"]
   
   s.description = "SonarSwift plugin analyzer"
   s.license = 'MIT'
