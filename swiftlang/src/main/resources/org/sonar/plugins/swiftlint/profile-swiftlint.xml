@@ -65,6 +65,14 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>contains_over_filter_count</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>contains_over_filter_is_empty</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>contains_over_first_not_nil</key>
     </rule>
     <rule>
@@ -118,6 +126,10 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>dynamic_inline</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>empty_collection_literal</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -378,6 +390,10 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>no_grouping_extension</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>no_space_in_method_call</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>

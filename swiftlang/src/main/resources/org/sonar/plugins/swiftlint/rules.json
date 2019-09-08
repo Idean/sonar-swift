@@ -105,6 +105,20 @@
         "severity": "MINOR"
     },
     {
+        "key": "contains_over_filter_count",
+        "category": "SwiftLint",
+        "name": "Contains Over Filter Count",
+        "description": "Prefer `contains` over comparing `filter(where:).count` to 0.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "contains_over_filter_is_empty",
+        "category": "SwiftLint",
+        "name": "Contains Over Filter Is Empty",
+        "description": "Prefer `contains` over using `filter(where:).isEmpty`",
+        "severity": "MINOR"
+    },
+    {
         "key": "contains_over_first_not_nil",
         "category": "SwiftLint",
         "name": "Contains over first not nil",
@@ -200,6 +214,13 @@
         "category": "SwiftLint",
         "name": "Dynamic Inline",
         "description": "Avoid using 'dynamic' and '@inline(__always)' together.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "empty_collection_literal",
+        "category": "SwiftLint",
+        "name": "Empty Collection Literal",
+        "description": "Prefer checking `isEmpty` over comparing collection to an empty array or dictionary literal.",
         "severity": "MINOR"
     },
     {
@@ -655,6 +676,13 @@
         "category": "SwiftLint",
         "name": "No Grouping Extension",
         "description": "Extensions shouldn't be used to group code within the same source file.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "no_space_in_method_call",
+        "category": "SwiftLint",
+        "name": "No Space in Method Call",
+        "description": "Don't add a space between the method name and the parentheses.",
         "severity": "MINOR"
     },
     {

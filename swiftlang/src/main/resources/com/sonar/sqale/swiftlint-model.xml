@@ -1583,6 +1583,32 @@
                     <txt>min</txt>
                 </prop>
             </chc>
+			<chc>
+				<rule-repo>SwiftLint</rule-repo>
+				<rule-key>empty_collection_literal</rule-key>
+				<prop>
+					<key>remediationFunction</key>
+					<txt>CONSTANT_ISSUE</txt>
+				</prop>
+				<prop>
+					<key>offset</key>
+					<val>5</val>
+					<txt>min</txt>
+				</prop>
+			</chc>
+			<chc>
+				<rule-repo>SwiftLint</rule-repo>
+				<rule-key>no_space_in_method_call</rule-key>
+				<prop>
+					<key>remediationFunction</key>
+					<txt>CONSTANT_ISSUE</txt>
+				</prop>
+				<prop>
+					<key>offset</key>
+					<val>10</val>
+					<txt>min</txt>
+				</prop>
+			</chc>
         </chc>
     </chc>
     <chc>
@@ -1771,6 +1797,32 @@
                     <txt>min</txt>
                 </prop>
             </chc>
+			<chc>
+				<rule-repo>SwiftLint</rule-repo>
+				<rule-key>contains_over_filter_count</rule-key>
+				<prop>
+					<key>remediationFunction</key>
+					<txt>CONSTANT_ISSUE</txt>
+				</prop>
+				<prop>
+					<key>offset</key>
+					<val>5</val>
+					<txt>min</txt>
+				</prop>
+			</chc>
+			<chc>
+				<rule-repo>SwiftLint</rule-repo>
+				<rule-key>contains_over_filter_is_empty</rule-key>
+				<prop>
+					<key>remediationFunction</key>
+					<txt>CONSTANT_ISSUE</txt>
+				</prop>
+				<prop>
+					<key>offset</key>
+					<val>5</val>
+					<txt>min</txt>
+				</prop>
+			</chc>
         </chc>
     </chc>
     <chc>
