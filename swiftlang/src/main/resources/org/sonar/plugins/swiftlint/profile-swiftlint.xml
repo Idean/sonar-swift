@@ -65,6 +65,14 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>contains_over_filter_count</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>contains_over_filter_is_empty</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>contains_over_first_not_nil</key>
     </rule>
     <rule>
@@ -109,11 +117,19 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>duplicate_enum_cases</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>duplicate_imports</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>dynamic_inline</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>empty_collection_literal</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -186,6 +202,10 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>file_name</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>file_types_order</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -285,6 +305,10 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>legacy_multiple</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>legacy_nsgeometry_functions</key>
     </rule>
     <rule>
@@ -369,11 +393,23 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>no_space_in_method_call</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>notification_center_detachment</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>nslocalizedstring_key</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>nslocalizedstring_require_bundle</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>nsobject_prefer_isequal</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -450,6 +486,14 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>quick_discouraged_pending_test</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>reduce_boolean</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>reduce_into</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -577,6 +621,10 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>type_contents_order</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>type_name</key>
     </rule>
     <rule>
@@ -593,7 +641,15 @@
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
+      <key>unowned_variable_capture</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
       <key>untyped_error_in_catch</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>unused_capture_list</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -602,6 +658,10 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>unused_control_flow_label</key>
+    </rule>
+    <rule>
+      <repositoryKey>SwiftLint</repositoryKey>
+      <key>unused_declaration</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -614,10 +674,6 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>unused_optional_binding</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>unused_private_declaration</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
@@ -654,10 +710,6 @@
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>
       <key>void_return</key>
-    </rule>
-    <rule>
-      <repositoryKey>SwiftLint</repositoryKey>
-      <key>weak_computed_property</key>
     </rule>
     <rule>
       <repositoryKey>SwiftLint</repositoryKey>

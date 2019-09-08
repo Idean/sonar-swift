@@ -105,10 +105,24 @@
         "severity": "MINOR"
     },
     {
+        "key": "contains_over_filter_count",
+        "category": "SwiftLint",
+        "name": "Contains Over Filter Count",
+        "description": "Prefer `contains` over comparing `filter(where:).count` to 0.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "contains_over_filter_is_empty",
+        "category": "SwiftLint",
+        "name": "Contains Over Filter Is Empty",
+        "description": "Prefer `contains` over using `filter(where:).isEmpty`",
+        "severity": "MINOR"
+    },
+    {
         "key": "contains_over_first_not_nil",
         "category": "SwiftLint",
         "name": "Contains over first not nil",
-        "description": "Prefer `contains` over `first(where:) != nil`",
+        "description": "Prefer `contains` over `first(where:) != nil` and `firstIndex(where:) != nil`.",
         "severity": "MINOR"
     },
     {
@@ -182,6 +196,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "duplicate_enum_cases",
+        "category": "SwiftLint",
+        "name": "Duplicate Enum Cases",
+        "description": "Enum can't contain multiple cases with the same name.",
+        "severity": "MINOR"
+    },
+    {
         "key": "duplicate_imports",
         "category": "SwiftLint",
         "name": "Duplicate Imports",
@@ -193,6 +214,13 @@
         "category": "SwiftLint",
         "name": "Dynamic Inline",
         "description": "Avoid using 'dynamic' and '@inline(__always)' together.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "empty_collection_literal",
+        "category": "SwiftLint",
+        "name": "Empty Collection Literal",
+        "description": "Prefer checking `isEmpty` over comparing collection to an empty array or dictionary literal.",
         "severity": "MINOR"
     },
     {
@@ -319,6 +347,13 @@
         "category": "SwiftLint",
         "name": "File Name",
         "description": "File name should match a type or extension declared in the file (if any).",
+        "severity": "MINOR"
+    },
+    {
+        "key": "file_types_order",
+        "category": "SwiftLint",
+        "name": "File Types Order",
+        "description": "Specifies how the types within a file should be ordered.",
         "severity": "MINOR"
     },
     {
@@ -490,6 +525,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "legacy_multiple",
+        "category": "SwiftLint",
+        "name": "Legacy Multiple",
+        "description": "Prefer using the `isMultiple(of:)` function instead of using the remainder operator (`%`).",
+        "severity": "MINOR"
+    },
+    {
         "key": "legacy_nsgeometry_functions",
         "category": "SwiftLint",
         "name": "Legacy NSGeometry Functions",
@@ -637,6 +679,13 @@
         "severity": "MINOR"
     },
     {
+        "key": "no_space_in_method_call",
+        "category": "SwiftLint",
+        "name": "No Space in Method Call",
+        "description": "Don't add a space between the method name and the parentheses.",
+        "severity": "MINOR"
+    },
+    {
         "key": "notification_center_detachment",
         "category": "SwiftLint",
         "name": "Notification Center Detachment",
@@ -648,6 +697,20 @@
         "category": "SwiftLint",
         "name": "NSLocalizedString Key",
         "description": "Static strings should be used as key in NSLocalizedString in order to genstrings work.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "nslocalizedstring_require_bundle",
+        "category": "SwiftLint",
+        "name": "NSLocalizedString Require Bundle",
+        "description": "Calls to NSLocalizedString should specify the bundle which contains the strings file.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "nsobject_prefer_isequal",
+        "category": "SwiftLint",
+        "name": "NSObject Prefer isEqual",
+        "description": "NSObject subclasses should implement isEqual instead of ==.",
         "severity": "MINOR"
     },
     {
@@ -781,6 +844,20 @@
         "category": "SwiftLint",
         "name": "Quick Discouraged Pending Test",
         "description": "Discouraged pending test. This test won't run while it's marked as pending.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "reduce_boolean",
+        "category": "SwiftLint",
+        "name": "Reduce Boolean",
+        "description": "Prefer using `.allSatisfy()` or `.contains()` over `reduce(true)` or `reduce(false)`",
+        "severity": "MINOR"
+    },
+    {
+        "key": "reduce_into",
+        "category": "SwiftLint",
+        "name": "Reduce Into",
+        "description": "Prefer `reduce(into:_:)` over `reduce(_:_:)` for copy-on-write types",
         "severity": "MINOR"
     },
     {
@@ -920,7 +997,7 @@
         "key": "superfluous_disable_command",
         "category": "SwiftLint",
         "name": "Superfluous Disable Command",
-        "description": "SwiftLint 'disable' commands are superfluous when the disabled rule would not have triggered a violation in the disabled region.",
+        "description": "SwiftLint 'disable' commands are superfluous when the disabled rule would not have triggered a violation in the disabled region. Use \" - \" if you wish to document a command.",
         "severity": "MINOR"
     },
     {
@@ -1001,6 +1078,13 @@
         "severity": "MAJOR"
     },
     {
+        "key": "type_contents_order",
+        "category": "SwiftLint",
+        "name": "Type Contents Order",
+        "description": "Specifies the order of subtypes, properties, methods & more within a type.",
+        "severity": "MINOR"
+    },
+    {
         "key": "type_name",
         "category": "SwiftLint",
         "name": "Type Name",
@@ -1029,10 +1113,24 @@
         "severity": "MINOR"
     },
     {
+        "key": "unowned_variable_capture",
+        "category": "SwiftLint",
+        "name": "Unowned Variable Capture",
+        "description": "Prefer capturing references as weak to avoid potential crashes.",
+        "severity": "MINOR"
+    },
+    {
         "key": "untyped_error_in_catch",
         "category": "SwiftLint",
         "name": "Untyped Error in Catch",
         "description": "Catch statements should not declare error variables without type casting.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "unused_capture_list",
+        "category": "SwiftLint",
+        "name": "Unused Capture List",
+        "description": "Unused reference in a capture list should be removed.",
         "severity": "MINOR"
     },
     {
@@ -1047,6 +1145,13 @@
         "category": "SwiftLint",
         "name": "Unused Control Flow Label",
         "description": "Unused control flow label should be removed.",
+        "severity": "MINOR"
+    },
+    {
+        "key": "unused_declaration",
+        "category": "SwiftLint",
+        "name": "Unused Declaration",
+        "description": "Declarations should be referenced at least once within all files linted.",
         "severity": "MINOR"
     },
     {
@@ -1068,13 +1173,6 @@
         "category": "SwiftLint",
         "name": "Unused Optional Binding",
         "description": "Prefer `!= nil` over `let _ =`",
-        "severity": "MINOR"
-    },
-    {
-        "key": "unused_private_declaration",
-        "category": "SwiftLint",
-        "name": "Unused Private Declaration",
-        "description": "Private declarations should be referenced in that file.",
         "severity": "MINOR"
     },
     {
@@ -1138,13 +1236,6 @@
         "category": "SwiftLint",
         "name": "Void Return",
         "description": "Prefer `-> Void` over `-> ()`.",
-        "severity": "MINOR"
-    },
-    {
-        "key": "weak_computed_property",
-        "category": "SwiftLint",
-        "name": "Weak Computed Property",
-        "description": "Adding weak to a computed property has no effect.",
         "severity": "MINOR"
     },
     {
