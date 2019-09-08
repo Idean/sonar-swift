@@ -1,4 +1,4 @@
-require_relative 'tool'
+require 'tool'
 
 class SonarScanner < Tool
 	def self.command

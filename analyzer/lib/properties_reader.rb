@@ -1,5 +1,5 @@
-require_relative 'logging'
-require_relative 'canfail'
+require 'logging'
+require 'canfail'
 require 'fileutils'
 require 'java-properties'
 
@@ -38,6 +38,8 @@ class SonarPropertiesReader
 	options[:exclude_from_coverage] = options[:exclude_from_coverage].split(',') unless options[:exclude_from_coverage].nil?
 	options[:binary_names] = properties[:'sonar.coverage.binaryNames']
 	options[:binary_names] = options[:binary_names].split(',') unless options[:binary_names].nil?
+	options[:skip_tests] = properties[:'sonar.swift.skipTests']
+	options[:skip_tests] = options[:skip_tests].split(',') unless options[:skip_tests].nil?
     options
   end
 

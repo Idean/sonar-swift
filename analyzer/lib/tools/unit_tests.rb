@@ -1,4 +1,4 @@
-require_relative 'tool'
+require 'tool'
 
 # Runs unit tests using Xcode with `xcodebuild`
 class UnitTests < Tool
@@ -20,6 +20,7 @@ class UnitTests < Tool
 		@configuration = properties[:configuration]
 		@simulator = properties[:simulator]
 		@exclude_from_coverage = properties[:exclude_from_coverage]
+		@skip_tests = properties[:skip_tests]
 		@report_folder = options.report_folder
 		super(properties, options)
 	end
@@ -33,6 +34,11 @@ class UnitTests < Tool
 		cmd += " -configuration \"#{@configuration}\""
 		cmd += " -enableCodeCoverage YES"
 		cmd += " -destination '#{@simulator}' -destination-timeout #{@@TIMEOUT}" unless @simulator.nil?
+		unless @skip_tests.nil?
+			@skip_tests.each do |test|
+				cmd += " -skip-testing:#{test}"
+			end
+		end
 		cmd += " -quiet" unless logger.level == Logger::DEBUG
 		cmd += " | tee xcodebuild.log"
 		cmd += " | #{self.class.command[:xcpretty]} -t --report junit -o #{@report_folder}/#{@@REPORT_FILE}"
@@ -49,6 +55,7 @@ class UnitTests < Tool
 		fatal_error('A configuration must be set in order to build and test the app') if @configuration.nil?
 		logger.warn('No simulator specified') if @simulator.nil?
 		# @exclude_from_coverage is optional
+		# @skip_tests is optional
 	end
 	
 end

@@ -1,5 +1,5 @@
 require 'fileutils'
-require_relative 'tool'
+require 'tool'
 
 class Slather < Tool
 

@@ -1,5 +1,5 @@
 require 'fileutils'
-require_relative 'logging'
+require 'logging'
 
 class Helper
 	include Logging
