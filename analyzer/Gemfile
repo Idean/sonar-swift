@@ -1,5 +1,3 @@
 source 'https://rubygems.org'
 
 gemspec
-
-gem 'xcpretty', "= 0.2.2", git: "https://github.com/Backelite/xcpretty"
