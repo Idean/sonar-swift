@@ -150,23 +150,48 @@ lizard="on"
 oclint="on"
 fauxpas="on"
 sonarscanner=""
+sonarurl=""
+sonarlogin=""
+sonarpassword=""
 
-while [ $# -gt 0 ]
-do
-    case "$1" in
-    -v)	vflag=on;;
-    -n) nflag=on;;
-    -nounittests) unittests="";;
-    -noswiftlint) swiftlint="";;
-    -notailor) tailor="";;
-    -usesonarscanner) sonarscanner="on";;
-	--)	shift; break;;
-	-*)
-        echo >&2 "Usage: $0 [-v]"
-		    exit 1;;
-	*)	break;;		# terminate while loop
-    esac
-    shift
+while [ "$1" != "" ]; do
+  param=$(echo "$1" | awk -F= '{print $1}')
+  value=$(echo "$1" | sed 's/^[^=]*=//g')
+
+  case $param in
+    -v)
+      vflag=on
+      ;;
+    -n)
+      nflag=on
+      ;;
+    -nounittests)
+      unittests=""
+      ;;
+    -noswiftlint)
+      swiftlint=""
+      ;;
+    -notailor)
+      tailor=""
+      ;;
+    -usesonarscanner)
+      sonarscanner="on"
+      ;;
+    -sonarurl)
+      sonarurl="$value"
+      ;;
+    -sonarlogin)
+      sonarlogin="$value"
+      ;;
+    -sonarpassword)
+      sonarpassword="$value"
+      ;;
+    *)
+      echo >&2 "Usage: $0 [-v] [-n] [-nounittests] [-noswiftlint)] [-notailor] [-usesonarscanner] [-sonarurl=value] [-sonarlogin=value] [-sonarpassword=value]"
+      exit 1
+      ;;
+  esac
+  shift
 done
 
 # Usage OK
@@ -331,9 +356,9 @@ if [ "$unittests" = "on" ]; then
     mv build/reports/junit.xml sonar-reports/TEST-report.xml
 
 
-    echo '\nComputing coverage report\n'
+    echo 'Computing coverage report'
 
-	firstProject=$(echo $projectFile | sed -n 1'p' | tr ',' '\n' | head -n 1)
+	  firstProject=$(echo $projectFile | sed -n 1'p' | tr ',' '\n' | head -n 1)
 
     slatherCmd=($SLATHER_CMD coverage)
 
@@ -516,22 +541,35 @@ else
 	#if we have version number in properties file, we don't overide numVersion for sonar-runner/sonar-scanner command
 	numVersionSonarRunner='';
 fi
+# Build sonar-runner / sonnar-scanner arguments
+sonarArguments=();
+if [ "$sonarurl" != "" ]; then
+  sonarArguments+=(-Dsonar.host.url=$sonarurl)
+fi
+if [ "$sonarlogin" != "" ]; then
+  sonarArguments+=(-Dsonar.login=$sonarlogin)
+fi
+if [ "$sonarpassword" != "" ]; then
+  sonarArguments+=(-Dsonar.password=$sonarpassword)
+fi
+
 # SonarQube
 if [ "$sonarscanner" = "on" ]; then
     echo -n 'Running SonarQube using SonarQube Scanner'
     if hash /dev/stdout sonar-scanner 2>/dev/null; then
-        runCommand /dev/stdout sonar-scanner $numVersionSonarRunner
+        runCommand /dev/stdout sonar-scanner "${sonarArguments[@]}" $numVersionSonarRunner
     else
         echo 'Skipping sonar-scanner (not installed!)'
     fi
 else
     echo -n 'Running SonarQube using SonarQube Runner'
     if hash /dev/stdout sonar-runner 2>/dev/null; then
-	   runCommand /dev/stdout sonar-runner $numVersionSonarRunner
+	   runCommand /dev/stdout sonar-runner "${sonarArguments[@]}" $numVersionSonarRunner
     else
-	   runCommand /dev/stdout sonar-scanner $numVersionSonarRunner
+	   runCommand /dev/stdout sonar-scanner "${sonarArguments[@]}" $numVersionSonarRunner
     fi
 fi
+#runCommand /dev/stdout "${slatherCmd[@]}"
 
 # Kill progress indicator
 stopProgress
