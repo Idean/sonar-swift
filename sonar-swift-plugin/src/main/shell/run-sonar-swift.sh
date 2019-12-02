@@ -279,9 +279,9 @@ fi
 rm -rf sonar-reports
 mkdir sonar-reports
 
-# Extracting project information needed later
-buildCmd=($XCODEBUILD_CMD clean build)
-echo -n 'Extracting Xcode project information'
+# Build and extract project information needed later
+buildCmd=($XCODEBUILD_CMD clean build-for-testing)
+echo -n 'Building & extracting Xcode project information'
 if [[ "$workspaceFile" != "" ]] ; then
     buildCmd+=(-workspace "$workspaceFile")
 else
@@ -300,20 +300,19 @@ hasObjC="no"
 compileCmdFile=compile_commands.json
 minimumSize=3
 actualSize=$(stat -f%z "$compileCmdFile")
-echo "actual = $actualSize, min = $minimumSize"
 if [ $actualSize -ge $minimumSize ]; then
     hasObjC="yes"
 fi
 
-# Unit surefire and coverage
+# Tests : surefire and coverage
 if [ "$unittests" = "on" ]; then
 
     # Put default xml files with no surefire and no coverage...
     echo "<?xml version='1.0' encoding='UTF-8' standalone='yes'?><testsuites name='AllTestUnits'></testsuites>" > sonar-reports/TEST-report.xml
     echo "<?xml version='1.0' ?><!DOCTYPE coverage SYSTEM 'http://cobertura.sourceforge.net/xml/coverage-03.dtd'><coverage><sources></sources><packages></packages></coverage>" > sonar-reports/coverage-swift.xml
 
-    echo -n 'Running surefire'
-    buildCmd=($XCODEBUILD_CMD clean build test)
+    echo -n 'Running tests'
+    buildCmd=($XCODEBUILD_CMD test)
     if [[ ! -z "$workspaceFile" ]]; then
         buildCmd+=(-workspace "$workspaceFile")
     elif [[ ! -z "$projectFile" ]]; then
