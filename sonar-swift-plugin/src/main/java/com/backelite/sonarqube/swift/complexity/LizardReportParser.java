@@ -117,7 +117,9 @@ public class LizardReportParser {
                 NodeList values = itemElement.getElementsByTagName(VALUE);
                 if (FILE_MEASURE.equalsIgnoreCase(type)) {
                     InputFile inputFile = getFile(name);
-                    addComplexityFileMeasures(inputFile, values);
+                    if (inputFile != null) {
+                        addComplexityFileMeasures(inputFile, values);
+                    }
                 } else if (FUNCTION_MEASURE.equalsIgnoreCase(type)) {
                     addComplexityFunctionMeasures(new SwiftFunction(0,name), values);
                 }
