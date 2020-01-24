@@ -12,6 +12,24 @@
 
 #### Enhancements
 
+- None.
+
+#### Bug Fixes
+
+- None.
+
+## v0.4.6
+
+#### Breaking
+
+- None.
+
+#### Experimental
+
+- None.
+
+#### Enhancements
+
 - Sped up analysis with a single build test using 'build-for-testing'
 - run-sonar-swift.sh now supports -sonarurl -sonarlogin and -sonarpassword arguments for SonarQube server connection
 

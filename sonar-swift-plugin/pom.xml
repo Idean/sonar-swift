@@ -26,12 +26,12 @@
     <parent>
         <groupId>com.backelite.sonarqube</groupId>
         <artifactId>backelite-swift</artifactId>
-        <version>0.4.5</version>
+        <version>0.4.6</version>
     </parent>
 
     <groupId>com.backelite.sonarqube</groupId>
     <artifactId>backelite-sonar-swift-plugin</artifactId>
-    <version>0.4.5</version>
+    <version>0.4.6</version>
 
     <packaging>sonar-plugin</packaging>
 
@@ -40,12 +40,12 @@
         <dependency>
             <groupId>com.backelite.sonarqube</groupId>
             <artifactId>swift-lang</artifactId>
-            <version>0.4.5</version>
+            <version>0.4.6</version>
         </dependency>
         <dependency>
             <groupId>com.backelite.sonarqube</groupId>
             <artifactId>objc-lang</artifactId>
-            <version>0.4.5</version>
+            <version>0.4.6</version>
         </dependency>
 
         <dependency>
