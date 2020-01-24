@@ -21,6 +21,9 @@
   [Gaël Foppolo](https://github.com/gaelfoppolo) [#246](https://github.com/Backelite/sonar-swift/pull/246)
 - Add SwiftLint 0.35.0 support
   [Gaël Foppolo](https://github.com/gaelfoppolo) [#247](https://github.com/Backelite/sonar-swift/pull/247)
+- Fixed NPE on LizardReportParser.addComplexityFileMeasures [#253](https://github.com/Backelite/sonar-swift/issues/253) and [#258](https://github.com/Backelite/sonar-swift/issues/258)
+- Fixed "Unable to locate test source file ****.swift" with Objective-C [#242](https://github.com/Backelite/sonar-swift/issues/242)
+  [egr-ext](https://github.com/egr-ext) [#248](https://github.com/Backelite/sonar-swift/pull/248)
 
 ## v0.4.5
 
