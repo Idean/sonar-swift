@@ -26,14 +26,14 @@
     <repositories>
         <repository>
             <id>sonar</id>
-            <url>http://repository.sonarsource.org/content/repositories/sonar</url>
+            <url>https://repository.sonarsource.org/content/repositories/sonar</url>
         </repository>
     </repositories>
 
     <pluginRepositories>
         <pluginRepository>
             <id>sonar</id>
-            <url>http://repository.sonarsource.org/content/repositories/sonar</url>
+            <url>https://repository.sonarsource.org/content/repositories/sonar</url>
         </pluginRepository>
     </pluginRepositories>
 
