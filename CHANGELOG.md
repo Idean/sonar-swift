@@ -16,7 +16,7 @@
 
 #### Bug Fixes
 
-- None.
+- Support spaces in sonar.swift.appScheme parameter 
 
 ## v0.4.6
 
