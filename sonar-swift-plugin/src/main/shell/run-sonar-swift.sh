@@ -147,7 +147,7 @@ unittests="on"
 swiftlint="on"
 tailor="on"
 lizard="on"
-oclint="on"
+oclint=""
 fauxpas="on"
 sonarscanner=""
 sonarurl=""
@@ -174,6 +174,9 @@ while [ "$1" != "" ]; do
     -notailor)
       tailor=""
       ;;
+    -useoclint)
+      oclint="on"
+      ;;
     -usesonarscanner)
       sonarscanner="on"
       ;;
@@ -187,7 +190,7 @@ while [ "$1" != "" ]; do
       sonarpassword="$value"
       ;;
     *)
-      echo >&2 "Usage: $0 [-v] [-n] [-nounittests] [-noswiftlint)] [-notailor] [-usesonarscanner] [-sonarurl=value] [-sonarlogin=value] [-sonarpassword=value]"
+      echo >&2 "Usage: $0 [-v] [-n] [-nounittests] [-noswiftlint)] [-notailor] [-useoclint] [-usesonarscanner] [-sonarurl=value] [-sonarlogin=value] [-sonarpassword=value]"
       exit 1
       ;;
   esac
@@ -221,17 +224,25 @@ fi
 # Source directories for .swift files
 srcDirs=''; readParameter srcDirs 'sonar.sources'
 # The name of your application scheme in Xcode
-appScheme=''; readParameter appScheme 'sonar.swift.appScheme'
+if [[ -n "$SONAR_SWIFT_APPSCHEME" ]]; then
+  appScheme=$SONAR_SWIFT_APPSCHEME
+else
+  appScheme=''; readParameter appScheme 'sonar.swift.appScheme'
+fi
 # The app configuration to use for the build
-appConfiguration=''; readParameter appConfiguration 'sonar.swift.appConfiguration'
+if [[ -n "$SONAR_SWIFT_APPCONFIGURATION" ]]; then
+  appConfiguration=$SONAR_SWIFT_APPCONFIGURATION
+else
+  appConfiguration=''; readParameter appConfiguration 'sonar.swift.appConfiguration'
+fi
+
 # The name of your test scheme in Xcode
 testScheme=''; readParameter testScheme 'sonar.swift.testScheme'
 # The name of your other binary files (frameworks)
 binaryNames=''; readParameter binaryNames 'sonar.coverage.binaryNames'
-# Get the path of plist file
-plistFile=`xcodebuild -showBuildSettings -project "${projectFile}" | grep -i 'PRODUCT_SETTINGS_PATH' -m 1 | sed 's/[ ]*PRODUCT_SETTINGS_PATH = //'`
-# Number version from plist if no sonar.projectVersion
-numVersionFromPlist=`defaults read "${plistFile}" CFBundleShortVersionString`
+
+# The project version from properties file
+numVersionSonarRunner=''; readParameter numVersionSonarRunner 'sonar.projectVersion'
 
 # Read destination simulator
 destinationSimulator=''; readParameter destinationSimulator 'sonar.swift.simulator'
@@ -245,41 +256,108 @@ excludedPathsFromCoverage=''; readParameter excludedPathsFromCoverage 'sonar.swi
 # Skipping tests
 skipTests=''; readParameter skipTests 'sonar.swift.skipTests'
 
-# Check for mandatory parameters
-if [ -z "$projectFile" -o "$projectFile" = " " ] && [ -z "$workspaceFile" -o "$workspaceFile" = " " ]; then
-	echo >&2 "ERROR - sonar.swift.project or/and sonar.swift.workspace parameter is missing in sonar-project.properties. You must specify which projects (comma-separated list) are application code or which workspace and project to use."
-	exit 1
-elif [ ! -z "$workspaceFile" ] && [ -z "$projectFile" ]; then
-	echo >&2 "ERROR - sonar.swift.workspace parameter is present in sonar-project.properties but sonar.swift.project and is not. You must specify which projects (comma-separated list) are application code or which workspace and project to use."
-	exit 1
+## Verify Tooling installed
+if [ "$oclint" = "on" ]; then
+    hash oclint-json-compilation-database 2>/dev/null
+    if [ $? -ne 0 ]; then
+      oclint=""
+      echo "Disabling OCLint (not installed!)"
+    fi
 fi
+
+if [ "$fauxpas" = "on" ]; then
+    hash fauxpas 2>/dev/null
+    if [ $? -ne 0 ]; then
+      fauxpas=""
+      echo "Disabling Faux Pas (not installed!)"
+    fi
+fi
+
+hash $LIZARD_CMD 2>/dev/null
+if [ $? -ne 0 ]; then
+  lizard=""
+  echo 'Disabling Lizard (not installed!)'
+fi
+
+if [ "$swiftlint" = "on" ]; then
+  hash $SWIFTLINT_CMD 2>/dev/null
+  if [ $? -ne 0 ]; then
+    swiftlint=""
+    echo 'Disabling SwiftLint (not installed!)'
+  fi
+fi
+
+if [ "$tailor" = "on" ]; then
+  hash $TAILOR_CMD 2>/dev/null
+  if [ $? -ne 0 ]; then
+    tailor=""
+    echo 'Disabling Tailor (not installed!)'
+  fi
+fi
+
+# Check if build is required
+if [ "$unittests" = "on" -o "$oclint" = "on" -o "$fauxpas" = "on" ]; then
+  buildRequired="yes"
+fi
+
+# Check for mandatory parameters
 if [ -z "$srcDirs" -o "$srcDirs" = " " ]; then
 	echo >&2 "ERROR - sonar.sources parameter is missing in sonar-project.properties. You must specify which directories contain your .swift source files (comma-separated list)."
 	exit 1
 fi
-if [ -z "$appScheme" -o "$appScheme" = " " ]; then
-	echo >&2 "ERROR - sonar.swift.appScheme parameter is missing in sonar-project.properties. You must specify which scheme is used to build your application."
-	exit 1
+
+# Check for project version
+if [ -z "$numVersionSonarRunner" -o "$numVersionSonarRunner" = " " ]; then
+  if [ -z "$projectFile" -o "$projectFile" = " " ]; then
+	  echo >&2 "ERROR - sonar.projectVersion and sonar.swift.project are missing in sonar-project.properties. You must specify one of these to determine the project version"
+	  exit 1
+  fi
+  # Get the path of plist file
+  plistFile=`xcodebuild -showBuildSettings -project "${projectFile}" | grep -i 'PRODUCT_SETTINGS_PATH' -m 1 | sed 's/[ ]*PRODUCT_SETTINGS_PATH = //'`
+  # Number version from plist if no sonar.projectVersion
+  numVersionFromPlist=`defaults read "${plistFile}" CFBundleShortVersionString`
+  if [ "$numVersionFromPlist" = "\$(MARKETING_VERSION)" ]; then
+    numVersionFromBuildSettings=`xcodebuild -showBuildSettings -project "${projectFile}" | grep -i "\ MARKETING_VERSION\ =" -m 1 | sed 's/[ ]*MARKETING_VERSION = //'`
+    numVersionSonarRunner=" --define sonar.projectVersion=$numVersionFromBuildSettings"
+  else
+	  numVersionSonarRunner=" --define sonar.projectVersion=$numVersionFromPlist"
+	fi
+else
+	#if we have version number in properties file, we don't override numVersion for sonar-runner/sonar-scanner command
+	numVersionSonarRunner='';
 fi
+
+# Check for properties required to build
+if [ "$buildRequired" = "yes" ]; then
+  if [ -z "$projectFile" -o "$projectFile" = " " ] && [ -z "$workspaceFile" -o "$workspaceFile" = " " ]; then
+    echo >&2 "ERROR - sonar.swift.project or/and sonar.swift.workspace parameter is missing in sonar-project.properties. You must specify which projects (comma-separated list) are application code or which workspace and project to use."
+    exit 1
+  elif [ ! -z "$workspaceFile" ] && [ -z "$projectFile" ]; then
+    echo >&2 "ERROR - sonar.swift.workspace parameter is present in sonar-project.properties but sonar.swift.project and is not. You must specify which projects (comma-separated list) are application code or which workspace and project to use."
+    exit 1
+  fi
+  if [ -z "$appScheme" -o "$appScheme" = " " ]; then
+    echo >&2 "ERROR - sonar.swift.appScheme parameter is missing in sonar-project.properties. You must specify which scheme is used to build your application."
+    exit 1
+  fi
+fi
+
+# Check for unit test properties
 if [ "$unittests" = "on" ]; then
     if [ -z "$destinationSimulator" -o "$destinationSimulator" = " " ]; then
 	      echo >&2 "ERROR - sonar.swift.simulator parameter is missing in sonar-project.properties. You must specify which simulator to use."
 	      exit 1
     fi
+else
+  # clean any simulator to bypass build-for-testing
+  destinationSimulator=
 fi
-
-# if the appConfiguration is not specified then set to Debug
-if [ -z "$appConfiguration" -o "$appConfiguration" = " " ]; then
-	appConfiguration="Debug"
-fi
-
-
 
 if [ "$vflag" = "on" ]; then
  	echo "Xcode project file is: $projectFile"
 	echo "Xcode workspace file is: $workspaceFile"
  	echo "Xcode application scheme is: $appScheme"
-    echo "Number version from plist is: $numVersionFromPlist"
+  echo "Number version for sonar-runner is: $numVersionSonarRunner"
   if [ -n "$unittests" ]; then
  	    echo "Destination simulator is: $destinationSimulator"
  	    echo "Excluded paths from coverage are: $excludedPathsFromCoverage"
@@ -304,29 +382,43 @@ fi
 rm -rf sonar-reports
 mkdir sonar-reports
 
-# Build and extract project information needed later
-buildCmd=($XCODEBUILD_CMD clean build-for-testing)
-echo -n 'Building & extracting Xcode project information'
-if [[ "$workspaceFile" != "" ]] ; then
-    buildCmd+=(-workspace "$workspaceFile")
-else
-    buildCmd+=(-project "$projectFile")
-fi
-buildCmd+=(-scheme $appScheme)
-if [[ ! -z "$destinationSimulator" ]]; then
-    buildCmd+=(-destination "$destinationSimulator" -destination-timeout 360 COMPILER_INDEX_STORE_ENABLE=NO)
-fi
-runCommand  xcodebuild.log "${buildCmd[@]}"
-#oclint-xcodebuild # Transform the xcodebuild.log file into a compile_command.json file
-cat xcodebuild.log | $XCPRETTY_CMD -r json-compilation-database -o compile_commands.json
+if [ "$buildRequired" = "yes" ]; then
+  # Build and extract project information needed later
+  buildCmd=($XCODEBUILD_CMD clean)
+  if [ "$unittests" = "on" ]; then
+    buildCmd+=(build-for-testing)
+  else
+    buildCmd+=(build CODE_SIGNING_ALLOWED=NO)
+  fi
 
-# Objective-C code detection
-hasObjC="no"
-compileCmdFile=compile_commands.json
-minimumSize=3
-actualSize=$(stat -f%z "$compileCmdFile")
-if [ $actualSize -ge $minimumSize ]; then
-    hasObjC="yes"
+  echo -n 'Building & extracting Xcode project information'
+  if [[ "$workspaceFile" != "" ]] ; then
+      buildCmd+=(-workspace "$workspaceFile")
+  else
+      buildCmd+=(-project "$projectFile")
+  fi
+  buildCmd+=(-scheme "$appScheme")
+  if [[ ! -z "$appConfiguration" ]]; then
+      buildCmd+=(-configuration "$appConfiguration")
+  fi
+  if [[ ! -z "$destinationSimulator" ]]; then
+      buildCmd+=(-destination "$destinationSimulator" -destination-timeout 360)
+  fi
+  buildCmd+=(COMPILER_INDEX_STORE_ENABLE=NO)
+  runCommand  xcodebuild.log "${buildCmd[@]}"
+  #oclint-xcodebuild # Transform the xcodebuild.log file into a compile_command.json file
+  cat xcodebuild.log | $XCPRETTY_CMD -r json-compilation-database -o compile_commands.json
+
+  # Objective-C code detection
+  hasObjC="no"
+  compileCmdFile=compile_commands.json
+  minimumSize=3
+  actualSize=$(stat -f%z "$compileCmdFile")
+  if [ $actualSize -ge $minimumSize ]; then
+      hasObjC="yes"
+  fi
+else
+  echo "Skipping build"
 fi
 
 # Tests : surefire and coverage
@@ -343,12 +435,12 @@ if [ "$unittests" = "on" ]; then
     elif [[ ! -z "$projectFile" ]]; then
 	      buildCmd+=(-project "$projectFile")
     fi
-    buildCmd+=( -scheme "$appScheme" -configuration "$appConfiguration" -enableCodeCoverage YES)
+    buildCmd+=( -scheme "$appScheme" -enableCodeCoverage YES)
+    if [[ ! -z "$appConfiguration" ]]; then
+      buildCmd+=(-configuration "$appConfiguration")
+    fi
     if [[ ! -z "$destinationSimulator" ]]; then
         buildCmd+=(-destination "$destinationSimulator" -destination-timeout 60)
-    fi
-    if [[ ! -z "$skipTests" ]]; then
-    	buildCmd+=(-skip-testing:"$skipTests")
     fi
 
     runCommand  sonar-reports/xcodebuild.log "${buildCmd[@]}"
@@ -395,46 +487,37 @@ fi
 
 # SwiftLint
 if [ "$swiftlint" = "on" ]; then
-	if hash $SWIFTLINT_CMD 2>/dev/null; then
-		echo -n 'Running SwiftLint...'
+  echo -n 'Running SwiftLint...'
 
-		# Build the --include flags
-		currentDirectory=${PWD##*/}
-		echo "$srcDirs" | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
-		while read word; do
+  # Build the --include flags
+  currentDirectory=${PWD##*/}
+  echo "$srcDirs" | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
+  while read word; do
 
-			# Run SwiftLint command
-		    $SWIFTLINT_CMD lint --path "$word" > sonar-reports/"$(echo $word | sed 's/\//_/g')"-swiftlint.txt
+    # Run SwiftLint command
+      $SWIFTLINT_CMD lint --path "$word" > sonar-reports/"$(echo $word | sed 's/\//_/g')"-swiftlint.txt
 
-		done < tmpFileRunSonarSh
-		rm -rf tmpFileRunSonarSh
-	else
-		echo "Skipping SwiftLint (not installed!)"
-	fi
-
+  done < tmpFileRunSonarSh
+  rm -rf tmpFileRunSonarSh
 else
-	echo 'Skipping SwiftLint (test purposes only!)'
+	echo 'Skipping SwiftLint'
 fi
 
 # Tailor
 if [ "$tailor" = "on" ]; then
-	if hash $TAILOR_CMD 2>/dev/null; then
-		echo -n 'Running Tailor...'
+  echo -n 'Running Tailor...'
 
-		# Build the --include flags
-		currentDirectory=${PWD##*/}
-		echo "$srcDirs" | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
-		while read word; do
+  # Build the --include flags
+  currentDirectory=${PWD##*/}
+  echo "$srcDirs" | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
+  while read word; do
 
-			  # Run tailor command
-		    $TAILOR_CMD $tailorConfiguration "$word" > sonar-reports/"$(echo $word | sed 's/\//_/g')"-tailor.txt
+      # Run tailor command
+      $TAILOR_CMD $tailorConfiguration "$word" > sonar-reports/"$(echo $word | sed 's/\//_/g')"-tailor.txt
 
-		done < tmpFileRunSonarSh
-		rm -rf tmpFileRunSonarSh
-	else
-		echo "Skipping Tailor (not installed!)"
-	fi
-
+  done < tmpFileRunSonarSh
+  rm -rf tmpFileRunSonarSh
+  echo ""
 else
 	echo 'Skipping Tailor!'
 fi
@@ -468,80 +551,57 @@ if [ "$oclint" = "on" ] && [ "$hasObjC" = "yes" ]; then
 
 
 else
-	echo 'Skipping OCLint (test purposes only!)'
+	echo 'Skipping OCLint'
 fi
 
 #FauxPas
 if [ "$fauxpas" = "on" ] && [ "$hasObjC" = "yes" ]; then
-    hash fauxpas 2>/dev/null
-    if [ $? -eq 0 ]; then
 
-        echo -n 'Running FauxPas...'
+    echo -n 'Running FauxPas...'
 
-        if [ "$projectCount" = "1" ]
-        then
-
-            fauxpas -o json check $projectFile --workspace $workspaceFile --scheme $appScheme > sonar-reports/fauxpas.json
-
-
-        else
-
-            echo $projectFile | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
-            while read projectName; do
-
-                $XCODEBUILD_CMD -list -project $projectName | sed -n '/Schemes/,$p' | while read scheme
-                do
-
-                if [ "$scheme" = "" ]
-                then
-                exit
-                fi
-
-                if [ "$scheme" == "${scheme/Schemes/}" ]
-                then
-                    if [ "$scheme" != "$testScheme" ]
-                    then
-                        projectBaseDir=$(dirname $projectName)
-                        workspaceRelativePath=$(python -c "import os.path; print os.path.relpath('$workspaceFile', '$projectBaseDir')")
-                        fauxpas -o json check $projectName --workspace $workspaceRelativePath --scheme $scheme > sonar-reports/$(basename $projectName .xcodeproj)-$scheme-fauxpas.json
-                    fi
-                fi
-
-                done
-
-            done < tmpFileRunSonarSh
-            rm -rf tmpFileRunSonarSh
-
-	    fi
-
+    if [ "$projectCount" = "1" ]
+    then
+        fauxpas -o json check $projectFile --workspace $workspaceFile --scheme "$appScheme" > sonar-reports/fauxpas.json
     else
-        echo 'Skipping FauxPas (not installed)'
-    fi
+        echo $projectFile | sed -n 1'p' | tr ',' '\n' > tmpFileRunSonarSh
+        while read projectName; do
+
+            $XCODEBUILD_CMD -list -project $projectName | sed -n '/Schemes/,$p' | while read scheme
+            do
+
+            if [ "$scheme" = "" ]
+            then
+            exit
+            fi
+
+            if [ "$scheme" == "${scheme/Schemes/}" ]
+            then
+                if [ "$scheme" != "$testScheme" ]
+                then
+                    projectBaseDir=$(dirname $projectName)
+                    workspaceRelativePath=$(python -c "import os.path; print os.path.relpath('$workspaceFile', '$projectBaseDir')")
+                    fauxpas -o json check $projectName --workspace $workspaceRelativePath --scheme "$scheme" > sonar-reports/$(basename $projectName .xcodeproj)-$scheme-fauxpas.json
+                fi
+            fi
+
+            done
+
+        done < tmpFileRunSonarSh
+        rm -rf tmpFileRunSonarSh
+  fi
 else
     echo 'Skipping FauxPas'
 fi
 
 # Lizard Complexity
 if [ "$lizard" = "on" ]; then
-	if hash $LIZARD_CMD 2>/dev/null; then
 		echo -n 'Running Lizard...'
-  		$LIZARD_CMD --xml "$srcDirs" > sonar-reports/lizard-report.xml
-  	else
-  		echo 'Skipping Lizard (not installed!)'
-  	fi
+  	$LIZARD_CMD --xml "$srcDirs" > sonar-reports/lizard-report.xml
 else
- 	echo 'Skipping Lizard (test purposes only!)'
+ 	echo 'Skipping Lizard'
 fi
 
-# The project version from properties file
-numVersionSonarRunner=''; readParameter numVersionSonarRunner 'sonar.projectVersion'
-if [ -z "$numVersionSonarRunner" -o "$numVersionSonarRunner" = " " ]; then
-	numVersionSonarRunner=" --define sonar.projectVersion=$numVersionFromPlist"
-else
-	#if we have version number in properties file, we don't overide numVersion for sonar-runner/sonar-scanner command
-	numVersionSonarRunner='';
-fi
-# Build sonar-runner / sonnar-scanner arguments
+# Build sonar-runner / sonar-scanner arguments
 sonarArguments=();
 if [ "$sonarurl" != "" ]; then
   sonarArguments+=(-Dsonar.host.url=$sonarurl)
