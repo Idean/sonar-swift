@@ -23,15 +23,11 @@ import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
 import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.measures.CoreMetrics;
 import org.sonar.api.measures.Metric;
-import org.sonar.api.test.MutableTestPlan;
-import org.sonar.api.test.TestCase;
 import org.sonar.squidbridge.api.AnalysisException;
 
 import javax.annotation.CheckForNull;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
@@ -46,21 +42,13 @@ import java.util.Map;
 
 public class SurefireReportParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireReportParser.class);
-    private static final String TESTSUITE = "testsuite";
-    private static final String TESTCASE = "testcase";
 
     protected final SensorContext context;
-    private final DocumentBuilderFactory dbfactory;
-    private final UnitTestIndex index;
-    private final ResourcePerspectives perspectives;
     private final FileSystem fileSystem;
 
-    protected SurefireReportParser(FileSystem fileSystem, ResourcePerspectives perspectives, SensorContext context) {
+    protected SurefireReportParser(FileSystem fileSystem, SensorContext context) {
         this.fileSystem = fileSystem;
         this.context = context;
-        this.perspectives = perspectives;
-        this.dbfactory = DocumentBuilderFactory.newInstance();
-        this.index = new UnitTestIndex();
     }
 
     public void collect(File reportsDir) {
@@ -99,6 +87,7 @@ public class SurefireReportParser {
     private void save(UnitTestIndex index, SensorContext context) {
         long negativeTimeTestNumber = 0;
         Map<InputFile, UnitTestClassReport> indexByInputFile = mapToInputFile(index.getIndexByClassname());
+
         for (Map.Entry<InputFile, UnitTestClassReport> entry : indexByInputFile.entrySet()) {
             UnitTestClassReport report = entry.getValue();
             if (report.getTests() > 0) {
@@ -114,7 +103,7 @@ public class SurefireReportParser {
     private Map<InputFile, UnitTestClassReport> mapToInputFile(Map<String, UnitTestClassReport> indexByClassname) {
         Map<InputFile, UnitTestClassReport> result = new HashMap<>();
         indexByClassname.forEach((className, index) -> {
-            InputFile resource = getUnitTestResource(className, index);
+            InputFile resource = getUnitTestResource(className);
             if (resource != null) {
                 UnitTestClassReport report = result.computeIfAbsent(resource, r -> new UnitTestClassReport());
                 // in case of repeated/parameterized tests (JUnit 5.x) we may end up with tests having the same name
@@ -133,24 +122,10 @@ public class SurefireReportParser {
         saveMeasure(context, inputFile, CoreMetrics.TEST_ERRORS, report.getErrors());
         saveMeasure(context, inputFile, CoreMetrics.TEST_FAILURES, report.getFailures());
         saveMeasure(context, inputFile, CoreMetrics.TEST_EXECUTION_TIME, report.getDurationMilliseconds());
-        saveResults(inputFile, report);
-    }
-
-    protected void saveResults(InputFile testFile, UnitTestClassReport report) {
-        for (UnitTestResult unitTestResult : report.getResults()) {
-            MutableTestPlan testPlan = perspectives.as(MutableTestPlan.class, testFile);
-            if (testPlan != null) {
-                testPlan.addTestCase(unitTestResult.getName())
-                        .setDurationInMs(Math.max(unitTestResult.getDurationMilliseconds(), 0))
-                        .setStatus(TestCase.Status.of(unitTestResult.getStatus()))
-                        .setMessage(unitTestResult.getMessage())
-                        .setStackTrace(unitTestResult.getStackTrace());
-            }
-        }
     }
 
     @CheckForNull
-    private InputFile getUnitTestResource(String className, UnitTestClassReport unitTestClassReport) {
+    private InputFile getUnitTestResource(String className) {
         return TestFileFinders.getInstance().getUnitTestResource(fileSystem, className);
     }
 
