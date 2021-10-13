@@ -51,7 +51,6 @@ public class OCLintRulesDefinition implements RulesDefinition {
         } catch (IOException e) {
             LOGGER.error("Failed to load OCLint rules", e);
         }
-        SqaleXmlLoader.load(repository, "/com/sonar/sqale/oclint-model.xml");
         repository.done();
     }
 

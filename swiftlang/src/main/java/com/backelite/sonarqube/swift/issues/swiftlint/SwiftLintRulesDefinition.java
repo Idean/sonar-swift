@@ -58,7 +58,6 @@ public class SwiftLintRulesDefinition implements RulesDefinition {
         } catch (IOException e) {
             LOGGER.error("Failed to load SwiftLint rules", e);
         }
-        SqaleXmlLoader.load(repository, "/com/sonar/sqale/swiftlint-model.xml");
         repository.done();
     }
 }

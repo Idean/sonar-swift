@@ -60,7 +60,6 @@ public class FauxPasRulesDefinition implements RulesDefinition {
         } catch (IOException e) {
             LOGGER.error("Failed to load FauxPas rules", e);
         }
-        SqaleXmlLoader.load(repository, "/com/sonar/sqale/fauxpas-model.xml");
         repository.done();
     }
 }
