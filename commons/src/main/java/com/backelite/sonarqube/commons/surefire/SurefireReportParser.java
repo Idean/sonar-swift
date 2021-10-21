@@ -22,16 +22,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.fs.InputFile;
+import org.sonar.api.batch.measure.Metric;
 import org.sonar.api.batch.sensor.SensorContext;
-import org.sonar.api.component.ResourcePerspectives;
 import org.sonar.api.measures.CoreMetrics;
-import org.sonar.api.measures.Metric;
-import org.sonar.api.test.MutableTestPlan;
-import org.sonar.api.test.TestCase;
-import org.sonar.squidbridge.api.AnalysisException;
 
 import javax.annotation.CheckForNull;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
@@ -46,21 +41,13 @@ import java.util.Map;
 
 public class SurefireReportParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireReportParser.class);
-    private static final String TESTSUITE = "testsuite";
-    private static final String TESTCASE = "testcase";
 
     protected final SensorContext context;
-    private final DocumentBuilderFactory dbfactory;
-    private final UnitTestIndex index;
-    private final ResourcePerspectives perspectives;
     private final FileSystem fileSystem;
 
-    protected SurefireReportParser(FileSystem fileSystem, ResourcePerspectives perspectives, SensorContext context) {
+    protected SurefireReportParser(FileSystem fileSystem, SensorContext context) {
         this.fileSystem = fileSystem;
         this.context = context;
-        this.perspectives = perspectives;
-        this.dbfactory = DocumentBuilderFactory.newInstance();
-        this.index = new UnitTestIndex();
     }
 
     public void collect(File reportsDir) {
@@ -91,7 +78,7 @@ public class SurefireReportParser {
             try {
                 parser.parse(report);
             } catch (XMLStreamException e) {
-                throw new AnalysisException("Fail to parse the Surefire report: " + report, e);
+                throw new RuntimeException("Fail to parse the Surefire report: " + report, e);
             }
         }
     }
@@ -133,20 +120,6 @@ public class SurefireReportParser {
         saveMeasure(context, inputFile, CoreMetrics.TEST_ERRORS, report.getErrors());
         saveMeasure(context, inputFile, CoreMetrics.TEST_FAILURES, report.getFailures());
         saveMeasure(context, inputFile, CoreMetrics.TEST_EXECUTION_TIME, report.getDurationMilliseconds());
-        saveResults(inputFile, report);
-    }
-
-    protected void saveResults(InputFile testFile, UnitTestClassReport report) {
-        for (UnitTestResult unitTestResult : report.getResults()) {
-            MutableTestPlan testPlan = perspectives.as(MutableTestPlan.class, testFile);
-            if (testPlan != null) {
-                testPlan.addTestCase(unitTestResult.getName())
-                        .setDurationInMs(Math.max(unitTestResult.getDurationMilliseconds(), 0))
-                        .setStatus(TestCase.Status.of(unitTestResult.getStatus()))
-                        .setMessage(unitTestResult.getMessage())
-                        .setStackTrace(unitTestResult.getStackTrace());
-            }
-        }
     }
 
     @CheckForNull
