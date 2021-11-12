@@ -4,1266 +4,1789 @@
         "category": "SwiftLint",
         "name": "AnyObject Protocol",
         "description": "Prefer using `AnyObject` over `class` for class-only protocols.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "array_init",
         "category": "SwiftLint",
         "name": "Array Init",
         "description": "Prefer using `Array(seq)` over `seq.map { $0 }` to convert a sequence into an Array.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "attributes",
         "category": "SwiftLint",
         "name": "Attributes",
         "description": "Attributes should be on their own lines in functions and types, but on the same line as variables and imports.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "block_based_kvo",
         "category": "SwiftLint",
         "name": "Block Based KVO",
         "description": "Prefer the new block based KVO API with keypaths when using Swift 3.2 or later.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "class_delegate_protocol",
         "category": "SwiftLint",
         "name": "Class Delegate Protocol",
         "description": "Delegate protocols should be class-only so they can be weakly referenced.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "closing_brace",
         "category": "SwiftLint",
         "name": "Closing Brace Spacing",
         "description": "Closing brace with closing parenthesis should not have any whitespaces in the middle.",
-        "severity": "MINOR"
-    },
-    {
-        "key": "closure_body_length",
-        "category": "SwiftLint",
-        "name": "Closure Body Length",
-        "description": "Closure bodies should not span too many lines.",
-        "severity": "MAJOR"
-    },
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
+    }
     {
         "key": "closure_end_indentation",
         "category": "SwiftLint",
         "name": "Closure End Indentation",
         "description": "Closure end should have the same indentation as the line that started it.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "closure_parameter_position",
         "category": "SwiftLint",
         "name": "Closure Parameter Position",
         "description": "Closure parameters should be on the same line as opening brace.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "closure_spacing",
         "category": "SwiftLint",
         "name": "Closure Spacing",
         "description": "Closure expressions should have a single space inside each brace.",
-        "severity": "MINOR"
-    },
-    {
-        "key": "collection_alignment",
-        "category": "SwiftLint",
-        "name": "Collection Element Alignment",
-        "description": "All elements in a collection literal should be vertically aligned",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "colon",
         "category": "SwiftLint",
         "name": "Colon",
         "description": "Colons should be next to the identifier when specifying a type and next to the key in dictionary literals.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "comma",
         "category": "SwiftLint",
         "name": "Comma Spacing",
         "description": "There should be no space before and one after any comma.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "compiler_protocol_init",
         "category": "SwiftLint",
         "name": "Compiler Protocol Init",
         "description": "The initializers declared in compiler protocols such as `ExpressibleByArrayLiteral` shouldn't be called directly.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "conditional_returns_on_newline",
         "category": "SwiftLint",
         "name": "Conditional Returns on Newline",
         "description": "Conditional statements should always return on the next line",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "contains_over_filter_count",
         "category": "SwiftLint",
         "name": "Contains Over Filter Count",
         "description": "Prefer `contains` over comparing `filter(where:).count` to 0.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "contains_over_filter_is_empty",
         "category": "SwiftLint",
         "name": "Contains Over Filter Is Empty",
         "description": "Prefer `contains` over using `filter(where:).isEmpty`",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "contains_over_first_not_nil",
         "category": "SwiftLint",
         "name": "Contains over first not nil",
         "description": "Prefer `contains` over `first(where:) != nil` and `firstIndex(where:) != nil`.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "control_statement",
         "category": "SwiftLint",
         "name": "Control Statement",
         "description": "`if`, `for`, `guard`, `switch`, `while`, and `catch` statements shouldn't unnecessarily wrap their conditionals or arguments in parentheses.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "convenience_type",
         "category": "SwiftLint",
         "name": "Convenience Type",
         "description": "Types used for hosting only static members should be implemented as a caseless enum to avoid instantiation.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "custom_rules",
         "category": "SwiftLint",
         "name": "Customs",
         "description": "Create custom rules by providing a regex string. Optionally specify what syntax kinds to match against, the severity level, and what message to display.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "cyclomatic_complexity",
         "category": "SwiftLint",
         "name": "Cyclomatic Complexity",
         "description": "Complexity of function bodies should be limited.",
-        "severity": "CRITICAL"
+        "severity": "CRITICAL",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 30min",
+        "effort" : "30min"
     },
     {
         "key": "deployment_target",
         "category": "SwiftLint",
         "name": "Deployment Target",
         "description": "Availability checks or attributes shouldn't be using older versions that are satisfied by the deployment target.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "discarded_notification_center_observer",
         "category": "SwiftLint",
         "name": "Discarded Notification Center Observer",
         "description": "When registering for a notification using a block, the opaque observer that is returned should be stored so it can be removed later.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "discouraged_direct_init",
         "category": "SwiftLint",
         "name": "Discouraged Direct Initialization",
         "description": "Discouraged direct initialization of types that can be harmful.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "discouraged_object_literal",
         "category": "SwiftLint",
         "name": "Discouraged Object Literal",
         "description": "Prefer initializers over object literals.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "discouraged_optional_boolean",
         "category": "SwiftLint",
         "name": "Discouraged Optional Boolean",
         "description": "Prefer non-optional booleans over optional booleans.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "discouraged_optional_collection",
         "category": "SwiftLint",
         "name": "Discouraged Optional Collection",
         "description": "Prefer empty collection over optional collection.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "duplicate_enum_cases",
         "category": "SwiftLint",
         "name": "Duplicate Enum Cases",
         "description": "Enum can't contain multiple cases with the same name.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "duplicate_imports",
         "category": "SwiftLint",
         "name": "Duplicate Imports",
         "description": "Imports should be unique.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "dynamic_inline",
         "category": "SwiftLint",
         "name": "Dynamic Inline",
         "description": "Avoid using 'dynamic' and '@inline(__always)' together.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "empty_collection_literal",
         "category": "SwiftLint",
         "name": "Empty Collection Literal",
         "description": "Prefer checking `isEmpty` over comparing collection to an empty array or dictionary literal.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "empty_count",
         "category": "SwiftLint",
         "name": "Empty Count",
         "description": "Prefer checking `isEmpty` over comparing `count` to zero.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "empty_enum_arguments",
         "category": "SwiftLint",
         "name": "Empty Enum Arguments",
         "description": "Arguments can be omitted when matching enums with associated types if they are not used.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "empty_parameters",
         "category": "SwiftLint",
         "name": "Empty Parameters",
         "description": "Prefer `() -> ` over `Void -> `.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "empty_parentheses_with_trailing_closure",
         "category": "SwiftLint",
         "name": "Empty Parentheses with Trailing Closure",
         "description": "When using trailing closures, empty parentheses should be avoided after the method call.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "empty_string",
         "category": "SwiftLint",
         "name": "Empty String",
         "description": "Prefer checking `isEmpty` over comparing `string` to an empty string literal.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "empty_xctest_method",
         "category": "SwiftLint",
         "name": "Empty XCTest Method",
         "description": "Empty XCTest method should be avoided.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "explicit_acl",
         "category": "SwiftLint",
         "name": "Explicit ACL",
         "description": "All declarations should specify Access Control Level keywords explicitly.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "explicit_enum_raw_value",
         "category": "SwiftLint",
         "name": "Explicit Enum Raw Value",
         "description": "Enums should be explicitly assigned their raw values.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "explicit_init",
         "category": "SwiftLint",
         "name": "Explicit Init",
         "description": "Explicitly calling .init() should be avoided.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "explicit_self",
         "category": "SwiftLint",
         "name": "Explicit Self",
         "description": "Instance variables and functions should be explicitly accessed with 'self.'.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "explicit_top_level_acl",
         "category": "SwiftLint",
         "name": "Explicit Top Level ACL",
         "description": "Top-level declarations should specify Access Control Level keywords explicitly.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "explicit_type_interface",
         "category": "SwiftLint",
         "name": "Explicit Type Interface",
         "description": "Properties should have a type interface",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "extension_access_modifier",
         "category": "SwiftLint",
         "name": "Extension Access Modifier",
         "description": "Prefer to use extension access modifiers",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "fallthrough",
         "category": "SwiftLint",
         "name": "Fallthrough",
         "description": "Fallthrough should be avoided.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "fatal_error_message",
         "category": "SwiftLint",
         "name": "Fatal Error Message",
         "description": "A fatalError call should have a message.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "file_header",
         "category": "SwiftLint",
         "name": "File Header",
         "description": "Header comments should be consistent with project patterns. The SWIFTLINT_CURRENT_FILENAME placeholder can optionally be used in the required and forbidden patterns. It will be replaced by the real file name.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "file_length",
         "category": "SwiftLint",
         "name": "File Line Length",
         "description": "Files should not span too many lines.",
-        "severity": "MAJOR"
+        "severity": "MAJOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 30min",
+        "effort" : "30min"
     },
     {
         "key": "file_name",
         "category": "SwiftLint",
         "name": "File Name",
         "description": "File name should match a type or extension declared in the file (if any).",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "file_types_order",
         "category": "SwiftLint",
         "name": "File Types Order",
         "description": "Specifies how the types within a file should be ordered.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "first_where",
         "category": "SwiftLint",
         "name": "First Where",
         "description": "Prefer using `.first(where:)` over `.filter { }.first` in collections.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "for_where",
         "category": "SwiftLint",
         "name": "For Where",
         "description": "`where` clauses are preferred over a single `if` inside a `for`.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "force_cast",
         "category": "SwiftLint",
         "name": "Force Cast",
         "description": "Force casts should be avoided.",
-        "severity": "MAJOR"
+        "severity": "MAJOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "force_try",
         "category": "SwiftLint",
         "name": "Force Try",
         "description": "Force tries should be avoided.",
-        "severity": "MAJOR"
+        "severity": "MAJOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "force_unwrapping",
         "category": "SwiftLint",
         "name": "Force Unwrapping",
         "description": "Force unwrapping should be avoided.",
-        "severity": "MAJOR"
+        "severity": "MAJOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "function_body_length",
         "category": "SwiftLint",
         "name": "Function Body Length",
         "description": "Functions bodies should not span too many lines.",
-        "severity": "MAJOR"
+        "severity": "MAJOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 30min",
+        "effort" : "30min"
     },
     {
         "key": "function_default_parameter_at_end",
         "category": "SwiftLint",
         "name": "Function Default Parameter at End",
         "description": "Prefer to locate parameters with defaults toward the end of the parameter list.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "function_parameter_count",
         "category": "SwiftLint",
         "name": "Function Parameter Count",
         "description": "Number of function parameters should be low.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 30min",
+        "effort" : "30min"
     },
     {
         "key": "generic_type_name",
         "category": "SwiftLint",
         "name": "Generic Type Name",
         "description": "Generic type name should only contain alphanumeric characters, start with an uppercase character and span between 1 and 20 characters in length.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "identical_operands",
         "category": "SwiftLint",
         "name": "Identical Operands",
         "description": "Comparing two identical operands is likely a mistake.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "identifier_name",
         "category": "SwiftLint",
         "name": "Identifier Name",
         "description": "Identifier names should only contain alphanumeric characters and start with a lowercase character or should only contain capital letters. In an exception to the above, variable names may start with a capital letter when they are declared static and immutable. Variable names should not be too long or too short.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "implicit_getter",
         "category": "SwiftLint",
         "name": "Implicit Getter",
         "description": "Computed read-only properties and subscripts should avoid using the get keyword.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "implicit_return",
         "category": "SwiftLint",
         "name": "Implicit Return",
         "description": "Prefer implicit returns in closures.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "implicitly_unwrapped_optional",
         "category": "SwiftLint",
         "name": "Implicitly Unwrapped Optional",
         "description": "Implicitly unwrapped optionals should be avoided when possible.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "inert_defer",
         "category": "SwiftLint",
         "name": "Inert Defer",
         "description": "If defer is at the end of its parent scope, it will be executed right where it is anyway.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "is_disjoint",
         "category": "SwiftLint",
         "name": "Is Disjoint",
         "description": "Prefer using `Set.isDisjoint(with:)` over `Set.intersection(_:).isEmpty`.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "joined_default_parameter",
         "category": "SwiftLint",
         "name": "Joined Default Parameter",
         "description": "Discouraged explicit usage of the default separator.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "large_tuple",
         "category": "SwiftLint",
         "name": "Large Tuple",
         "description": "Tuples shouldn't have too many members. Create a custom type instead.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "last_where",
         "category": "SwiftLint",
         "name": "Last Where",
         "description": "Prefer using `.last(where:)` over `.filter { }.last` in collections.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "leading_whitespace",
         "category": "SwiftLint",
         "name": "Leading Whitespace",
         "description": "Files should not contain leading whitespace.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "legacy_cggeometry_functions",
         "category": "SwiftLint",
         "name": "Legacy CGGeometry Functions",
         "description": "Struct extension properties and methods are preferred over legacy functions",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "legacy_constant",
         "category": "SwiftLint",
         "name": "Legacy Constant",
         "description": "Struct-scoped constants are preferred over legacy global constants.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "legacy_constructor",
         "category": "SwiftLint",
         "name": "Legacy Constructor",
         "description": "Swift constructors are preferred over legacy convenience functions.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "legacy_hashing",
         "category": "SwiftLint",
         "name": "Legacy Hashing",
         "description": "Prefer using the `hash(into:)` function instead of overriding `hashValue`",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "legacy_multiple",
         "category": "SwiftLint",
         "name": "Legacy Multiple",
         "description": "Prefer using the `isMultiple(of:)` function instead of using the remainder operator (`%`).",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "legacy_nsgeometry_functions",
         "category": "SwiftLint",
         "name": "Legacy NSGeometry Functions",
         "description": "Struct extension properties and methods are preferred over legacy functions",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "legacy_random",
         "category": "SwiftLint",
         "name": "Legacy Random",
         "description": "Prefer using `type.random(in:)` over legacy functions.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "let_var_whitespace",
         "category": "SwiftLint",
         "name": "Variable Declaration Whitespace",
         "description": "Let and var should be separated from other statements by a blank line.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "line_length",
         "category": "SwiftLint",
         "name": "Line Length",
         "description": "Lines should not span too many characters.",
-        "severity": "MAJOR"
+        "severity": "MAJOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "10min"
     },
     {
         "key": "literal_expression_end_indentation",
         "category": "SwiftLint",
         "name": "Literal Expression End Indentation",
         "description": "Array and dictionary literal end should have the same indentation as the line that started it.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "lower_acl_than_parent",
         "category": "SwiftLint",
         "name": "Lower ACL than parent",
         "description": "Ensure definitions have a lower access control level than their enclosing parent",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "mark",
         "category": "SwiftLint",
         "name": "Mark",
         "description": "MARK comment should be in valid format. e.g. '// MARK: ...' or '// MARK: - ...'",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "missing_docs",
         "category": "SwiftLint",
         "name": "Missing Docs",
         "description": "Declarations should be documented.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "modifier_order",
         "category": "SwiftLint",
         "name": "Modifier Order",
         "description": "Modifier order should be consistent.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "multiline_arguments",
         "category": "SwiftLint",
         "name": "Multiline Arguments",
         "description": "Arguments should be either on the same line, or one per line.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "multiline_arguments_brackets",
         "category": "SwiftLint",
         "name": "Multiline Arguments Brackets",
         "description": "Multiline arguments should have their surrounding brackets in a new line.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "multiline_function_chains",
         "category": "SwiftLint",
         "name": "Multiline Function Chains",
         "description": "Chained function calls should be either on the same line, or one per line.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "multiline_literal_brackets",
         "category": "SwiftLint",
         "name": "Multiline Literal Brackets",
         "description": "Multiline literals should have their surrounding brackets in a new line.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "multiline_parameters",
         "category": "SwiftLint",
         "name": "Multiline Parameters",
         "description": "Functions and methods parameters should be either on the same line, or one per line.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "multiline_parameters_brackets",
         "category": "SwiftLint",
         "name": "Multiline Parameters Brackets",
         "description": "Multiline parameters should have their surrounding brackets in a new line.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "multiple_closures_with_trailing_closure",
         "category": "SwiftLint",
         "name": "Multiple Closures with Trailing Closure",
         "description": "Trailing closure syntax should not be used when passing more than one closure argument.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "nesting",
         "category": "SwiftLint",
-        "name": "Nesting",
+        "name": "Nestin5g",
         "description": "Types should be nested at most 1 level deep, and statements should be nested at most 5 levels deep.",
-        "severity": "CRITICAL"
+        "severity": "CRITICAL",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 30min",
+        "effort" : "30min"
     },
     {
         "key": "nimble_operator",
         "category": "SwiftLint",
         "name": "Nimble Operator",
         "description": "Prefer Nimble operator overloads over free matcher functions.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "no_extension_access_modifier",
         "category": "SwiftLint",
         "name": "No Extension Access Modifier",
         "description": "Prefer not to use extension access modifiers",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "no_fallthrough_only",
         "category": "SwiftLint",
         "name": "No Fallthrough Only",
         "description": "Fallthroughs can only be used if the `case` contains at least one other statement.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "no_grouping_extension",
         "category": "SwiftLint",
         "name": "No Grouping Extension",
         "description": "Extensions shouldn't be used to group code within the same source file.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "no_space_in_method_call",
         "category": "SwiftLint",
         "name": "No Space in Method Call",
         "description": "Don't add a space between the method name and the parentheses.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "notification_center_detachment",
         "category": "SwiftLint",
         "name": "Notification Center Detachment",
         "description": "An object should only remove itself as an observer in `deinit`.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "nslocalizedstring_key",
         "category": "SwiftLint",
         "name": "NSLocalizedString Key",
         "description": "Static strings should be used as key in NSLocalizedString in order to genstrings work.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "nslocalizedstring_require_bundle",
         "category": "SwiftLint",
         "name": "NSLocalizedString Require Bundle",
         "description": "Calls to NSLocalizedString should specify the bundle which contains the strings file.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "nsobject_prefer_isequal",
         "category": "SwiftLint",
         "name": "NSObject Prefer isEqual",
         "description": "NSObject subclasses should implement isEqual instead of ==.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "number_separator",
         "category": "SwiftLint",
         "name": "Number Separator",
         "description": "Underscores should be used as thousand separator in large decimal numbers.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "object_literal",
         "category": "SwiftLint",
         "name": "Object Literal",
         "description": "Prefer object literals over image and color inits.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "opening_brace",
         "category": "SwiftLint",
         "name": "Opening Brace Spacing",
         "description": "Opening braces should be preceded by a single space and on the same line as the declaration.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "operator_usage_whitespace",
         "category": "SwiftLint",
         "name": "Operator Usage Whitespace",
         "description": "Operators should be surrounded by a single whitespace when they are being used.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "operator_whitespace",
         "category": "SwiftLint",
         "name": "Operator Function Whitespace",
         "description": "Operators should be surrounded by a single whitespace when defining them.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "overridden_super_call",
         "category": "SwiftLint",
         "name": "Overridden methods call super",
         "description": "Some overridden methods should always call super",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "override_in_extension",
         "category": "SwiftLint",
         "name": "Override in Extension",
         "description": "Extensions shouldn't override declarations.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "pattern_matching_keywords",
         "category": "SwiftLint",
         "name": "Pattern Matching Keywords",
         "description": "Combine multiple pattern matching bindings by moving keywords out of tuples.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "prefixed_toplevel_constant",
         "category": "SwiftLint",
         "name": "Prefixed Top-Level Constant",
         "description": "Top-level constants should be prefixed by `k`.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "private_action",
         "category": "SwiftLint",
         "name": "Private Actions",
         "description": "IBActions should be private.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "private_outlet",
         "category": "SwiftLint",
         "name": "Private Outlets",
         "description": "IBOutlets should be private to avoid leaking UIKit to higher layers.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "private_over_fileprivate",
         "category": "SwiftLint",
         "name": "Private over fileprivate",
         "description": "Prefer `private` over `fileprivate` declarations.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "private_unit_test",
         "category": "SwiftLint",
         "name": "Private Unit Test",
         "description": "Unit tests marked private are silently skipped.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "prohibited_interface_builder",
         "category": "SwiftLint",
         "name": "Prohibited Interface Builder",
         "description": "Creating views using Interface Builder should be avoided.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "prohibited_super_call",
         "category": "SwiftLint",
         "name": "Prohibited calls to super",
         "description": "Some methods should not call super",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "protocol_property_accessors_order",
         "category": "SwiftLint",
         "name": "Protocol Property Accessors Order",
         "description": "When declaring properties in protocols, the order of accessors should be `get set`.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "quick_discouraged_call",
         "category": "SwiftLint",
         "name": "Quick Discouraged Call",
         "description": "Discouraged call inside 'describe' and/or 'context' block.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "quick_discouraged_focused_test",
         "category": "SwiftLint",
         "name": "Quick Discouraged Focused Test",
         "description": "Discouraged focused test. Other tests won't run while this one is focused.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "quick_discouraged_pending_test",
         "category": "SwiftLint",
         "name": "Quick Discouraged Pending Test",
         "description": "Discouraged pending test. This test won't run while it's marked as pending.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "reduce_boolean",
         "category": "SwiftLint",
         "name": "Reduce Boolean",
         "description": "Prefer using `.allSatisfy()` or `.contains()` over `reduce(true)` or `reduce(false)`",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "reduce_into",
         "category": "SwiftLint",
         "name": "Reduce Into",
         "description": "Prefer `reduce(into:_:)` over `reduce(_:_:)` for copy-on-write types",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "redundant_discardable_let",
         "category": "SwiftLint",
         "name": "Redundant Discardable Let",
         "description": "Prefer `_ = foo()` over `let _ = foo()` when discarding a result from a function.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "redundant_nil_coalescing",
         "category": "SwiftLint",
         "name": "Redundant Nil Coalescing",
         "description": "nil coalescing operator is only evaluated if the lhs is nil, coalescing operator with nil as rhs is redundant",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "redundant_objc_attribute",
         "category": "SwiftLint",
         "name": "Redundant @objc Attribute",
         "description": "Objective-C attribute (@objc) is redundant in declaration.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "redundant_optional_initialization",
         "category": "SwiftLint",
         "name": "Redundant Optional Initialization",
         "description": "Initializing an optional variable with nil is redundant.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "redundant_set_access_control",
         "category": "SwiftLint",
         "name": "Redundant Set Access Control",
         "description": "Property setter access level shouldn't be explicit if it's the same as the variable access level.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "redundant_string_enum_value",
         "category": "SwiftLint",
         "name": "Redundant String Enum Value",
         "description": "String enum values can be omitted when they are equal to the enumcase name.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "redundant_type_annotation",
         "category": "SwiftLint",
         "name": "Redundant Type Annotation",
         "description": "Variables should not have redundant type annotation",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "redundant_void_return",
         "category": "SwiftLint",
         "name": "Redundant Void Return",
         "description": "Returning Void in a function declaration is redundant.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "required_deinit",
         "category": "SwiftLint",
         "name": "Required Deinit",
         "description": "Classes should have an explicit deinit method.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "required_enum_case",
         "category": "SwiftLint",
         "name": "Required Enum Case",
         "description": "Enums conforming to a specified protocol must implement a specific case(s).",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "return_arrow_whitespace",
         "category": "SwiftLint",
         "name": "Returning Whitespace",
         "description": "Return arrow and return type should be separated by a single space or on a separate line.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "shorthand_operator",
         "category": "SwiftLint",
         "name": "Shorthand Operator",
         "description": "Prefer shorthand operators (+=, -=, *=, /=) over doing the operation and assigning.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "single_test_class",
         "category": "SwiftLint",
         "name": "Single Test Class",
         "description": "Test files should contain a single QuickSpec or XCTestCase class.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "sorted_first_last",
         "category": "SwiftLint",
         "name": "Min or Max over Sorted First or Last",
         "description": "Prefer using `min()` or `max()` over `sorted().first` or `sorted().last`",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "sorted_imports",
         "category": "SwiftLint",
         "name": "Sorted Imports",
         "description": "Imports should be sorted.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "statement_position",
         "category": "SwiftLint",
         "name": "Statement Position",
         "description": "Else and catch should be on the same line, one space after the previous declaration.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "static_operator",
         "category": "SwiftLint",
         "name": "Static Operator",
         "description": "Operators should be declared as static functions, not free functions.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "strict_fileprivate",
         "category": "SwiftLint",
         "name": "Strict fileprivate",
         "description": "`fileprivate` should be avoided.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "strong_iboutlet",
         "category": "SwiftLint",
         "name": "Strong IBOutlet",
         "description": "@IBOutlets shouldn't be declared as weak.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "superfluous_disable_command",
         "category": "SwiftLint",
         "name": "Superfluous Disable Command",
         "description": "SwiftLint 'disable' commands are superfluous when the disabled rule would not have triggered a violation in the disabled region. Use \" - \" if you wish to document a command.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "switch_case_alignment",
         "category": "SwiftLint",
         "name": "Switch and Case Statement Alignment",
         "description": "Case statements should vertically align with their enclosing switch statement, or indented if configured otherwise.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "switch_case_on_newline",
         "category": "SwiftLint",
         "name": "Switch Case on Newline",
         "description": "Cases inside a switch should always be on a newline",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "syntactic_sugar",
         "category": "SwiftLint",
         "name": "Syntactic Sugar",
         "description": "Shorthand syntactic sugar should be used, i.e. [Int] instead of Array<Int>.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "todo",
         "category": "SwiftLint",
         "name": "Todo",
         "description": "TODOs and FIXMEs should be resolved.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "toggle_bool",
         "category": "SwiftLint",
         "name": "Toggle Bool",
         "description": "Prefer `someBool.toggle()` over `someBool = !someBool`.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "trailing_closure",
         "category": "SwiftLint",
         "name": "Trailing Closure",
         "description": "Trailing closure syntax should be used whenever possible.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "trailing_comma",
         "category": "SwiftLint",
         "name": "Trailing Comma",
         "description": "Trailing commas in arrays and dictionaries should be avoided/enforced.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "trailing_newline",
         "category": "SwiftLint",
         "name": "Trailing Newline",
         "description": "Files should have a single trailing newline.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "trailing_semicolon",
         "category": "SwiftLint",
         "name": "Trailing Semicolon",
         "description": "Lines should not have trailing semicolons.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "trailing_whitespace",
         "category": "SwiftLint",
         "name": "Trailing Whitespace",
         "description": "Lines should not have trailing whitespace.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "type_body_length",
         "category": "SwiftLint",
         "name": "Type Body Length",
         "description": "Type bodies should not span too many lines.",
-        "severity": "MAJOR"
+        "severity": "MAJOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 30min",
+        "effort" : "30min"
     },
     {
         "key": "type_contents_order",
         "category": "SwiftLint",
         "name": "Type Contents Order",
         "description": "Specifies the order of subtypes, properties, methods & more within a type.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "type_name",
         "category": "SwiftLint",
         "name": "Type Name",
         "description": "Type name should only contain alphanumeric characters, start with an uppercase character and span between 3 and 40 characters in length.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "unavailable_function",
         "category": "SwiftLint",
         "name": "Unavailable Function",
         "description": "Unimplemented functions should be marked as unavailable.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "unneeded_break_in_switch",
         "category": "SwiftLint",
         "name": "Unneeded Break in Switch",
         "description": "Avoid using unneeded break statements.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "unneeded_parentheses_in_closure_argument",
         "category": "SwiftLint",
         "name": "Unneeded Parentheses in Closure Argument",
         "description": "Parentheses are not needed when declaring closure arguments.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "unowned_variable_capture",
         "category": "SwiftLint",
         "name": "Unowned Variable Capture",
         "description": "Prefer capturing references as weak to avoid potential crashes.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "untyped_error_in_catch",
         "category": "SwiftLint",
         "name": "Untyped Error in Catch",
         "description": "Catch statements should not declare error variables without type casting.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "unused_capture_list",
         "category": "SwiftLint",
         "name": "Unused Capture List",
         "description": "Unused reference in a capture list should be removed.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "unused_closure_parameter",
         "category": "SwiftLint",
         "name": "Unused Closure Parameter",
         "description": "Unused parameter in a closure should be replaced with _.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "unused_control_flow_label",
         "category": "SwiftLint",
         "name": "Unused Control Flow Label",
         "description": "Unused control flow label should be removed.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "unused_declaration",
         "category": "SwiftLint",
         "name": "Unused Declaration",
         "description": "Declarations should be referenced at least once within all files linted.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "unused_enumerated",
         "category": "SwiftLint",
         "name": "Unused Enumerated",
         "description": "When the index or the item is not used, `.enumerated()` can be removed.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "unused_import",
         "category": "SwiftLint",
         "name": "Unused Import",
         "description": "All imported modules should be required to make the file compile.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "unused_optional_binding",
         "category": "SwiftLint",
         "name": "Unused Optional Binding",
         "description": "Prefer `!= nil` over `let _ =`",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "unused_setter_value",
         "category": "SwiftLint",
         "name": "Unused Setter Value",
         "description": "Setter value is not used.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "valid_ibinspectable",
         "category": "SwiftLint",
         "name": "Valid IBInspectable",
         "description": "@IBInspectable should be applied to variables only, have its type explicit and be of a supported type",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "vertical_parameter_alignment",
         "category": "SwiftLint",
         "name": "Vertical Parameter Alignment",
         "description": "Function parameters should be aligned vertically if they're in multiple lines in a declaration.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "vertical_parameter_alignment_on_call",
         "category": "SwiftLint",
         "name": "Vertical Parameter Alignment On Call",
         "description": "Function parameters should be aligned vertically if they're in multiple lines in a method call.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "vertical_whitespace",
         "category": "SwiftLint",
         "name": "Vertical Whitespace",
         "description": "Limit vertical whitespace to a single empty line.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "vertical_whitespace_between_cases",
         "category": "SwiftLint",
         "name": "Vertical Whitespace Between Cases",
         "description": "Include a single empty line between switch cases.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "vertical_whitespace_closing_braces",
         "category": "SwiftLint",
         "name": "Vertical Whitespace before Closing Braces",
         "description": "Don't include vertical whitespace (empty line) before closing braces.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "vertical_whitespace_opening_braces",
         "category": "SwiftLint",
         "name": "Vertical Whitespace after Opening Braces",
         "description": "Don't include vertical whitespace (empty line) after opening braces.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "void_return",
         "category": "SwiftLint",
         "name": "Void Return",
         "description": "Prefer `-> Void` over `-> ()`.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "weak_delegate",
         "category": "SwiftLint",
         "name": "Weak Delegate",
         "description": "Delegates should be weak to avoid reference cycles.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 10min",
+        "effort" : "10min"
     },
     {
         "key": "xct_specific_matcher",
         "category": "SwiftLint",
         "name": "XCTest Specific Matcher",
         "description": "Prefer specific XCTest matchers over `XCTAssertEqual` and `XCTAssertNotEqual`",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "xctfail_message",
         "category": "SwiftLint",
         "name": "XCTFail Message",
         "description": "An XCTFail call should include a description of the assertion.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     },
     {
         "key": "yoda_condition",
         "category": "SwiftLint",
         "name": "Yoda condition rule",
         "description": "The variable should be placed on the left, the constant on the right of a comparison operator.",
-        "severity": "MINOR"
+        "severity": "MINOR",
+        "type" : "CONSTANT_ISSUE",
+        "gap" : "0d 0h 5min",
+        "effort" : "5min"
     }
 ]

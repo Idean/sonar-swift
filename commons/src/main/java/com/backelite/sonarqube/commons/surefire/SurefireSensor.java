@@ -24,13 +24,8 @@ import org.sonar.api.batch.fs.FileSystem;
 import org.sonar.api.batch.sensor.Sensor;
 import org.sonar.api.batch.sensor.SensorContext;
 import org.sonar.api.batch.sensor.SensorDescriptor;
-import org.sonar.api.component.ResourcePerspectives;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class SurefireSensor implements Sensor {
     private static final Logger LOGGER = LoggerFactory.getLogger(SurefireSensor.class);
@@ -38,12 +33,10 @@ public class SurefireSensor implements Sensor {
     public static final String DEFAULT_REPORT_PATH = "sonar-reports/";
 
     private final SensorContext context;
-    private final ResourcePerspectives perspectives;
     private final FileSystem fileSystem;
 
-    public SurefireSensor(FileSystem fileSystem, ResourcePerspectives perspectives, SensorContext context) {
+    public SurefireSensor(FileSystem fileSystem, SensorContext context) {
         this.fileSystem = fileSystem;
-        this.perspectives = perspectives;
         this.context = context;
     }
 
@@ -62,7 +55,7 @@ public class SurefireSensor implements Sensor {
 
     @Override
     public void execute(SensorContext context) {
-        SurefireReportParser surefireParser = new SurefireReportParser(fileSystem, perspectives, context);
+        SurefireReportParser surefireParser = new SurefireReportParser(fileSystem, context);
         String reportFileName = context.fileSystem().baseDir().getAbsolutePath() + "/"+ reportPath();
         File reportsDir = new File(reportFileName);
 

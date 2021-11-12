@@ -60,7 +60,6 @@ public class TailorRulesDefinition implements RulesDefinition {
         } catch (IOException e) {
             LOGGER.error("Failed to load tailor rules", e);
         }
-        SqaleXmlLoader.load(repository, "/com/sonar/sqale/tailor-model.xml");
         repository.done();
     }
 }
