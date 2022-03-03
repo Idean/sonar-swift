@@ -23,7 +23,6 @@ desc "Launch code analysis for SonarQube"
 lane :metrics do |options|
 	properties = JavaProperties.load(File.join(ENV["PWD"], "sonar-project.properties"))
 	default_output_directory = "./sonar-reports"
-	derived_data_path = "./DerivedData"
 
 	sonar_run_tests(properties: properties, output_directory: default_output_directory)
 	sonar_run_slather(properties: properties, output_directory: default_output_directory)
@@ -41,7 +40,6 @@ private_lane :sonar_run_tests do |options|
 	destination = options[:properties][:"sonar.swift.simulator"]
 	app_configuration = options[:properties][:"sonar.swift.appConfiguration"]
 	configuration = "Debug" if app_configuration.to_s.empty?
-	derived_data_path = options[:derived_data_path]
 
 	run_tests(
     	workspace: workspace,
