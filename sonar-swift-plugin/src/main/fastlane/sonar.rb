@@ -35,18 +35,18 @@ end
 desc "Build and run project to gather compile commands database and test report"
 private_lane :sonar_run_tests do |options|
 	# Extract sonar property values
-	workspace	= options[:properties][:"sonar.swift.workspace"]
+	workspace = options[:properties][:"sonar.swift.workspace"]
 	app_scheme = options[:properties][:"sonar.swift.appScheme"]
 	destination = options[:properties][:"sonar.swift.simulator"]
 	app_configuration = options[:properties][:"sonar.swift.appConfiguration"]
 	configuration = "Debug" if app_configuration.to_s.empty?
 
 	run_tests(
-    	workspace: workspace,
-    	scheme: app_scheme,
+			workspace: workspace,
+			scheme: app_scheme,
 			destination: destination,
 			configuration: configuration,
-    	clean: true,
+			clean: true,
 			code_coverage: true,
 			output_types: "json-compilation-database,junit",
     	output_directory: options[:output_directory],
