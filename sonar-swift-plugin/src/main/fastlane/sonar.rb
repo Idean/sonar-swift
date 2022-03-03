@@ -1,6 +1,6 @@
 #
-# backelite-sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
-# Copyright © 2019 David Yang (david.tcha.yang@gmail.com)
+# sonar-swift-plugin - Enables analysis of Swift and Objective-C projects into SonarQube.
+# Copyright © 2022 David Yang (david.tcha.yang@gmail.com)
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by
