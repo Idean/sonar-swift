@@ -2,9 +2,16 @@
 
 If you already use fastlane, you can simply setup a new lane performing the analysis as follows:
 
-Add `fastlane-plugin-lizard` and `java-properties` gems into `Gemfile`, run `bundle install`
+Add `java-properties` to your Gemfile and run `bundle install`.
 
-Then copy the file `sonar-swift-plugin/src/main/fastlane/sonar.rb` in your project and import it in your Fastfile.
+Install lizard locally and add the Fastlane plugin:
+
+```sh
+$ pip install lizard ./tools/lizard
+$ fastlane add_plugin lizard
+```
+
+Then copy the file `sonar-swift-plugin/src/main/fastlane/sonar.rb` in your project (`./fastlane/`) and import it in your Fastfile.
 
 ```ruby
 import "sonar.rb"
@@ -13,7 +20,7 @@ import "sonar.rb"
 The lane `:metrics` is then available. To run the analysis, call:
 
 ```bash
-$ fastlane metrics
+$ fastlane metrics sonar_url:<YOUR_SONAR_URL> sonar_login:<YOUR_SONAR_LOGIN>
 ```
 
 ## `sonar-project.properties`

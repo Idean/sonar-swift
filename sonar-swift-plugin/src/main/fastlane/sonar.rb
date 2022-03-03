@@ -17,64 +17,54 @@
 #
 
 require "java-properties"
-require 'shellwords'
+require "shellwords"
 
 desc "Launch code analysis for SonarQube"
-lane :metrics do
+lane :metrics do |options|
 	properties = JavaProperties.load(File.join(ENV["PWD"], "sonar-project.properties"))
 	default_output_directory = "./sonar-reports"
 	derived_data_path = "./DerivedData"
 
-	sonar_run_build(properties: properties, output_directory: default_output_directory)
-	sonar_run_tests(properties: properties, output_directory: default_output_directory, derived_data_path: derived_data_path)
-	sonar_run_slather(properties: properties, output_directory: default_output_directory, derived_data_path: derived_data_path)
+	sonar_run_tests(properties: properties, output_directory: default_output_directory)
+	sonar_run_slather(properties: properties, output_directory: default_output_directory)
 	sonar_run_oclint(properties: properties, output_directory: default_output_directory)
 	sonar_run_swiftlint(properties: properties, output_directory: default_output_directory)
 	sonar_run_lizard(properties: properties, output_directory: default_output_directory)
-	sonar_run_scanner()
+	sonar_run_scanner(properties: properties, sonar_url: options[:sonar_url], sonar_login: options[:sonar_login])
 end
 
-desc "Run and build project to gather compile commands database"
-private_lane :sonar_run_build do |options|
-	# Extract sonar property values
-	workspace	= options[:properties][:"sonar.swift.workspace"]
-	app_scheme	= options[:properties][:"sonar.swift.appScheme"]
-
-	gym(
-    	workspace: workspace,
-    	scheme: app_scheme, 
-    	clean: true,
-    	skip_package_ipa: true,
-    	xcpretty_report_json: options[:output_directory] + "/compile_commands.json",
-    	xcargs: "COMPILER_INDEX_STORE_ENABLE=NO"
-	)
-end
-
-desc "Run unit tests"
+desc "Build and run project to gather compile commands database and test report"
 private_lane :sonar_run_tests do |options|
 	# Extract sonar property values
 	workspace	= options[:properties][:"sonar.swift.workspace"]
-	app_scheme	= options[:properties][:"sonar.swift.appScheme"]
+	app_scheme = options[:properties][:"sonar.swift.appScheme"]
+	destination = options[:properties][:"sonar.swift.simulator"]
+	app_configuration = options[:properties][:"sonar.swift.appConfiguration"]
+	configuration = "Debug" if app_configuration.to_s.empty?
+	derived_data_path = options[:derived_data_path]
 
 	run_tests(
     	workspace: workspace,
-    	scheme: app_scheme, 
-    	clean: false,
-    	code_coverage: true, 
-    	derived_data_path: options[:derived_data_path], 
+    	scheme: app_scheme,
+			destination: destination,
+			configuration: configuration,
+    	clean: true,
+			code_coverage: true,
+			output_types: "json-compilation-database,junit",
     	output_directory: options[:output_directory],
-    	output_types: "junit",
-    	output_files: "TEST-report.xml"
-    )
+			output_files: "compile_commands.json,TEST-report.xml",
+    	xcargs: "COMPILER_INDEX_STORE_ENABLE=NO"
+	)
 end
 
 desc "Run Slather coverage"
 private_lane :sonar_run_slather do |options|
 	# Extract sonar property values
-	binary_basename 				= options[:properties][:"sonar.coverage.binaryNames"]
-	app_scheme 						= options[:properties][:"sonar.swift.appScheme"]
-	excluded_paths_from_coverage 	= options[:properties][:"sonar.swift.excludedPathsFromCoverage"]
-	project 						= options[:properties][:"sonar.swift.project"]
+	binary_basename = options[:properties][:"sonar.coverage.binaryNames"]
+	app_scheme = options[:properties][:"sonar.swift.appScheme"]
+	excluded_paths_from_coverage = options[:properties][:"sonar.swift.excludedPathsFromCoverage"]
+	project = options[:properties][:"sonar.swift.project"]
+	derived_data_path = lane_context[SharedValues::SCAN_DERIVED_DATA_PATH]
 
 	if binary_basename.nil? || binary_basename.empty?
 		slather(
@@ -82,7 +72,7 @@ private_lane :sonar_run_slather do |options|
 		   	scheme: app_scheme,
 		   	input_format: "profdata", 
 		   	ignore: excluded_paths_from_coverage.split(","), 
-		   	build_directory: options[:derived_data_path], 
+		   	build_directory: derived_data_path, 
 		   	output_directory: options[:output_directory],
 		   	proj: project
 		)
@@ -93,7 +83,7 @@ private_lane :sonar_run_slather do |options|
 		   	input_format: "profdata", 
 		   	ignore: excluded_paths_from_coverage.split(","), 
 		   	binary_basename: binary_basename.split(","),
-		   	build_directory: options[:derived_data_path], 
+		   	build_directory: derived_data_path, 
 		   	output_directory: options[:output_directory],
 		   	proj: project
 		)
@@ -118,11 +108,12 @@ end
 
 desc "Run Lizard"
 private_lane :sonar_run_lizard do |options|
-	# Extract sonar property values
+	executablePath = './tools/lizard/lizard.py'
 	sources = options[:properties][:"sonar.sources"]
-
 	source_folders = sources.split(",").map { |source| source.shellescape }.join(" ")
+
 	lizard(
+		executable: executablePath,
 		source_folder: source_folders,
 		language: 'swift,objectivec',
 		export_type: 'xml',
@@ -144,5 +135,15 @@ end
 
 desc "Run sonar-scanner"
 private_lane :sonar_run_scanner do |options|
-	sonar(project_configuration_path: "sonar-project.properties")
+	version_number = get_version_number(
+		xcodeproj: options[:properties][:"sonar.swift.project"],
+		target: options[:properties][:"sonar.swift.appScheme"]
+	)
+
+	sonar(
+		project_configuration_path: "sonar-project.properties",
+		project_version: version_number,
+		sonar_url: options[:sonar_url], 
+		sonar_login: options[:sonar_login]
+	)
 end
